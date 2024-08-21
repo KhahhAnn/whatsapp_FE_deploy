@@ -1,4 +1,19 @@
-<script setup></script>
+<script setup>
+import { onMounted, ref } from 'vue'
+import UserItems from './UserItems.vue'
+import axios from 'axios'
+
+const users = ref([])
+
+onMounted(async () => {
+  try {
+    const response = await axios.get('http://localhost:3000/users')
+    users.value = response.data
+  } catch (error) {
+    console.error('Failed to fetch users:', error)
+  }
+})
+</script>
 
 <template>
   <div class="flex flex-col justify-between bg-[#FAF3E9] w-1/4 rounded-3xl shadow-2xl">
@@ -12,171 +27,12 @@
         />
       </div>
       <div class="grow overflow-auto max-h-[78vh]">
-        <div class="flex justify-between items-center p-4">
-          <div class="flex gap-4">
-            <img width="50" src="../assets/avt.png" />
-            <div class="user-data">
-              <h1>Nguyễn Văn A</h1>
-              <p>message info</p>
-            </div>
-          </div>
-          <i class="fa-solid fa-ellipsis-vertical fa-xl"></i>
-        </div>
-        <div class="flex justify-between items-center p-4">
-          <div class="flex gap-4">
-            <img width="50" src="../assets/avt.png" />
-            <div class="user-data">
-              <h1>Nguyễn Văn A</h1>
-              <p>message info</p>
-            </div>
-          </div>
-          <i class="fa-solid fa-ellipsis-vertical fa-xl"></i>
-        </div>
-        <div class="flex justify-between items-center p-4">
-          <div class="flex gap-4">
-            <img width="50" src="../assets/avt.png" />
-            <div class="user-data">
-              <h1>Nguyễn Văn A</h1>
-              <p>message info</p>
-            </div>
-          </div>
-          <i class="fa-solid fa-ellipsis-vertical fa-xl"></i>
-        </div>
-        <div class="flex justify-between items-center p-4">
-          <div class="flex gap-4">
-            <img width="50" src="../assets/avt.png" />
-            <div class="user-data">
-              <h1>Nguyễn Văn A</h1>
-              <p>message info</p>
-            </div>
-          </div>
-          <i class="fa-solid fa-ellipsis-vertical fa-xl"></i>
-        </div>
-        <div class="flex justify-between items-center p-4">
-          <div class="flex gap-4">
-            <img width="50" src="../assets/avt.png" />
-            <div class="user-data">
-              <h1>Nguyễn Văn A</h1>
-              <p>message info</p>
-            </div>
-          </div>
-          <i class="fa-solid fa-ellipsis-vertical fa-xl"></i>
-        </div>
-        <div class="flex justify-between items-center p-4">
-          <div class="flex gap-4">
-            <img width="50" src="../assets/avt.png" />
-            <div class="user-data">
-              <h1>Nguyễn Văn A</h1>
-              <p>message info</p>
-            </div>
-          </div>
-          <i class="fa-solid fa-ellipsis-vertical fa-xl"></i>
-        </div>
-        <div class="flex justify-between items-center p-4">
-          <div class="flex gap-4">
-            <img width="50" src="../assets/avt.png" />
-            <div class="user-data">
-              <h1>Nguyễn Văn A</h1>
-              <p>message info</p>
-            </div>
-          </div>
-          <i class="fa-solid fa-ellipsis-vertical fa-xl"></i>
-        </div>
-        <div class="flex justify-between items-center p-4">
-          <div class="flex gap-4">
-            <img width="50" src="../assets/avt.png" />
-            <div class="user-data">
-              <h1>Nguyễn Văn A</h1>
-              <p>message info</p>
-            </div>
-          </div>
-          <i class="fa-solid fa-ellipsis-vertical fa-xl"></i>
-        </div>
-        <div class="flex justify-between items-center p-4">
-          <div class="flex gap-4">
-            <img width="50" src="../assets/avt.png" />
-            <div class="user-data">
-              <h1>Nguyễn Văn A</h1>
-              <p>message info</p>
-            </div>
-          </div>
-          <i class="fa-solid fa-ellipsis-vertical fa-xl"></i>
-        </div>
-        <div class="flex justify-between items-center p-4">
-          <div class="flex gap-4">
-            <img width="50" src="../assets/avt.png" />
-            <div class="user-data">
-              <h1>Nguyễn Văn A</h1>
-              <p>message info</p>
-            </div>
-          </div>
-          <i class="fa-solid fa-ellipsis-vertical fa-xl"></i>
-        </div>
-        <div class="flex justify-between items-center p-4">
-          <div class="flex gap-4">
-            <img width="50" src="../assets/avt.png" />
-            <div class="user-data">
-              <h1>Nguyễn Văn A</h1>
-              <p>message info</p>
-            </div>
-          </div>
-          <i class="fa-solid fa-ellipsis-vertical fa-xl"></i>
-        </div>
-        <div class="flex justify-between items-center p-4">
-          <div class="flex gap-4">
-            <img width="50" src="../assets/avt.png" />
-            <div class="user-data">
-              <h1>Nguyễn Văn A</h1>
-              <p>message info</p>
-            </div>
-          </div>
-          <i class="fa-solid fa-ellipsis-vertical fa-xl"></i>
-        </div>
-        <div class="flex justify-between items-center p-4">
-          <div class="flex gap-4">
-            <img width="50" src="../assets/avt.png" />
-            <div class="user-data">
-              <h1>Nguyễn Văn A</h1>
-              <p>message info</p>
-            </div>
-          </div>
-          <i class="fa-solid fa-ellipsis-vertical fa-xl"></i>
-        </div>
-        <div class="flex justify-between items-center p-4">
-          <div class="flex gap-4">
-            <img width="50" src="../assets/avt.png" />
-            <div class="user-data">
-              <h1>Nguyễn Văn A</h1>
-              <p>message info</p>
-            </div>
-          </div>
-          <i class="fa-solid fa-ellipsis-vertical fa-xl"></i>
-        </div>
-        <div class="flex justify-between items-center p-4">
-          <div class="flex gap-4">
-            <img width="50" src="../assets/avt.png" />
-            <div class="user-data">
-              <h1>Nguyễn Văn A</h1>
-              <p>message info</p>
-            </div>
-          </div>
-          <i class="fa-solid fa-ellipsis-vertical fa-xl"></i>
-        </div>
-        <div class="flex justify-between items-center p-4">
-          <div class="flex gap-4">
-            <img width="50" src="../assets/avt.png" />
-            <div class="user-data">
-              <h1>Nguyễn Văn B</h1>
-              <p>message info</p>
-            </div>
-          </div>
-          <i class="fa-solid fa-ellipsis-vertical fa-xl"></i>
-        </div>
+        <UserItems v-for="user in users" :key="user.id" :user="user" />
       </div>
     </div>
 
     <div class="flex justify-center items-center gap-4 p-4 border-t-2 border-black">
-      <i class="fa-solid fa-download fa-xl"></i>
+      <font-awesome-icon :icon="['fas', 'download']" size="xl" />
       <p>Dùng thử WhatsApp dành cho điện thoại</p>
     </div>
   </div>

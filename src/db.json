@@ -1,0 +1,124 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Nguyễn Văn A",
+      "message": "Xin chào, đây là tin nhắn mẫu!",
+      "avatar": "https://live.staticflickr.com/65535/53459716820_a6c3ce93a8_w.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Nguyễn Thị B",
+      "message": "Rất vui được làm quen.",
+      "avatar": "https://live.staticflickr.com/65535/53299884271_c3f91d3c0e_z.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Trần Văn C",
+      "message": "Hãy liên hệ với tôi qua email.",
+      "avatar": "https://live.staticflickr.com/65535/53281310471_67a6f08805.jpg"
+    },
+    {
+      "id": 4,
+      "name": "Phạm Thị D",
+      "message": "Tôi đang bận, vui lòng để lại tin nhắn.",
+      "avatar": "https://live.staticflickr.com/65535/53281664699_22ab1dee85_z.jpg"
+    },
+    {
+      "id": 5,
+      "name": "Lê Văn E",
+      "message": "Cảm ơn bạn đã liên hệ!",
+      "avatar": "https://live.staticflickr.com/65535/53281595153_b1f39cd943_w.jpg"
+    },
+    {
+      "id": 1,
+      "name": "Nguyễn Văn A",
+      "message": "Xin chào, đây là tin nhắn mẫu!",
+      "avatar": "https://live.staticflickr.com/65535/53459716820_a6c3ce93a8_w.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Nguyễn Thị B",
+      "message": "Rất vui được làm quen.",
+      "avatar": "https://live.staticflickr.com/65535/53299884271_c3f91d3c0e_z.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Trần Văn C",
+      "message": "Hãy liên hệ với tôi qua email.",
+      "avatar": "https://live.staticflickr.com/65535/53281310471_67a6f08805.jpg"
+    },
+    {
+      "id": 4,
+      "name": "Phạm Thị D",
+      "message": "Tôi đang bận, vui lòng để lại tin nhắn.",
+      "avatar": "https://live.staticflickr.com/65535/53281664699_22ab1dee85_z.jpg"
+    },
+    {
+      "id": 5,
+      "name": "Lê Văn E",
+      "message": "Cảm ơn bạn đã liên hệ!",
+      "avatar": "https://live.staticflickr.com/65535/53281595153_b1f39cd943_w.jpg"
+    },
+    {
+      "id": 1,
+      "name": "Nguyễn Văn A",
+      "message": "Xin chào, đây là tin nhắn mẫu!",
+      "avatar": "https://live.staticflickr.com/65535/53459716820_a6c3ce93a8_w.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Nguyễn Thị B",
+      "message": "Rất vui được làm quen.",
+      "avatar": "https://live.staticflickr.com/65535/53299884271_c3f91d3c0e_z.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Trần Văn C",
+      "message": "Hãy liên hệ với tôi qua email.",
+      "avatar": "https://live.staticflickr.com/65535/53281310471_67a6f08805.jpg"
+    },
+    {
+      "id": 4,
+      "name": "Phạm Thị D",
+      "message": "Tôi đang bận, vui lòng để lại tin nhắn.",
+      "avatar": "https://live.staticflickr.com/65535/53281664699_22ab1dee85_z.jpg"
+    },
+    {
+      "id": 5,
+      "name": "Lê Văn E",
+      "message": "Cảm ơn bạn đã liên hệ!",
+      "avatar": "https://live.staticflickr.com/65535/53281595153_b1f39cd943_w.jpg"
+    },
+    {
+      "id": 1,
+      "name": "Nguyễn Văn A",
+      "message": "Xin chào, đây là tin nhắn mẫu!",
+      "avatar": "https://live.staticflickr.com/65535/53459716820_a6c3ce93a8_w.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Nguyễn Thị B",
+      "message": "Rất vui được làm quen.",
+      "avatar": "https://live.staticflickr.com/65535/53299884271_c3f91d3c0e_z.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Trần Văn C",
+      "message": "Hãy liên hệ với tôi qua email.",
+      "avatar": "https://live.staticflickr.com/65535/53281310471_67a6f08805.jpg"
+    },
+    {
+      "id": 4,
+      "name": "Phạm Thị D",
+      "message": "Tôi đang bận, vui lòng để lại tin nhắn.",
+      "avatar": "https://live.staticflickr.com/65535/53281664699_22ab1dee85_z.jpg"
+    },
+    {
+      "id": 5,
+      "name": "Lê Văn E",
+      "message": "Cảm ơn bạn đã liên hệ!",
+      "avatar": "https://live.staticflickr.com/65535/53281595153_b1f39cd943_w.jpg"
+    }
+  ]
+}
