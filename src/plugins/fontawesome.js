@@ -13,6 +13,7 @@ import { faCirclePlus } from '@fortawesome/free-solid-svg-icons'
 import { faImage } from '@fortawesome/free-solid-svg-icons'
 import { faNoteSticky } from '@fortawesome/free-solid-svg-icons'
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
+import { faCircle } from '@fortawesome/free-solid-svg-icons'
 
 // Thêm các icon vào thư viện
 library.add(
@@ -24,5 +25,6 @@ library.add(
   faCirclePlus,
   faImage,
   faNoteSticky,
-  faPaperPlane
+  faPaperPlane,
+  faCircle
 )

@@ -15,7 +15,7 @@ export default {
       <img class="w-16 h-16 rounded-full object-cover" :src="user.avatar" alt="Avatar" width="50" />
       <div class="user-data">
         <h1>{{ user.name }}</h1>
-        <p>{{ user.message }}</p>
+        <p class="truncate max-w-[200px]">{{ user.message }}</p>
       </div>
     </div>
     <font-awesome-icon
