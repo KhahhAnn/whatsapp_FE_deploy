@@ -1,8 +1,10 @@
 <script setup>
 import { ref } from 'vue'
 import MyModal from './SettingModal.vue'
+import { useUserStore } from '../stores/userStore'
 
 const isModalOpen = ref(false)
+const userStore = useUserStore()
 
 function toggleModal() {
   isModalOpen.value = !isModalOpen.value
@@ -18,10 +20,13 @@ function toggleModal() {
   >
     <div class="flex justify-between items-center p-4 border-b-2 border-black">
       <div class="flex items-center gap-4">
-        <img class="w-14 h-14 rounded-full object-cover" src="../assets/avt.png" />
-        <div class="user-data">
-          <h1>Nguyễn Văn A</h1>
-          <p>Đang hoạt động</p>
+        <img
+          :src="userStore.selectedUser ? userStore.selectedUser.avatar : ''"
+          class="w-14 h-14 rounded-full object-cover"
+          v-if="userStore.selectedUser"
+        />
+        <div v-if="userStore.selectedUser" class="user-data">
+          <h1>{{ userStore.selectedUser.name }}</h1>
         </div>
       </div>
       <div class="flex gap-4">
@@ -44,7 +49,9 @@ function toggleModal() {
       </div>
     </div>
     <div class="grow overflow-auto">
-      <div>Block</div>
+      <div v-if="userStore.selectedUser">
+        <p>{{ userStore.selectedUser.message }}</p>
+      </div>
     </div>
     <div class="flex justify-center items-center gap-2 px-4 py-2 border-t-2 border-black">
       <font-awesome-icon

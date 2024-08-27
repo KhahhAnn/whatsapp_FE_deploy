@@ -1,9 +1,11 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import UserItems from './UserItems.vue'
+import { useUserStore } from '../stores/userStore'
 import axios from 'axios'
 
 const users = ref([])
+const userStore = useUserStore()
 
 onMounted(async () => {
   try {
@@ -13,6 +15,11 @@ onMounted(async () => {
     console.error('Failed to fetch users:', error)
   }
 })
+
+const selectUser = (user) => {
+  userStore.selectUser(user)
+  console.log(userStore.selectedUser.name)
+}
 </script>
 
 <template>
@@ -28,7 +35,7 @@ onMounted(async () => {
       />
     </div>
     <div class="grow overflow-auto">
-      <UserItems v-for="user in users" :key="user.id" :user="user" />
+      <UserItems v-for="user in users" :key="user.id" :user="user" @click="selectUser(user)" />
     </div>
 
     <div class="flex justify-center items-center gap-4 p-4 border-t-2 border-black">

@@ -1,21 +1,24 @@
-<script>
-export default {
-  props: {
-    user: {
-      type: Object,
-      required: true
-    }
+<script setup>
+const props = defineProps({
+  user: {
+    type: Object,
+    required: true
   }
-}
+})
 </script>
 
 <template>
   <div class="flex justify-between items-center p-3 hover:bg-[#c0bab1]">
     <div class="flex items-center gap-4">
-      <img class="w-16 h-16 rounded-full object-cover" :src="user.avatar" alt="Avatar" width="50" />
+      <img
+        class="w-16 h-16 rounded-full object-cover"
+        :src="props.user.avatar"
+        alt="Avatar"
+        width="50"
+      />
       <div class="user-data">
-        <h1>{{ user.name }}</h1>
-        <p class="truncate max-w-[200px]">{{ user.message }}</p>
+        <h1>{{ props.user.name }}</h1>
+        <p class="truncate max-w-[200px]">{{ props.user.message }}</p>
       </div>
     </div>
     <font-awesome-icon
