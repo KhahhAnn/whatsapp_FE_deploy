@@ -27,6 +27,7 @@ function toggleModal() {
         />
         <div v-if="userStore.selectedUser" class="user-data">
           <h1>{{ userStore.selectedUser.name }}</h1>
+          <p>{{ userStore.selectedUser.isActive ? 'Đang hoạt động' : 'Không hoạt động' }}</p>
         </div>
       </div>
       <div class="flex gap-4">
@@ -50,6 +51,7 @@ function toggleModal() {
     </div>
     <div class="grow overflow-auto">
       <div v-if="userStore.selectedUser">
+        <!-- test -->
         <p>{{ userStore.selectedUser.message }}</p>
       </div>
     </div>

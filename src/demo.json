@@ -1,0 +1,91 @@
+{
+  "data": {
+    "currentPage": 1,
+    "datas": [
+      {
+        "created_at": 1724817721,
+        "room_id": "665b30723a5d56dc63feabc8",
+        "sender": "1",
+        "text": "adu vjp"
+      },
+      {
+        "created_at": 1724817670,
+        "room_id": "665b30723a5d56dc63feabc8",
+        "sender": "1",
+        "text": "jkjkjkjkjkjkjkjk"
+      },
+      {
+        "created_at": 1722263672,
+        "room_id": "665b30723a5d56dc63feabc8",
+        "sender": "1",
+        "text": "xong ch"
+      },
+      {
+        "created_at": 1722263542,
+        "room_id": "665b30723a5d56dc63feabc8",
+        "sender": "1",
+        "text": "goi di"
+      },
+      {
+        "created_at": 1722263540,
+        "room_id": "665b30723a5d56dc63feabc8",
+        "sender": "1",
+        "text": "ok"
+      },
+      {
+        "created_at": 1722263535,
+        "room_id": "665b30723a5d56dc63feabc8",
+        "sender": "2",
+        "text": "abc"
+      },
+      {
+        "created_at": 1719641284,
+        "room_id": "665b30723a5d56dc63feabc8",
+        "sender": "1",
+        "text": "abc"
+      },
+      {
+        "created_at": 1719641278,
+        "room_id": "665b30723a5d56dc63feabc8",
+        "sender": "1",
+        "text": "blo"
+      },
+      {
+        "created_at": 1719641266,
+        "room_id": "665b30723a5d56dc63feabc8",
+        "sender": "1",
+        "text": "alo"
+      },
+      {
+        "created_at": 1719641257,
+        "room_id": "665b30723a5d56dc63feabc8",
+        "sender": "1",
+        "text": "."
+      },
+      {
+        "created_at": 1719641104,
+        "room_id": "665b30723a5d56dc63feabc8",
+        "sender": "1",
+        "text": "."
+      }
+    ],
+    "friend": {
+      "avatar": "gojo_1_2_1716998170.jpg",
+      "birth_date": 1714237200,
+      "count_notification": 2,
+      "cover_photo": "back_gr_2_1716998183.jpg",
+      "create_at": 1713344791,
+      "description": "",
+      "email": "duc1@gmail.com",
+      "gender": 1,
+      "id": 2,
+      "is_block": 0,
+      "nickname": "",
+      "role": 0,
+      "username": "Nguy\u1ec5n \u0110\u1ee9c"
+    },
+    "maxPage": 1
+  },
+  "errorCode": 0,
+  "message": "success"
+}
