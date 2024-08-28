@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import MyModal from './SettingModal.vue'
+import UserModal from './UserModal.vue'
 import { useUserStore } from '../stores/userStore'
 
 const isModalOpen = ref(false)
@@ -83,5 +83,5 @@ function toggleModal() {
       />
     </div>
   </div>
-  <MyModal :isOpen="isModalOpen" @update:isOpen="isModalOpen = $event" />
+  <UserModal :isOpen="isModalOpen" @update:isOpen="isModalOpen = $event" />
 </template>

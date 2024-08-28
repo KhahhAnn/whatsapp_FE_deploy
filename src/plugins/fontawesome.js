@@ -3,28 +3,21 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 
 // Import các icon mà bạn muốn dùng
 
-import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
-import { faDownload } from '@fortawesome/free-solid-svg-icons'
-import { faPhone } from '@fortawesome/free-solid-svg-icons'
-import { faVideo } from '@fortawesome/free-solid-svg-icons'
-import { faEllipsis } from '@fortawesome/free-solid-svg-icons'
-
-import { faCirclePlus } from '@fortawesome/free-solid-svg-icons'
-import { faImage } from '@fortawesome/free-solid-svg-icons'
-import { faNoteSticky } from '@fortawesome/free-solid-svg-icons'
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
-import { faCircle } from '@fortawesome/free-solid-svg-icons'
+import * as Icons from '@fortawesome/free-solid-svg-icons'
 
 // Thêm các icon vào thư viện
 library.add(
-  faEllipsisVertical,
-  faDownload,
-  faPhone,
-  faVideo,
-  faEllipsis,
-  faCirclePlus,
-  faImage,
-  faNoteSticky,
-  faPaperPlane,
-  faCircle
+  Icons.faEllipsisVertical,
+  Icons.faDownload,
+  Icons.faPhone,
+  Icons.faVideo,
+  Icons.faEllipsis,
+  Icons.faCirclePlus,
+  Icons.faImage,
+  Icons.faNoteSticky,
+  Icons.faPaperPlane,
+  Icons.faCircle,
+  Icons.faBell,
+  Icons.faMagnifyingGlass,
+  Icons.faGear
 )
