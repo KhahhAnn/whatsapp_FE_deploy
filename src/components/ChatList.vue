@@ -1,10 +1,7 @@
 <script setup>
-import { ref } from 'vue'
 import UserItems from './UserItems.vue'
 import { useUserStore } from '../stores/userStore'
-import axios from 'axios'
 
-const users = ref([])
 const userStore = useUserStore()
 
 const selectUser = (user) => {
@@ -12,16 +9,7 @@ const selectUser = (user) => {
   console.log(userStore.selectedUser.name)
 }
 
-const fetchUsers = async () => {
-  try {
-    const response = await axios.get('http://localhost:3000/users')
-    users.value = response.data
-  } catch (error) {
-    console.error('Failed to fetch users:', error)
-  }
-}
-
-fetchUsers()
+userStore.fetchUsers()
 </script>
 
 <template>
@@ -37,7 +25,12 @@ fetchUsers()
       />
     </div>
     <div class="grow overflow-auto">
-      <UserItems v-for="user in users" :key="user.id" :user="user" @click="selectUser(user)" />
+      <UserItems
+        v-for="user in userStore.users"
+        :key="user.id"
+        :user="user"
+        @click="selectUser(user)"
+      />
     </div>
 
     <div class="flex justify-center items-center gap-4 p-4 border-t-2 border-black">
