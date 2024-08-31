@@ -8,8 +8,6 @@ const selectUser = (user) => {
   userStore.selectUser(user)
   console.log(userStore.selectedUser.name)
 }
-
-userStore.fetchUsers()
 </script>
 
 <template>

@@ -1,6 +1,11 @@
 <script setup>
 import ChatList from '@/components/ChatList.vue'
 import DetailMessage from '@/components/DetailMessage.vue'
+import { useUserStore } from '../stores/userStore'
+
+const userStore = useUserStore()
+
+userStore.fetchUsers()
 </script>
 
 <template>
