@@ -19,5 +19,6 @@ library.add(
   Icons.faCircle,
   Icons.faBell,
   Icons.faMagnifyingGlass,
-  Icons.faGear
+  Icons.faGear,
+  Icons.faXmark
 )
