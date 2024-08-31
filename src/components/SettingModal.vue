@@ -15,7 +15,7 @@ function closeModal() {
 <template>
   <div
     v-if="isOpen"
-    class="relative z-10 -ml-5"
+    class="relative z-10"
     aria-labelledby="modal-title"
     role="dialog"
     aria-modal="true"

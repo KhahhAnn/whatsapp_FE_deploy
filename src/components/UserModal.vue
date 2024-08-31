@@ -87,5 +87,7 @@ function toggleModal() {
       </div>
     </div>
   </div>
-  <SettingModal :isOpen="isModalOpen" @update:isOpen="isModalOpen = $event" />
+  <Teleport to="#app">
+    <SettingModal :isOpen="isModalOpen" @update:isOpen="isModalOpen = $event" />
+  </Teleport>
 </template>
