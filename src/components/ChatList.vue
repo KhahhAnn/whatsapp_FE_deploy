@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import UserItems from './UserItems.vue'
 import { useUserStore } from '../stores/userStore'
 import axios from 'axios'
@@ -7,19 +7,21 @@ import axios from 'axios'
 const users = ref([])
 const userStore = useUserStore()
 
-onMounted(async () => {
+const selectUser = (user) => {
+  userStore.selectUser(user)
+  console.log(userStore.selectedUser.name)
+}
+
+const fetchUsers = async () => {
   try {
     const response = await axios.get('http://localhost:3000/users')
     users.value = response.data
   } catch (error) {
     console.error('Failed to fetch users:', error)
   }
-})
-
-const selectUser = (user) => {
-  userStore.selectUser(user)
-  console.log(userStore.selectedUser.name)
 }
+
+fetchUsers()
 </script>
 
 <template>
