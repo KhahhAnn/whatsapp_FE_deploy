@@ -3,16 +3,16 @@ import { ref } from 'vue'
 import { useUserStore } from '../stores/userStore'
 import SettingModal from './SettingModal.vue'
 
+defineProps({
+  isOpen: Boolean
+})
+
 const isModalOpen = ref(false)
 const userStore = useUserStore()
 
 function toggleModal() {
   isModalOpen.value = !isModalOpen.value
 }
-
-const { isOpen } = defineProps({
-  isOpen: Boolean
-})
 </script>
 
 <template>

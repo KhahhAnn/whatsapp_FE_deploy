@@ -1,7 +1,7 @@
 <script setup>
 import { defineProps, defineEmits } from 'vue'
 
-const { isOpen } = defineProps({
+defineProps({
   isOpen: Boolean
 })
 
