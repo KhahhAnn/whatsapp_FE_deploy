@@ -11,7 +11,6 @@ function closeModal() {
   emit('update:isOpen', false)
 }
 </script>
-
 <template>
   <div
     v-if="isOpen"

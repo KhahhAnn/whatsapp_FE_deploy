@@ -1,17 +1,23 @@
 <script setup>
 import { ref } from 'vue'
 import { useUserStore } from '../stores/userStore'
-import SettingModal from './SettingModal.vue'
+import ThemeModal from './ThemeModal.vue'
+import NicknameModal from './NicknameModal.vue'
 
 defineProps({
   isOpen: Boolean
 })
 
-const isModalOpen = ref(false)
+const isThemeModalOpen = ref(false)
+const isNicknameModalOpen = ref(false)
 const userStore = useUserStore()
 
-function toggleModal() {
-  isModalOpen.value = !isModalOpen.value
+function toggleThemeModal() {
+  isThemeModalOpen.value = !isThemeModalOpen.value
+}
+function toggleNicknameModal() {
+  isNicknameModalOpen.value = !isNicknameModalOpen.value
+  console.log('clicked')
 }
 </script>
 
@@ -34,60 +40,26 @@ function toggleModal() {
           size="xl"
           class="p-2 hover:bg-[#c0bab1] rounded-full"
         />
-        <button @click="toggleModal">
-          <font-awesome-icon icon="gear" size="xl" class="p-2 hover:bg-[#c0bab1] rounded-full" />
-        </button>
       </div>
     </div>
 
-    <div class="flex flex-col justify-between">
-      <div class="flex items-center min-w-0 gap-x-4 p-2 hover:bg-[#c0bab1] rounded-xl">
-        <font-awesome-icon
-          icon="magnifying-glass"
-          size="xl"
-          class="p-2 hover:bg-[#c0bab1] rounded-full"
-        />
-
-        <div class="min-w-0 flex-auto">
-          <p class="text-sm font-semibold leading-6 text-gray-900">Thong tin doan chat</p>
-        </div>
-      </div>
-      <div class="flex items-center min-w-0 gap-x-4 p-2 hover:bg-[#c0bab1] rounded-xl">
-        <font-awesome-icon
-          icon="magnifying-glass"
-          size="xl"
-          class="p-2 hover:bg-[#c0bab1] rounded-full"
-        />
-
-        <div class="min-w-0 flex-auto">
-          <p class="text-sm font-semibold leading-6 text-gray-900">Thong tin doan chat</p>
-        </div>
-      </div>
-      <div class="flex items-center min-w-0 gap-x-4 p-2 hover:bg-[#c0bab1] rounded-xl">
-        <font-awesome-icon
-          icon="magnifying-glass"
-          size="xl"
-          class="p-2 hover:bg-[#c0bab1] rounded-full"
-        />
-
-        <div class="min-w-0 flex-auto">
-          <p class="text-sm font-semibold leading-6 text-gray-900">Thong tin doan chat</p>
-        </div>
-      </div>
-      <div class="flex items-center min-w-0 gap-x-4 p-2 hover:bg-[#c0bab1] rounded-xl">
-        <font-awesome-icon
-          icon="magnifying-glass"
-          size="xl"
-          class="p-2 hover:bg-[#c0bab1] rounded-full"
-        />
-
-        <div class="min-w-0 flex-auto">
-          <p class="text-sm font-semibold leading-6 text-gray-900">Thong tin doan chat</p>
-        </div>
-      </div>
+    <div class="flex flex-col gap-2">
+      <button
+        @click="toggleThemeModal"
+        class="p-2 hover:bg-[#c0bab1] rounded-xl text-lg font-semibold"
+      >
+        Đổi chủ đề
+      </button>
+      <button
+        @click="toggleNicknameModal"
+        class="p-2 hover:bg-[#c0bab1] rounded-xl text-lg font-semibold"
+      >
+        Chỉnh sửa biệt danh
+      </button>
     </div>
   </div>
   <Teleport to="#app">
-    <SettingModal :isOpen="isModalOpen" @update:isOpen="isModalOpen = $event" />
+    <ThemeModal :isOpen="isThemeModalOpen" @update:isOpen="isThemeModalOpen = $event" />
+    <NicknameModal :isOpen="isNicknameModalOpen" @update:isOpen="isNicknameModalOpen = $event" />
   </Teleport>
 </template>
