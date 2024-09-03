@@ -30,54 +30,57 @@ function closeModal() {
         <div
           class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
         >
-          <div class="flex flex-col items-center justify-center">
-            <div class="w-96 rounded-lg p-6">
-              <!-- Header -->
-              <div class="font-bold text-xl text-center mb-6">Chọn chủ đề</div>
+          <div class="flex flex-col items-center justify-center p-8">
+            <!-- Header -->
+            <div class="font-bold text-xl text-center mb-6">Chọn chủ đề</div>
 
-              <!-- Theme Selection -->
-              <div class="flex flex-col">
-                <span>App color theme</span>
-                <select class="bg-[#7c7873] text-white p-2 rounded">
-                  <option>System default</option>
-                  <option>Light</option>
-                  <option>Dark</option>
-                </select>
+            <!-- Theme Selection -->
+            <div class="flex flex-col justify-center items-center">
+              <span>App color theme</span>
+              <select class="mt-2 p-2 rounded border-2">
+                <option>System default</option>
+                <option>Light</option>
+                <option>Dark</option>
+              </select>
+            </div>
+
+            <!-- Chat Wallpaper -->
+            <div class="mt-8 flex flex-col justify-center items-center">
+              <span class="text-lg mb-2">Chat wallpaper</span>
+              <div class="grid grid-cols-4 gap-8">
+                <button
+                  class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded hover:border-2 hover:border-green-700"
+                />
+                <button
+                  class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded hover:border-2 hover:border-blue-700"
+                />
+                <button
+                  class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded hover:border-2 hover:border-yellow-700"
+                />
+                <button
+                  class="w-12 h-12 bg-gradient-to-br from-pink-400 to-pink-600 rounded hover:border-2 hover:border-pink-700"
+                />
+                <button
+                  class="w-12 h-12 bg-gradient-to-br from-red-400 to-red-600 rounded hover:border-2 hover:border-red-700"
+                />
+                <button
+                  class="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded hover:border-2 hover:border-purple-700"
+                />
+                <button
+                  class="w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded hover:border-2 hover:border-orange-700"
+                />
+                <button
+                  class="w-12 h-12 bg-gradient-to-br from-teal-400 to-teal-600 rounded hover:border-2 hover:border-teal-700"
+                />
               </div>
+            </div>
 
-              <!-- Chat Wallpaper -->
-              <div class="mt-6 flex flex-col justify-center items-center">
-                <span class="text-lg mb-2">Chat wallpaper</span>
-                <div class="grid grid-cols-4 gap-8">
-                  <div
-                    class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded hover:border border-gray-600"
-                  />
-                  <div
-                    class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded hover:border border-gray-600"
-                  />
-                  <div
-                    class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded hover:border border-gray-600"
-                  />
-                  <div
-                    class="w-12 h-12 bg-gradient-to-br from-pink-400 to-pink-600 rounded hover:border border-gray-600"
-                  />
-                  <div
-                    class="w-12 h-12 bg-gradient-to-br from-red-400 to-red-600 rounded hover:border border-gray-600"
-                  />
-                  <div
-                    class="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded hover:border border-gray-600"
-                  />
-                  <div
-                    class="w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded hover:border border-gray-600"
-                  />
-                  <div
-                    class="w-12 h-12 bg-gradient-to-br from-teal-400 to-teal-600 rounded hover:border border-gray-600"
-                  />
-                </div>
-              </div>
-
-              <button class="flex mt-4 border border-gray-600 px-4 py-2 rounded hover:bg-[#c0bab1]">
+            <div class="flex justify-between w-full mt-8">
+              <button class="border border-gray-600 px-4 py-2 rounded hover:bg-[#c0bab1]">
                 Reset
+              </button>
+              <button class="border border-gray-600 px-4 py-2 rounded hover:bg-[#c0bab1]">
+                Save
               </button>
             </div>
           </div>

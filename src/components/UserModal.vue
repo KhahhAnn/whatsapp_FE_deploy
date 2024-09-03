@@ -44,18 +44,13 @@ function toggleNicknameModal() {
     </div>
 
     <div class="flex flex-col gap-2">
-      <button
-        @click="toggleThemeModal"
-        class="p-2 hover:bg-[#c0bab1] rounded-xl text-lg font-semibold"
-      >
+      <button @click="toggleThemeModal" class="p-2 hover:bg-[#c0bab1] rounded-xl font-semibold">
         Đổi chủ đề
       </button>
-      <button
-        @click="toggleNicknameModal"
-        class="p-2 hover:bg-[#c0bab1] rounded-xl text-lg font-semibold"
-      >
+      <button @click="toggleNicknameModal" class="p-2 hover:bg-[#c0bab1] rounded-xl font-semibold">
         Chỉnh sửa biệt danh
       </button>
+      <button class="p-2 hover:bg-[#c0bab1] rounded-xl font-semibold">Đăng xuất</button>
     </div>
   </div>
   <Teleport to="#app">
