@@ -12,13 +12,13 @@ const selectUser = (user) => {
 
 <template>
   <div
-    class="flex flex-col h-[calc(100vh-32px)] justify-between bg-[#FAF3E9] w-1/4 rounded-3xl shadow-2xl"
+    class="flex flex-col justify-between h-[calc(100vh-32px)] w-1/4 rounded-3xl shadow-2xl bg-lightMode dark:bg-darkMode dark:text-lightMode"
   >
     <div class="p-4 border-b-2 border-black">
-      <h1 class="text-2xl font-bold">Đoạn chat</h1>
+      <h1 class="text-center text-2xl font-bold">Đoạn chat</h1>
       <input
         type="text"
-        class="w-full py-2 px-4 mt-2 rounded-full bg-gray-300 focus:bg-white focus:outline-none"
+        class="w-full py-2 px-4 mt-2 rounded-full focus:bg-white focus:outline-none bg-gray-300"
         placeholder="Tìm kiếm"
       />
     </div>

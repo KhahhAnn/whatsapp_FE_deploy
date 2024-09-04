@@ -9,7 +9,7 @@ userStore.fetchUsers()
 </script>
 
 <template>
-  <div class="flex gap-5 w-full min-h-screen p-4 bg-[#DBDDDC]">
+  <div class="flex gap-5 w-full min-h-screen p-4 bg-[#DBDDDC] dark:bg-slate-950">
     <ChatList />
     <DetailMessage />
   </div>

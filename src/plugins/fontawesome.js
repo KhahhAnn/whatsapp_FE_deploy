@@ -20,5 +20,7 @@ library.add(
   Icons.faBell,
   Icons.faMagnifyingGlass,
   Icons.faGear,
-  Icons.faXmark
+  Icons.faXmark,
+  Icons.faMoon,
+  Icons.faSun
 )

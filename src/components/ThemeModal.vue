@@ -1,15 +1,18 @@
 <script setup>
+import { useDark, useToggle } from '@vueuse/core'
 import { defineProps, defineEmits } from 'vue'
 
 defineProps({
   isOpen: Boolean
 })
-
 const emit = defineEmits(['update:isOpen'])
 
 function closeModal() {
   emit('update:isOpen', false)
 }
+
+const isDark = useDark()
+const toggle = useToggle(isDark)
 </script>
 
 <template>
@@ -28,15 +31,15 @@ function closeModal() {
     <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
       <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
         <div
-          class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
+          class="relative transform overflow-hidden rounded-2xl text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg bg-lightMode dark:bg-darkMode"
         >
           <div class="flex flex-col items-center justify-center p-8">
             <!-- Header -->
-            <div class="font-bold text-xl text-center mb-6">Chọn chủ đề</div>
+            <div class="font-bold text-xl text-center mb-6 dark:text-lightMode">Chọn chủ đề</div>
 
             <!-- Theme Selection -->
             <div class="flex flex-col justify-center items-center">
-              <span>App color theme</span>
+              <span class="dark:text-lightMode">App color theme</span>
               <select class="mt-2 p-2 rounded border-2">
                 <option>System default</option>
                 <option>Light</option>
@@ -46,7 +49,7 @@ function closeModal() {
 
             <!-- Chat Wallpaper -->
             <div class="mt-8 flex flex-col justify-center items-center">
-              <span class="text-lg mb-2">Chat wallpaper</span>
+              <span class="text-lg mb-2 dark:text-lightMode">Chat wallpaper</span>
               <div class="grid grid-cols-4 gap-8">
                 <button
                   class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded hover:border-2 hover:border-green-700"
@@ -76,10 +79,15 @@ function closeModal() {
             </div>
 
             <div class="flex justify-between w-full mt-8">
-              <button class="border border-gray-600 px-4 py-2 rounded hover:bg-[#c0bab1]">
+              <button
+                @click="toggle()"
+                class="border px-4 py-2 rounded border-gray-600 hover:bg-lightModeHover dark:text-lightMode dark:hover:bg-darkModeHover"
+              >
                 Reset
               </button>
-              <button class="border border-gray-600 px-4 py-2 rounded hover:bg-[#c0bab1]">
+              <button
+                class="border px-4 py-2 rounded border-gray-600 hover:bg-lightModeHover dark:text-lightMode dark:hover:bg-darkModeHover"
+              >
                 Save
               </button>
             </div>
@@ -88,7 +96,7 @@ function closeModal() {
             <button @click="closeModal" type="button">
               <font-awesome-icon
                 icon="xmark"
-                class="p-2 hover:bg-[#c0bab1] rounded-xl border border-gray-600"
+                class="p-2 rounded-xl border hover:bg-lightModeHover border-gray-600 dark:hover:bg-darkModeHover dark:text-lightMode"
               />
             </button>
           </div>

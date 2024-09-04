@@ -14,7 +14,7 @@ function toggleModal() {
 <template>
   <div
     :class="[
-      'flex flex-col h-[calc(100vh-32px)] justify-between bg-[#FAF3E9] rounded-3xl shadow-2xl',
+      'flex flex-col justify-between h-[calc(100vh-32px)] rounded-3xl shadow-2xl dark:text-lightMode bg-lightMode dark:bg-darkMode',
       isModalOpen ? 'w-1/2' : 'w-3/4'
     ]"
   >
@@ -25,25 +25,25 @@ function toggleModal() {
           class="w-14 h-14 rounded-full object-cover"
           v-if="userStore.selectedUser"
         />
-        <div v-if="userStore.selectedUser" class="user-data">
+        <div v-if="userStore.selectedUser" class="user-data text-darkMode dark:text-lightMode">
           <h1>{{ userStore.selectedUser.name }}</h1>
           <p>{{ userStore.selectedUser.isActive ? 'Đang hoạt động' : 'Không hoạt động' }}</p>
         </div>
       </div>
       <div class="flex gap-4">
         <font-awesome-icon
-          class="hover:bg-[#c0bab1] p-2 rounded-full"
+          class="p-2 rounded-full dark:hover:bg-darkModeHover hover:bg-lightModeHover"
           :icon="['fas', 'phone']"
           size="lg"
         />
         <font-awesome-icon
-          class="hover:bg-[#c0bab1] p-2 rounded-full"
+          class="p-2 rounded-full dark:hover:bg-darkModeHover hover:bg-lightModeHover"
           :icon="['fas', 'video']"
           size="lg"
         />
         <button @click="toggleModal">
           <font-awesome-icon
-            class="hover:bg-[#c0bab1] p-2 rounded-full"
+            class="p-2 rounded-full dark:hover:bg-darkModeHover hover:bg-lightModeHover"
             :icon="['fas', 'ellipsis']"
           />
         </button>
@@ -57,27 +57,27 @@ function toggleModal() {
     </div>
     <div class="flex justify-center items-center gap-2 px-4 py-2 border-t-2 border-black">
       <font-awesome-icon
-        class="hover:bg-[#c0bab1] p-2 rounded-full"
+        class="p-2 rounded-full dark:hover:bg-darkModeHover hover:bg-lightModeHover"
         :icon="['fas', 'circle-plus']"
         size="lg"
       />
       <font-awesome-icon
-        class="hover:bg-[#c0bab1] p-2 rounded-full"
+        class="p-2 rounded-full dark:hover:bg-darkModeHover hover:bg-lightModeHover"
         :icon="['fas', 'image']"
         size="lg"
       />
       <font-awesome-icon
-        class="hover:bg-[#c0bab1] p-2 rounded-full"
+        class="p-2 rounded-full dark:hover:bg-darkModeHover hover:bg-lightModeHover"
         :icon="['fas', 'note-sticky']"
         size="lg"
       />
       <input
         type="text"
-        class="w-full py-2 px-4 rounded-full bg-gray-300 focus:bg-white focus:outline-none"
+        class="w-full py-2 px-4 rounded-full focus:bg-white focus:outline-none bg-gray-300"
         placeholder="Send message"
       />
       <font-awesome-icon
-        class="hover:bg-[#c0bab1] p-2 rounded-full"
+        class="p-2 rounded-full dark:hover:bg-darkModeHover hover:bg-lightModeHover"
         :icon="['fas', 'paper-plane']"
         size="lg"
       />
