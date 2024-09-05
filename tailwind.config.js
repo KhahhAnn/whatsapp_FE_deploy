@@ -9,9 +9,9 @@ export default {
         darkMode: '#1F2937',
         darkModeHover: '#4B5563',
         lightMode: '#FAF3E9',
-        lightModeHover: '#c0bab1',
-        textdarkMode: 'text-black',
-        textlightMode: 'text-white'
+        lightModeHover: '#c0bab1'
+        // textdarkMode: 'text-black',
+        // textlightMode: 'text-white'
       }
     }
   },

@@ -19,7 +19,7 @@ defineProps({
       </div>
     </div>
     <font-awesome-icon
-      class="dark:text-lightMode hover:bg-[#d3cdc4] dark:hover:bg-gray-500 p-3 rounded-2xl"
+      class="p-3 rounded-2xl dark:text-lightMode hover:bg-[#d3cdc4] dark:hover:bg-gray-500"
       icon="ellipsis-vertical"
       size="lg"
     />

@@ -14,7 +14,7 @@ function toggleModal() {
 <template>
   <div
     :class="[
-      'flex flex-col justify-between h-[calc(100vh-32px)] rounded-3xl shadow-2xl dark:text-lightMode bg-lightMode dark:bg-darkMode',
+      'flex flex-col justify-between h-[calc(100vh-32px)] rounded-3xl shadow-2xl bg-lightMode dark:text-lightMode dark:bg-darkMode',
       isModalOpen ? 'w-1/2' : 'w-3/4'
     ]"
   >

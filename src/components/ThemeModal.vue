@@ -1,5 +1,4 @@
 <script setup>
-import { useDark, useToggle } from '@vueuse/core'
 import { defineProps, defineEmits } from 'vue'
 
 defineProps({
@@ -10,9 +9,6 @@ const emit = defineEmits(['update:isOpen'])
 function closeModal() {
   emit('update:isOpen', false)
 }
-
-const isDark = useDark()
-const toggle = useToggle(isDark)
 </script>
 
 <template>
@@ -24,7 +20,7 @@ const toggle = useToggle(isDark)
     aria-modal="true"
   >
     <div
-      class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity"
+      class="fixed inset-0 bg-opacity-75 transition-opacity bg-gray-900"
       aria-hidden="true"
     ></div>
 
@@ -35,21 +31,10 @@ const toggle = useToggle(isDark)
         >
           <div class="flex flex-col items-center justify-center p-8">
             <!-- Header -->
-            <div class="font-bold text-xl text-center mb-6 dark:text-lightMode">Chọn chủ đề</div>
-
-            <!-- Theme Selection -->
-            <div class="flex flex-col justify-center items-center">
-              <span class="dark:text-lightMode">App color theme</span>
-              <select class="mt-2 p-2 rounded border-2">
-                <option>System default</option>
-                <option>Light</option>
-                <option>Dark</option>
-              </select>
-            </div>
+            <div class="font-bold text-xl text-center dark:text-lightMode">Chọn chủ đề</div>
 
             <!-- Chat Wallpaper -->
             <div class="mt-8 flex flex-col justify-center items-center">
-              <span class="text-lg mb-2 dark:text-lightMode">Chat wallpaper</span>
               <div class="grid grid-cols-4 gap-8">
                 <button
                   class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded hover:border-2 hover:border-green-700"
@@ -80,7 +65,6 @@ const toggle = useToggle(isDark)
 
             <div class="flex justify-between w-full mt-8">
               <button
-                @click="toggle()"
                 class="border px-4 py-2 rounded border-gray-600 hover:bg-lightModeHover dark:text-lightMode dark:hover:bg-darkModeHover"
               >
                 Reset
