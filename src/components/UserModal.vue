@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useUserStore } from '../stores/userStore'
 import ThemeModal from './ThemeModal.vue'
 import NicknameModal from './NicknameModal.vue'
@@ -23,6 +23,8 @@ function toggleNicknameModal() {
   isNicknameModalOpen.value = !isNicknameModalOpen.value
   console.log('clicked')
 }
+
+const isLoading = computed(() => !userStore.selectedUser)
 </script>
 
 <template>
@@ -30,13 +32,25 @@ function toggleNicknameModal() {
     v-if="isOpen"
     class="flex flex-col justify-start h-[calc(100vh-32px)] w-1/4 rounded-3xl shadow-2xl bg-lightMode dark:bg-darkMode dark:text-lightMode"
   >
-    <div v-if="userStore.selectedUser" class="flex flex-col justify-center items-center gap-2 py-8">
-      <img
-        class="w-24 h-24 rounded-full object-cover"
-        :src="userStore.selectedUser ? userStore.selectedUser.avatar : ''"
-      />
-      <p>{{ userStore.selectedUser.name }}</p>
-      <p>{{ userStore.selectedUser.isActive ? 'Đang hoạt động' : 'Không hoạt động' }}</p>
+    <div class="flex flex-col justify-center items-center gap-2 py-8">
+      <!-- Skeleton loader -->
+      <template v-if="isLoading">
+        <div class="w-24 h-24 rounded-full bg-gray-300 dark:bg-gray-700 animate-pulse"></div>
+        <div class="w-32 h-4 bg-gray-300 dark:bg-gray-700 rounded animate-pulse"></div>
+        <div class="w-24 h-4 bg-gray-300 dark:bg-gray-700 rounded animate-pulse"></div>
+      </template>
+
+      <!-- User information -->
+      <template v-else>
+        <img
+          class="w-24 h-24 rounded-full object-cover bg-darkModeHover"
+          :src="userStore.selectedUser.avatar"
+          alt="User avatar"
+        />
+        <p>{{ userStore.selectedUser.name }}</p>
+        <p>{{ userStore.selectedUser.isActive ? 'Đang hoạt động' : 'Không hoạt động' }}</p>
+      </template>
+
       <div class="flex gap-6">
         <font-awesome-icon
           icon="bell"
