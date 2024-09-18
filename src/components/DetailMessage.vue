@@ -33,7 +33,7 @@ function toggleModal() {
       </div>
 
       <!-- User information -->
-      <div v-else class="flex items-center gap-4">
+      <div v-else class="flex items-center gap-4 select-none">
         <img :src="userStore.selectedUser.avatar" class="w-14 h-14 rounded-full object-cover" />
         <div class="user-data text-darkMode dark:text-lightMode">
           <h1>{{ userStore.selectedUser.name }}</h1>
@@ -54,8 +54,16 @@ function toggleModal() {
         />
         <button @click="toggleModal">
           <font-awesome-icon
+            v-if="isModalOpen"
+            icon="angle-right"
+            size="lg"
             class="p-2 rounded-full dark:hover:bg-darkModeHover hover:bg-lightModeHover"
-            :icon="['fas', 'ellipsis']"
+          />
+          <font-awesome-icon
+            v-else
+            icon="angle-left"
+            size="lg"
+            class="p-2 rounded-full dark:hover:bg-darkModeHover hover:bg-lightModeHover"
           />
         </button>
       </div>
@@ -97,11 +105,13 @@ function toggleModal() {
         class="w-full py-2 px-4 rounded-full bg-lightModeHover dark:bg-darkModeHover text-darkMode dark:text-lightMode placeholder-darkModeHover dark:placeholder-lightModeHover"
         placeholder="Aa"
       />
-      <font-awesome-icon
-        class="p-2 rounded-full dark:hover:bg-darkModeHover hover:bg-lightModeHover"
-        :icon="['fas', 'paper-plane']"
-        size="lg"
-      />
+      <button>
+        <font-awesome-icon
+          class="p-2 rounded-full dark:hover:bg-darkModeHover hover:bg-lightModeHover"
+          :icon="['fas', 'paper-plane']"
+          size="lg"
+        />
+      </button>
     </div>
   </div>
   <UserModal :isOpen="isModalOpen" @update:isOpen="isModalOpen = $event" />

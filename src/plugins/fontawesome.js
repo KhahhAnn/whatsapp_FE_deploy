@@ -22,5 +22,10 @@ library.add(
   Icons.faGear,
   Icons.faXmark,
   Icons.faMoon,
-  Icons.faSun
+  Icons.faSun,
+  Icons.faAngleLeft,
+  Icons.faAngleRight,
+  Icons.faUser,
+  Icons.faUserPlus,
+  Icons.faBars
 )
