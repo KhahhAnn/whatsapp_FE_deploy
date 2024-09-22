@@ -36,7 +36,8 @@ const toggleSidebar = () => {
         @click="toggleSidebar"
       />
     </div>
-    <div class="grow overflow-auto">
+    <SidebarModal :is-open="isSidebarOpen" @close="toggleSidebar" />
+    <div :class="[isSidebarOpen ? 'hidden' : '']" class="grow overflow-auto scroll-smooth">
       <UserItems
         v-for="user in userStore.users"
         :key="user.id"
@@ -45,5 +46,4 @@ const toggleSidebar = () => {
       />
     </div>
   </div>
-  <SidebarModal :is-open="isSidebarOpen" @close="toggleSidebar" />
 </template>

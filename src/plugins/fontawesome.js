@@ -27,5 +27,8 @@ library.add(
   Icons.faAngleRight,
   Icons.faUser,
   Icons.faUserPlus,
-  Icons.faBars
+  Icons.faUserGroup,
+  Icons.faPlus,
+  Icons.faBars,
+  Icons.faRightFromBracket
 )

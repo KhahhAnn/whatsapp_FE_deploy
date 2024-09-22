@@ -3,7 +3,6 @@ import { ref, computed } from 'vue'
 import { useUserStore } from '../stores/userStore'
 import ThemeModal from './ThemeModal.vue'
 import NicknameModal from './NicknameModal.vue'
-import { useDark, useToggle } from '@vueuse/core'
 
 defineProps({
   isOpen: Boolean
@@ -12,9 +11,6 @@ defineProps({
 const isThemeModalOpen = ref(false)
 const isNicknameModalOpen = ref(false)
 const userStore = useUserStore()
-
-const isDark = useDark()
-const toggle = useToggle(isDark)
 
 function toggleThemeModal() {
   isThemeModalOpen.value = !isThemeModalOpen.value
@@ -62,14 +58,6 @@ const isLoading = computed(() => !userStore.selectedUser)
           size="xl"
           class="rounded-full p-2 hover:bg-lightModeHover dark:hover:bg-darkModeHover"
         />
-        <button
-          @click="toggle()"
-          :class="{ 'hover:bg-lightModeHover': !isDark, 'hover:bg-darkModeHover': isDark }"
-          class="rounded-full p-2"
-        >
-          <font-awesome-icon v-if="isDark" icon="sun" size="xl" class="rounded-full" />
-          <font-awesome-icon v-else icon="moon" size="xl" class="rounded-full" />
-        </button>
       </div>
     </div>
 
@@ -85,12 +73,6 @@ const isLoading = computed(() => !userStore.selectedUser)
         class="rounded-xl font-semibold p-2 hover:bg-lightModeHover dark:hover:bg-darkModeHover"
       >
         Chỉnh sửa biệt danh
-      </button>
-
-      <button
-        class="rounded-xl font-semibold p-2 hover:bg-lightModeHover dark:hover:bg-darkModeHover"
-      >
-        Đăng xuất
       </button>
     </div>
   </div>

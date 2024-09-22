@@ -14,49 +14,76 @@ defineProps({
   <Transition name="slide">
     <div
       v-if="isOpen"
-      class="fixed inset-y-0 left-0 w-80 text-darkMode dark:text-lightMode bg-lightMode dark:bg-darkMode shadow-lg"
+      class="w-full h-[100%] rounded-3xl text-darkMode dark:text-lightMode bg-lightMode dark:bg-darkMode shadow-lg"
     >
-      <div class="flex flex-col items-stretch gap-4 p-6">
+      <div class="flex flex-col justify-center items-center gap-4 px-24 py-8">
         <img
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ891HLuugNKthcStMIQ3VD_phd6XrcYAhkjA&s"
-          class="w-14 h-14 rounded-full object-cover"
+          src="https://live.staticflickr.com/65535/53281664699_22ab1dee85_z.jpg"
+          class="w-24 h-24 rounded-full object-cover mb-4"
         />
         <button
           @click="toggleThemeModal"
-          class="rounded-xl font-semibold p-2 hover:bg-lightModeHover dark:hover:bg-darkModeHover"
+          class="flex items-center gap-5 w-full rounded-xl font-semibold p-2 hover:bg-lightModeHover dark:hover:bg-darkModeHover"
         >
+          <font-awesome-icon
+            icon="user-plus"
+            class="dark:hover:bg-darkModeHover hover:bg-lightModeHover cursor-pointer"
+            size="lg"
+          />
           Thêm liên hệ
         </button>
         <button
           @click="toggleNicknameModal"
-          class="rounded-xl font-semibold p-2 hover:bg-lightModeHover dark:hover:bg-darkModeHover"
+          class="flex items-center gap-5 w-full rounded-xl font-semibold p-2 hover:bg-lightModeHover dark:hover:bg-darkModeHover"
         >
+          <font-awesome-icon
+            icon="user-group"
+            class="dark:hover:bg-darkModeHover hover:bg-lightModeHover cursor-pointer"
+            size="lg"
+          />
           Tạo nhóm
         </button>
         <button
-          class="rounded-xl font-semibold p-2 hover:bg-lightModeHover dark:hover:bg-darkModeHover"
+          class="flex items-center gap-5 w-full rounded-xl font-semibold p-2 hover:bg-lightModeHover dark:hover:bg-darkModeHover"
         >
-          THam gia nhóm
+          <font-awesome-icon
+            icon="plus"
+            class="dark:hover:bg-darkModeHover hover:bg-lightModeHover cursor-pointer"
+            size="lg"
+          />
+          Tham gia nhóm
         </button>
         <button
           @click="toggle()"
-          class="rounded-xl font-semibold p-2 hover:bg-lightModeHover dark:hover:bg-darkModeHover"
+          class="flex items-center gap-5 w-full rounded-xl font-semibold p-2 hover:bg-lightModeHover dark:hover:bg-darkModeHover"
         >
+          <div>
+            <font-awesome-icon
+              v-if="isDark"
+              icon="sun"
+              size="xl"
+              class="dark:hover:bg-darkModeHover hover:bg-lightModeHover cursor-pointer"
+            />
+            <font-awesome-icon
+              v-else
+              icon="moon"
+              size="xl"
+              class="dark:hover:bg-darkModeHover hover:bg-lightModeHover cursor-pointer"
+            />
+          </div>
           {{ isDark ? 'Light Mode' : 'Dark Mode' }}
+        </button>
+        <button
+          class="flex items-center gap-5 w-full rounded-xl font-semibold p-2 hover:bg-lightModeHover dark:hover:bg-darkModeHover"
+        >
+          <font-awesome-icon
+            icon="right-from-bracket"
+            class="dark:hover:bg-darkModeHover hover:bg-lightModeHover cursor-pointer"
+            size="lg"
+          />
+          Đăng xuất
         </button>
       </div>
     </div>
   </Transition>
 </template>
-
-<style scoped>
-.slide-enter-active,
-.slide-leave-active {
-  transition: transform 0.3s ease;
-}
-
-.slide-enter-from,
-.slide-leave-to {
-  transform: translateX(-100%);
-}
-</style>
