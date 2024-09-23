@@ -3,6 +3,9 @@ import { ref, computed } from 'vue'
 import { useUserStore } from '../stores/userStore'
 import ThemeModal from './ThemeModal.vue'
 import NicknameModal from './NicknameModal.vue'
+import ButtonOption from './custom/CustomButton.vue'
+import CustomIcon from './custom/CustomIcon.vue'
+import CustomAvatar from './custom/CustomAvatar.vue'
 
 defineProps({
   isOpen: Boolean
@@ -38,42 +41,20 @@ const isLoading = computed(() => !userStore.selectedUser)
 
       <!-- User information -->
       <template v-else>
-        <img
-          class="w-24 h-24 rounded-full object-cover bg-darkModeHover"
-          :src="userStore.selectedUser.avatar"
-          alt="User avatar"
-        />
+        <CustomAvatar :avatar="userStore.selectedUser.avatar" />
         <p>{{ userStore.selectedUser.name }}</p>
         <p>{{ userStore.selectedUser.isActive ? 'Đang hoạt động' : 'Không hoạt động' }}</p>
       </template>
 
       <div class="flex gap-6">
-        <font-awesome-icon
-          icon="bell"
-          size="xl"
-          class="rounded-full p-2 hover:bg-lightModeHover dark:hover:bg-darkModeHover"
-        />
-        <font-awesome-icon
-          icon="magnifying-glass"
-          size="xl"
-          class="rounded-full p-2 hover:bg-lightModeHover dark:hover:bg-darkModeHover"
-        />
+        <CustomIcon icon="bell" />
+        <CustomIcon icon="magnifying-glass" />
       </div>
     </div>
 
-    <div class="flex flex-col gap-2">
-      <button
-        @click="toggleThemeModal"
-        class="rounded-xl font-semibold p-2 hover:bg-lightModeHover dark:hover:bg-darkModeHover"
-      >
-        Đổi chủ đề
-      </button>
-      <button
-        @click="toggleNicknameModal"
-        class="rounded-xl font-semibold p-2 hover:bg-lightModeHover dark:hover:bg-darkModeHover"
-      >
-        Chỉnh sửa biệt danh
-      </button>
+    <div class="flex flex-col justify-center items-center gap-4 px-24">
+      <ButtonOption @click="toggleThemeModal" text="Đổi chủ đề" />
+      <ButtonOption @click="toggleNicknameModal" text="Chỉnh sửa biệt danh" />
     </div>
   </div>
   <Teleport to="#app">

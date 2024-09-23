@@ -31,7 +31,9 @@ function closeModal() {
         >
           <div class="flex flex-col items-center justify-center p-8">
             <!-- Header -->
-            <div class="font-bold text-xl text-center dark:text-lightMode">Chọn chủ đề</div>
+            <div class="font-bold text-xl text-center text-darkMode dark:text-lightMode">
+              Chọn chủ đề
+            </div>
 
             <!-- Chat Wallpaper -->
             <div class="mt-8 flex flex-col justify-center items-center">

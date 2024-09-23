@@ -2,6 +2,9 @@
 import { ref, computed } from 'vue'
 import UserModal from './UserModal.vue'
 import { useUserStore } from '../stores/userStore'
+import CustomIcon from './custom/CustomIcon.vue'
+import CustomAvatar from './custom/CustomAvatar.vue'
+import CustomInput from './custom/CustomInput.vue'
 
 const isModalOpen = ref(false)
 const userStore = useUserStore()
@@ -34,7 +37,7 @@ function toggleModal() {
 
       <!-- User information -->
       <div v-else class="flex items-center gap-4 select-none">
-        <img :src="userStore.selectedUser.avatar" class="w-14 h-14 rounded-full object-cover" />
+        <CustomAvatar :avatar="userStore.selectedUser.avatar" width="3rem" height="3rem" />
         <div class="user-data text-darkMode dark:text-lightMode">
           <h1>{{ userStore.selectedUser.name }}</h1>
           <p>{{ userStore.selectedUser.isActive ? 'Đang hoạt động' : 'Không hoạt động' }}</p>
@@ -42,29 +45,11 @@ function toggleModal() {
       </div>
 
       <div class="flex gap-4">
-        <font-awesome-icon
-          class="p-2 rounded-full dark:hover:bg-darkModeHover hover:bg-lightModeHover"
-          :icon="['fas', 'phone']"
-          size="lg"
-        />
-        <font-awesome-icon
-          class="p-2 rounded-full dark:hover:bg-darkModeHover hover:bg-lightModeHover"
-          :icon="['fas', 'video']"
-          size="lg"
-        />
+        <CustomIcon icon="phone" size="lg" />
+        <CustomIcon icon="video" size="lg" />
         <button @click="toggleModal">
-          <font-awesome-icon
-            v-if="isModalOpen"
-            icon="angle-right"
-            size="lg"
-            class="p-2 rounded-full dark:hover:bg-darkModeHover hover:bg-lightModeHover"
-          />
-          <font-awesome-icon
-            v-else
-            icon="angle-left"
-            size="lg"
-            class="p-2 rounded-full dark:hover:bg-darkModeHover hover:bg-lightModeHover"
-          />
+          <CustomIcon v-if="isModalOpen" icon="angle-right" size="lg" />
+          <CustomIcon v-else icon="angle-left" size="lg" />
         </button>
       </div>
     </div>
@@ -120,7 +105,12 @@ function toggleModal() {
             />
           </div>
           <div class="flex max-w-96 bg-white rounded-lg p-3 gap-3">
-            <p class="text-gray-700">That book sounds interesting! What's it about?</p>
+            <p class="text-gray-700">
+              That book sounds interesting! What's it about?That book sounds interesting! What's it
+              about?That book sounds interesting! What's it about?That book sounds interesting!
+              What's it about?That book sounds interesting! What's it about?That book sounds
+              interesting! What's it about?
+            </p>
           </div>
         </div>
 
@@ -241,32 +231,12 @@ function toggleModal() {
     <div
       class="flex justify-center items-center gap-2 px-4 py-2 border-t border-darkModeHover dark:border-lightModeHover"
     >
-      <font-awesome-icon
-        class="p-2 rounded-full dark:hover:bg-darkModeHover hover:bg-lightModeHover"
-        :icon="['fas', 'circle-plus']"
-        size="lg"
-      />
-      <font-awesome-icon
-        class="p-2 rounded-full dark:hover:bg-darkModeHover hover:bg-lightModeHover"
-        :icon="['fas', 'image']"
-        size="lg"
-      />
-      <font-awesome-icon
-        class="p-2 rounded-full dark:hover:bg-darkModeHover hover:bg-lightModeHover"
-        :icon="['fas', 'note-sticky']"
-        size="lg"
-      />
-      <input
-        type="text"
-        class="w-full py-2 px-4 rounded-full bg-lightModeHover dark:bg-darkModeHover text-darkMode dark:text-lightMode placeholder-darkModeHover dark:placeholder-lightModeHover"
-        placeholder="Aa"
-      />
+      <CustomIcon icon="circle-plus" size="lg" />
+      <CustomIcon icon="image" size="lg" />
+      <CustomIcon icon="note-sticky" size="lg" />
+      <CustomInput type="text" placeholder="Aa" />
       <button>
-        <font-awesome-icon
-          class="p-2 rounded-full dark:hover:bg-darkModeHover hover:bg-lightModeHover"
-          :icon="['fas', 'paper-plane']"
-          size="lg"
-        />
+        <CustomIcon icon="paper-plane" size="lg" />
       </button>
     </div>
   </div>

@@ -1,8 +1,10 @@
 <script setup>
+import { ref } from 'vue'
 import UserItems from './UserItems.vue'
 import SidebarModal from './SidebarModal.vue'
 import { useUserStore } from '../stores/userStore'
-import { ref } from 'vue'
+import CustomIcon from './custom/CustomIcon.vue'
+import CustomInput from './custom/CustomInput.vue'
 
 const userStore = useUserStore()
 const isSidebarOpen = ref(false)
@@ -24,17 +26,8 @@ const toggleSidebar = () => {
     <div
       class="flex justify-between items-center gap-4 p-4 border-b border-darkModeHover dark:border-lightModeHover"
     >
-      <input
-        type="text"
-        class="w-full py-2 px-4 rounded-full bg-lightModeHover dark:bg-darkModeHover text-darkMode dark:text-lightMode placeholder-darkModeHover dark:placeholder-lightModeHover"
-        placeholder="Tìm kiếm"
-      />
-      <font-awesome-icon
-        icon="bars"
-        class="p-2 rounded-full dark:hover:bg-darkModeHover hover:bg-lightModeHover cursor-pointer"
-        size="lg"
-        @click="toggleSidebar"
-      />
+      <CustomInput type="text" placeholder="Tìm kiếm" />
+      <CustomIcon icon="bars" size="lg" @click="toggleSidebar" />
     </div>
     <SidebarModal :is-open="isSidebarOpen" @close="toggleSidebar" />
     <div :class="[isSidebarOpen ? 'hidden' : '']" class="grow overflow-auto scroll-smooth">
