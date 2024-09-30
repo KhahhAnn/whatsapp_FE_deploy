@@ -54,17 +54,13 @@ function toggleModal() {
       </div>
     </div>
 
-    <div class="grow overflow-auto p-4">
+    <div ref="scrollContainer" class="flex flex-col-reverse overflow-auto p-4">
       <!-- Skeleton loader for messages -->
       <template v-if="isLoading">
         <div v-for="i in 5" :key="i" class="flex mb-4" :class="i % 2 === 0 ? 'justify-end' : ''">
           <div class="w-3/4 h-16 bg-gray-300 dark:bg-gray-700 rounded-lg animate-pulse"></div>
         </div>
       </template>
-
-      <!-- <div v-else>
-        <p>{{ userStore.selectedUser.message }}</p>
-      </div> -->
 
       <div v-else>
         <!-- Incoming Message -->

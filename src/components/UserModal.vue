@@ -52,7 +52,7 @@ const isLoading = computed(() => !userStore.selectedUser)
       </div>
     </div>
 
-    <div class="flex flex-col justify-center items-center gap-4 px-24">
+    <div class="flex flex-col justify-center items-center gap-4 px-4">
       <ButtonOption @click="toggleThemeModal" text="Đổi chủ đề" />
       <ButtonOption @click="toggleNicknameModal" text="Chỉnh sửa biệt danh" />
     </div>
