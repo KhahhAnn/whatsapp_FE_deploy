@@ -1,5 +1,30 @@
 <script setup>
+import { ref } from 'vue'
+import { useUserStore } from '../stores/userStore'
 import { RouterLink } from 'vue-router'
+
+const userStore = useUserStore()
+const email = ref('')
+const password = ref('')
+const rememberMe = ref(false)
+const errorMessage = ref('')
+
+// Hàm xử lý đăng nhập
+const handleLogin = async () => {
+  console.log(email)
+  errorMessage.value = '' // Reset thông báo lỗi
+  try {
+    const userData = await userStore.loginUser(email.value, password.value, rememberMe.value)
+    if (userData) {
+      // Chuyển hướng hoặc thực hiện hành động sau khi đăng nhập thành công
+      console.log('Login successful:', userData)
+      window.location.assign('/')
+    }
+  } catch (error) {
+    errorMessage.value = 'Login failed. Please try again.'
+    console.log('error', error)
+  }
+}
 </script>
 <template>
   <div class="w-full">
@@ -25,6 +50,7 @@ import { RouterLink } from 'vue-router'
             required="true"
             placeholder="Email address"
             class="w-full p-3 border rounded-md border-gray-300"
+            @input="(event) => (email = event.target.value)"
           />
           <div class="flex justify-end items-center">
             <a href="#" class="font-semibold text-[#00A884] hover:text-[#00bc93]"
@@ -39,18 +65,21 @@ import { RouterLink } from 'vue-router'
             required="true"
             placeholder="Password"
             class="w-full p-3 border rounded-md border-gray-300"
+            @input="(event) => (password = event.target.value)"
           />
           <div class="flex">
-            <input type="checkbox" class="mr-2" />
+            <input type="checkbox" v-model="rememberMe" class="mr-2" />
             <label for="save-login" class="text-gray-700">Save login information</label>
           </div>
         </form>
         <button
+          @click="handleLogin"
           type="submit"
           class="font-semibold w-full flex justify-center p-3 rounded-md bg-[#00A884] hover:bg-[#00bc93] text-white"
         >
           Login
         </button>
+        <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p>
         <div class="flex justify-center gap-2 my-2">
           <p class="text-gray-700">Don't have an account?</p>
           <RouterLink to="/signup" href="#" class="text-[#00A884] hover:text-[#00bc93]"

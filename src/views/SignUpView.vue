@@ -1,3 +1,37 @@
+<script setup>
+import { ref } from 'vue'
+import { useUserStore } from '../stores/userStore'
+
+const userStore = useUserStore()
+const email = ref('')
+const password = ref('')
+const confirmPassword = ref('')
+const username = ref('')
+const phoneNumber = ref('')
+const errorMessage = ref('')
+
+const handleRegister = async () => {
+  console.log(email)
+  errorMessage.value = '' // Reset thông báo lỗi
+  try {
+    const userData = await userStore.registerUser(
+      username.value,
+      email.value,
+      password.value,
+      phoneNumber.value
+    )
+    if (userData) {
+      // Chuyển hướng hoặc thực hiện hành động sau khi đăng nhập thành công
+      console.log('register successful:', userData)
+      window.location.assign('/login')
+    }
+  } catch (error) {
+    errorMessage.value = 'register failed. Please try again.'
+    console.log('error', error)
+  }
+}
+</script>
+
 <template>
   <div class="w-full">
     <div class="z-[-1] w-full h-[225px] fixed top-0 bg-[#00A884]"></div>
@@ -13,21 +47,31 @@
         <div class="text-center text-4xl font-light pb-10 text-gray-700">WhatsApp</div>
         <div class="flex flex-col space-y-4 pb-5">
           <input
+            @input="(event) => (username = event.target.value)"
             type="text"
             placeholder="Username"
             class="w-full p-3 border rounded-md border-gray-300"
           />
           <input
+            @input="(event) => (phoneNumber = event.target.value)"
+            type="number"
+            placeholder="Phone number"
+            class="w-full p-3 border rounded-md border-gray-300"
+          />
+          <input
+            @input="(event) => (email = event.target.value)"
             type="text"
             placeholder="Email address"
             class="w-full p-3 border rounded-md border-gray-300"
           />
           <input
+            @input="(event) => (password = event.target.value)"
             type="password"
             placeholder="Password"
             class="w-full p-3 border rounded-md border-gray-300"
           />
           <input
+            @input="(event) => (confirmPassword = event.target.value)"
             type="password"
             placeholder="Confirm password"
             class="w-full p-3 border rounded-md border-gray-300"
@@ -39,7 +83,10 @@
             >
           </div>
         </div>
-        <button class="w-full flex justify-center p-3 rounded-md bg-[#00A884] text-white">
+        <button
+          class="w-full flex justify-center p-3 rounded-md bg-[#00A884] text-white"
+          @click="handleRegister"
+        >
           Sign up
         </button>
       </div>

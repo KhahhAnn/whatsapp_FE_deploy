@@ -10,11 +10,11 @@ import './plugins/fontawesome'
 const app = createApp(App)
 
 // Kết nối WebSocket
-const socket = new WebSocket('ws://localhost:8080'); // Địa chỉ WebSocket server
+const socket = new WebSocket('ws://localhost:8081') // Địa chỉ WebSocket server
 
 socket.onopen = () => {
-    console.log('Connected to WebSocket server');
-};
+  console.log('Connected to WebSocket server')
+}
 
 // socket.onmessage = (event) => {
 //     const message = JSON.parse(event.data);
@@ -24,13 +24,13 @@ socket.onopen = () => {
 // };
 
 socket.onclose = () => {
-    console.log('Disconnected from WebSocket server');
-    // Có thể thêm logic để tự động kết nối lại
-};
+  console.log('Disconnected from WebSocket server')
+  // Có thể thêm logic để tự động kết nối lại
+}
 
 socket.onerror = (error) => {
-    console.error('WebSocket error:', error);
-};
+  console.error('WebSocket error:', error)
+}
 
 app.component('font-awesome-icon', FontAwesomeIcon)
 
