@@ -64,24 +64,19 @@ function closeModal() {
               </div>
             </div>
           </div>
-          <div class="absolute top-4 right-4">
-            <button @click="closeModal" type="button">
-              <font-awesome-icon
-                icon="xmark"
-                class="p-2 rounded-xl border border-gray-600 text-darkMode hover:bg-lightModeHover dark:hover:bg-darkModeHover dark:text-lightMode"
-              />
-            </button>
-          </div>
+
           <div class="flex justify-between w-full px-6 py-4">
             <button
               class="border px-4 py-2 rounded border-gray-600 hover:bg-lightModeHover dark:text-lightMode dark:hover:bg-darkModeHover"
             >
-              Reset
+              Add
             </button>
             <button
+              @click="closeModal"
+              type="button"
               class="border px-4 py-2 rounded border-gray-600 hover:bg-lightModeHover dark:text-lightMode dark:hover:bg-darkModeHover"
             >
-              Save
+              Close
             </button>
           </div>
         </div>

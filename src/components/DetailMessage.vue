@@ -54,7 +54,12 @@ function toggleModal() {
       </div>
     </div>
 
-    <div ref="scrollContainer" class="flex flex-col-reverse overflow-auto p-4">
+    <div
+      :class="[
+        'flex flex-col-reverse overflow-auto p-4',
+        isLoading ? '' : 'bg-custom-pattern' // Chỉ áp dụng lớp nền khi không đang tải
+      ]"
+    >
       <!-- Skeleton loader for messages -->
       <template v-if="isLoading">
         <div v-for="i in 5" :key="i" class="flex mb-4" :class="i % 2 === 0 ? 'justify-end' : ''">
