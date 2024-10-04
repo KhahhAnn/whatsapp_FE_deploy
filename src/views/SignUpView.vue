@@ -45,7 +45,7 @@ const handleRegister = async () => {
 
       <div class="z-10 p-20 mt-5 rounded-lg shadow-2xl bg-white">
         <div class="text-center text-4xl font-light pb-10 text-gray-700">WhatsApp</div>
-        <div class="flex flex-col space-y-4 pb-5">
+        <form class="flex flex-col space-y-4 pb-5" @submit.prevent="handleRegister" @keyup.enter="handleRegister">
           <input
             @input="(event) => (username = event.target.value)"
             type="text"
@@ -82,7 +82,7 @@ const handleRegister = async () => {
               >I have read and agree to the terms of service</label
             >
           </div>
-        </div>
+        </form>
         <button
           class="w-full flex justify-center p-3 rounded-md bg-[#00A884] text-white"
           @click="handleRegister"

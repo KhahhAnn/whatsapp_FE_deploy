@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import axios from 'axios'
+// import axios from 'axios'
 import AccountService from '../services/AccountService.js'
 
 export const useUserStore = defineStore('user', () => {
@@ -11,14 +11,15 @@ export const useUserStore = defineStore('user', () => {
     selectedUser.value = user
   }
 
-  const fetchUsers = async () => {
-    try {
-      const response = await axios.get('http://localhost:3000/users')
-      users.value = response.data
-    } catch (error) {
-      console.error('Failed to fetch users:', error)
-    }
-  }
+  //fake api, need change
+  // const fetchUsers = async () => {
+  //   try {
+  //     const response = await axios.get('http://localhost:3000/users')
+  //     users.value = response.data
+  //   } catch (error) {
+  //     console.error('Failed to fetch users:', error)
+  //   }
+  // }
 
   // Thêm hàm để gọi handleLoginUser và lưu access token
   const loginUser = async (email, password, rememberMe) => {
@@ -77,10 +78,10 @@ export const useUserStore = defineStore('user', () => {
   return {
     selectedUser,
     users,
+    // fetchUsers,
     selectUser,
     loginUser,
     registerUser,
-    fetchUsers,
     logoutUser
   }
 })

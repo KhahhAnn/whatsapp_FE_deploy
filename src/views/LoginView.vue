@@ -39,7 +39,7 @@ const handleLogin = async () => {
         <div class="text-center text-3xl font-light pb-10 text-gray-700">
           Sign in to your account
         </div>
-        <form class="flex flex-col space-y-4 pb-5" action="#" method="post">
+        <form class="flex flex-col space-y-4 pb-5" @submit.prevent="handleLogin" @keyup.enter="handleLogin">
           <input
             id="email"
             name="email"

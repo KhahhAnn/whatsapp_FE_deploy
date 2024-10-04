@@ -29,6 +29,20 @@ const toggleSidebar = () => {
       <CustomInput type="text" placeholder="Tìm kiếm" />
       <CustomIcon icon="bars" size="lg" @click="toggleSidebar" />
     </div>
+    
+    <!-- Skeleton loader for user items -->
+    <div
+    :class="[isSidebarOpen ? 'hidden' : '']"
+    v-if="userStore.users.length === 0" class="grow overflow-auto scroll-smooth">
+      <div v-for="i in 7" :key="i" class="flex items-center gap-4 p-4 border-darkModeHover dark:border-lightModeHover animate-pulse">
+        <div class="w-12 h-12 rounded-full bg-gray-300 dark:bg-gray-700"></div>
+        <div class="flex-1 space-y-2">
+          <div class="w-32 h-4 bg-gray-300 dark:bg-gray-700 rounded"></div>
+          <div class="w-24 h-3 bg-gray-300 dark:bg-gray-700 rounded"></div>
+        </div>
+      </div>
+    </div>
+    
     <SidebarModal :is-open="isSidebarOpen" @close="toggleSidebar" />
     <div :class="[isSidebarOpen ? 'hidden' : '']" class="grow overflow-auto scroll-smooth">
       <UserItems
