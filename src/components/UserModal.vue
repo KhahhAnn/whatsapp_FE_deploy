@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { useUserStore } from '../stores/userStore'
+import { useUserStore } from '../stores/AccountStore'
 import ThemeModal from './ThemeModal.vue'
 import NicknameModal from './NicknameModal.vue'
 import ButtonOption from './custom/CustomButton.vue'

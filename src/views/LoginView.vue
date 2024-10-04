@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { useUserStore } from '../stores/userStore'
+import { useUserStore } from '../stores/AccountStore'
 import { RouterLink } from 'vue-router'
 
 const userStore = useUserStore()
@@ -9,14 +9,12 @@ const password = ref('')
 const rememberMe = ref(false)
 const errorMessage = ref('')
 
-// Hàm xử lý đăng nhập
 const handleLogin = async () => {
   console.log(email)
-  errorMessage.value = '' // Reset thông báo lỗi
+  errorMessage.value = ''
   try {
     const userData = await userStore.loginUser(email.value, password.value, rememberMe.value)
     if (userData) {
-      // Chuyển hướng hoặc thực hiện hành động sau khi đăng nhập thành công
       console.log('Login successful:', userData)
       window.location.assign('/')
     }

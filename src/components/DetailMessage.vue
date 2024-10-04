@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import UserModal from './UserModal.vue'
-import { useUserStore } from '../stores/userStore'
+import { useUserStore } from '../stores/AccountStore'
 import CustomIcon from './custom/CustomIcon.vue'
 import CustomAvatar from './custom/CustomAvatar.vue'
 import CustomInput from './custom/CustomInput.vue'

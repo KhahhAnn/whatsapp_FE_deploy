@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import UserItems from './UserItems.vue'
 import SidebarModal from './SidebarModal.vue'
-import { useUserStore } from '../stores/userStore'
+import { useUserStore } from '../stores/AccountStore'
 import CustomIcon from './custom/CustomIcon.vue'
 import CustomInput from './custom/CustomInput.vue'
 

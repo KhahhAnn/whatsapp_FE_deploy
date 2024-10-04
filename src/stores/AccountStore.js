@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import axios from 'axios'
-// Import các hàm từ AccountService
 import AccountService from '../services/AccountService.js'
 
 export const useUserStore = defineStore('user', () => {
@@ -61,12 +60,27 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
+  // Hàm đăng xuất
+  const logoutUser = () => {
+    // Xóa token khỏi localStorage
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+
+    // Cập nhật trạng thái người dùng
+    selectedUser.value = null;
+    users.value = [];
+
+    // Chuyển hướng về trang đăng nhập
+    window.location.assign('/login');
+  }
+
   return {
     selectedUser,
     users,
     selectUser,
     loginUser,
     registerUser,
-    fetchUsers
+    fetchUsers,
+    logoutUser
   }
 })

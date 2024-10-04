@@ -1,7 +1,7 @@
 <script setup>
 import ChatList from '@/components/ChatList.vue'
 import DetailMessage from '@/components/DetailMessage.vue'
-import { useUserStore } from '../stores/userStore'
+import { useUserStore } from '../stores/AccountStore'
 
 const userStore = useUserStore()
 

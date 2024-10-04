@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { useUserStore } from '../stores/userStore'
+import { useUserStore } from '../stores/AccountStore'
 
 const userStore = useUserStore()
 const email = ref('')

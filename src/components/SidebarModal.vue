@@ -4,6 +4,7 @@ import { useDark, useToggle } from '@vueuse/core'
 import CustomButton from './custom/CustomButton.vue' // Import your CustomButton component
 import CustomAvatar from './custom/CustomAvatar.vue'
 import CustomModal from './custom/CustomModal.vue'
+import { useUserStore } from '../stores/AccountStore' // Nhập useUserStore
 
 const isDark = useDark()
 const toggle = useToggle(isDark)
@@ -15,6 +16,8 @@ defineProps({
   isOpen: Boolean
 })
 
+const userStore = useUserStore() // Khởi tạo userStore
+
 function toggleContactModal() {
   isCustomContactModalOpen.value = !isCustomContactModalOpen.value
 }
@@ -23,6 +26,11 @@ function toggleGroupModal() {
 }
 function toggleJoinGroupModal() {
   isCustomJoinGroupModalOpen.value = !isCustomJoinGroupModalOpen.value
+}
+
+// Hàm để xử lý đăng xuất
+function handleLogout() {
+  userStore.logoutUser() // Gọi hàm logoutUser từ userStore
 }
 </script>
 
@@ -42,7 +50,7 @@ function toggleJoinGroupModal() {
           :icon="isDark ? 'sun' : 'moon'"
           :text="isDark ? 'Light Mode' : 'Dark Mode'"
         />
-        <CustomButton icon="right-from-bracket" text="Đăng xuất" />
+        <CustomButton icon="right-from-bracket" text="Đăng xuất" @click="handleLogout" /> <!-- Gọi handleLogout -->
       </div>
     </div>
   </Transition>
