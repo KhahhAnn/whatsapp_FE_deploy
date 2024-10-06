@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from 'vue'
 import { useUserStore } from '../stores/AccountStore'
+import Toast from 'primevue/toast';
+import { useToast } from 'primevue/usetoast';
 
 const userStore = useUserStore()
 const email = ref('')
@@ -9,6 +11,7 @@ const confirmPassword = ref('')
 const username = ref('')
 const phoneNumber = ref('')
 const errorMessage = ref('')
+const toast = useToast();
 
 const handleRegister = async () => {
   console.log(email)
@@ -24,6 +27,9 @@ const handleRegister = async () => {
       // Chuyển hướng hoặc thực hiện hành động sau khi đăng nhập thành công
       console.log('register successful:', userData)
       window.location.assign('/login')
+    }
+    else {
+      toast.add({ severity: 'error', summary: 'Có lỗi xảy ra !', detail: 'Lỗi đăng ký', life: 2000 });
     }
   } catch (error) {
     errorMessage.value = 'register failed. Please try again.'
@@ -83,6 +89,7 @@ const handleRegister = async () => {
             >
           </div>
         </form>
+        <Toast/>
         <button
           class="w-full flex justify-center p-3 rounded-md bg-[#00A884] text-white"
           @click="handleRegister"

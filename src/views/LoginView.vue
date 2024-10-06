@@ -2,6 +2,8 @@
 import { ref } from 'vue'
 import { useUserStore } from '../stores/AccountStore'
 import { RouterLink } from 'vue-router'
+import Toast from 'primevue/toast';
+import { useToast } from 'primevue/usetoast';
 
 const userStore = useUserStore()
 const email = ref('')
@@ -9,17 +11,19 @@ const password = ref('')
 const rememberMe = ref(false)
 const errorMessage = ref('')
 
+const toast = useToast();
+
 const handleLogin = async () => {
-  console.log(email)
-  errorMessage.value = ''
   try {
     const userData = await userStore.loginUser(email.value, password.value, rememberMe.value)
     if (userData) {
       console.log('Login successful:', userData)
       window.location.assign('/')
     }
-  } catch (error) {
-    errorMessage.value = 'Login failed. Please try again.'
+    else{
+      toast.add({ severity: 'error', summary: 'Có lỗi xảy ra !', detail: 'Lỗi đăng nhập', life: 2000 });
+    }
+  }  catch (error) {
     console.log('error', error)
   }
 }
@@ -70,6 +74,7 @@ const handleLogin = async () => {
             <label for="save-login" class="text-gray-700">Save login information</label>
           </div>
         </form>
+        <Toast/>
         <button
           @click="handleLogin"
           type="submit"

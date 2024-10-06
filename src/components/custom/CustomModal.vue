@@ -23,6 +23,7 @@ function closeModal() {
   emit('update:isOpen', false)
 }
 </script>
+
 <template>
   <div
     v-if="isOpen"
@@ -66,7 +67,10 @@ function closeModal() {
           </div>
 
           <div class="flex justify-between w-full px-6 py-4">
+            
             <button
+            type="button"
+            
               class="border px-4 py-2 rounded border-gray-600 hover:bg-lightModeHover dark:text-lightMode dark:hover:bg-darkModeHover"
             >
               Add
@@ -78,6 +82,7 @@ function closeModal() {
             >
               Close
             </button>
+          
           </div>
         </div>
       </div>
