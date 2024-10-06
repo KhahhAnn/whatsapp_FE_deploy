@@ -11,6 +11,17 @@ const userStore = useUserStore()
 
 const isLoading = computed(() => !userStore.selectedUser)
 
+const imageUrl = ref(null);
+
+    const handleFileChange = (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        imageUrl.value = URL.createObjectURL(file);
+      } else {
+        imageUrl.value = null;
+      }
+    };
+
 function toggleModal() {
   isModalOpen.value = !isModalOpen.value
 }
@@ -230,12 +241,15 @@ function toggleModal() {
       </div>
     </div>
     <div
-      class="flex justify-center items-center gap-2 px-4 py-2 border-t border-darkModeHover dark:border-lightModeHover"
+      class="flex justify-center items-end gap-2 px-4 py-2 border-t border-darkModeHover dark:border-lightModeHover"
     >
       <CustomIcon icon="circle-plus" size="lg" />
-      <CustomIcon icon="image" size="lg" />
+      <div>
+        <CustomIcon icon="image" size="lg" @click="$refs.fileInput.click()" />
+        <input type="file" ref="fileInput" @change="handleFileChange" hidden multiple />
+      </div>
       <CustomIcon icon="note-sticky" size="lg" />
-      <CustomInput type="text" placeholder="Aa" />
+      <CustomInput type="text" placeholder="Aa" v-model="imageUrl"/>
       <button>
         <CustomIcon icon="paper-plane" size="lg" />
       </button>

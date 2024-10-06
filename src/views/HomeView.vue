@@ -1,5 +1,5 @@
 <script setup>
-import ChatList from '@/components/ChatList.vue'
+import ListContact from '@/components/ListContact.vue'
 import DetailMessage from '@/components/DetailMessage.vue'
 // import { useUserStore } from '../stores/AccountStore'
 
@@ -10,7 +10,7 @@ import DetailMessage from '@/components/DetailMessage.vue'
 
 <template>
   <div class="flex gap-5 w-full min-h-screen p-4 bg-[#DBDDDC] dark:bg-slate-950">
-    <ChatList />
+    <ListContact />
     <DetailMessage />
   </div>
 </template>
