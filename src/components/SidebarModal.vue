@@ -1,10 +1,21 @@
 <script setup>
-import { defineProps, ref } from 'vue'
+import { defineProps, ref, onMounted } from 'vue'
 import { useDark, useToggle } from '@vueuse/core'
 import CustomButton from './custom/CustomButton.vue' // Import your CustomButton component
 import CustomAvatar from './custom/CustomAvatar.vue'
 import CustomModal from './custom/CustomModal.vue'
 import { useUserStore } from '../stores/AccountStore' // Nhập useUserStore
+
+const userStore = useUserStore();
+const userId = localStorage.getItem('userId');
+
+onMounted(() => {
+  if (userId) {
+    userStore.getUserDetail(userId); // Fetch user details using the stored userId
+  } else {
+    console.error('User ID not found');
+  }
+});
 
 const isDark = useDark()
 const toggle = useToggle(isDark)
@@ -15,8 +26,6 @@ const isCustomJoinGroupModalOpen = ref(false)
 defineProps({
   isOpen: Boolean
 })
-
-const userStore = useUserStore() // Khởi tạo userStore
 
 function toggleContactModal() {
   isCustomContactModalOpen.value = !isCustomContactModalOpen.value
@@ -40,8 +49,10 @@ function handleLogout() {
       v-if="isOpen"
       class="w-full h-[100%] rounded-3xl text-darkMode dark:text-lightMode bg-lightMode dark:bg-darkMode shadow-lg"
     >
-      <div class="flex flex-col justify-center items-center gap-4 px-4 py-8">
+      <div v-if="userStore.selectedUser" class="flex flex-col justify-center items-center gap-4 px-4 py-8">
         <CustomAvatar src="https://live.staticflickr.com/65535/53281664699_22ab1dee85_z.jpg" />
+        <h1>username: {{ userStore.selectedUser.username }}</h1> <!-- Hiển thị username -->
+
         <CustomButton icon="user-plus" text="Thêm liên hệ" @click="toggleContactModal" />
         <CustomButton icon="user-group" text="Tạo nhóm" @click="toggleGroupModal" />
         <CustomButton icon="plus" text="Tham gia nhóm" @click="toggleJoinGroupModal" />

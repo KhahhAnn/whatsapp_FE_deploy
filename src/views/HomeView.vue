@@ -2,10 +2,6 @@
 import ListContact from '@/components/ListContact.vue'
 import DetailMessage from '@/components/DetailMessage.vue'
 // import { useUserStore } from '../stores/AccountStore'
-
-// const userStore = useUserStore()
-
-// userStore.fetchUsers()
 </script>
 
 <template>
