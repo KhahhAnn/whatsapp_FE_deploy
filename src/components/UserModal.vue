@@ -1,11 +1,12 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { useUserStore } from '../stores/AccountStore'
+
+import CustomIcon from './custom/CustomIcon.vue'
+import CustomAvatar from './custom/CustomAvatar.vue'
 import ThemeModal from './ThemeModal.vue'
 import NicknameModal from './NicknameModal.vue'
 import ButtonOption from './custom/CustomButton.vue'
-import CustomIcon from './custom/CustomIcon.vue'
-import CustomAvatar from './custom/CustomAvatar.vue'
+import { useUserStore } from '../stores/AccountStore'
 
 defineProps({
   isOpen: Boolean
@@ -14,6 +15,7 @@ defineProps({
 const isThemeModalOpen = ref(false)
 const isNicknameModalOpen = ref(false)
 const userStore = useUserStore()
+const isLoading = computed(() => !userStore.selectedUser)
 
 function toggleThemeModal() {
   isThemeModalOpen.value = !isThemeModalOpen.value
@@ -23,14 +25,11 @@ function toggleNicknameModal() {
   console.log('clicked')
 }
 
-const isLoading = computed(() => !userStore.selectedUser)
 </script>
 
 <template>
-  <div
-    v-if="isOpen"
-    class="flex flex-col justify-start h-[calc(100vh-32px)] w-1/4 rounded-3xl shadow-2xl bg-lightMode dark:bg-darkMode dark:text-lightMode"
-  >
+  <div v-if="isOpen"
+    class="flex flex-col justify-start h-[calc(100vh-32px)] w-1/4 rounded-3xl shadow-2xl bg-lightMode dark:bg-darkMode dark:text-lightMode">
     <div class="flex flex-col justify-center items-center gap-2 py-8">
       <!-- Skeleton loader -->
       <template v-if="isLoading">

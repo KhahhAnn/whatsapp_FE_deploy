@@ -52,48 +52,23 @@ const handleRegister = async () => {
       <div class="z-10 p-20 mt-5 rounded-lg shadow-2xl bg-white">
         <div class="text-center text-4xl font-light pb-10 text-gray-700">WhatsApp</div>
         <form class="flex flex-col space-y-4 pb-5" @submit.prevent="handleRegister" @keyup.enter="handleRegister">
-          <input
-            @input="(event) => (username = event.target.value)"
-            type="text"
-            placeholder="Username"
-            class="w-full p-3 border rounded-md border-gray-300"
-          />
-          <input
-            @input="(event) => (phoneNumber = event.target.value)"
-            type="number"
-            placeholder="Phone number"
-            class="w-full p-3 border rounded-md border-gray-300"
-          />
-          <input
-            @input="(event) => (email = event.target.value)"
-            type="text"
-            placeholder="Email address"
-            class="w-full p-3 border rounded-md border-gray-300"
-          />
-          <input
-            @input="(event) => (password = event.target.value)"
-            type="password"
-            placeholder="Password"
-            class="w-full p-3 border rounded-md border-gray-300"
-          />
-          <input
-            @input="(event) => (confirmPassword = event.target.value)"
-            type="password"
-            placeholder="Confirm password"
-            class="w-full p-3 border rounded-md border-gray-300"
-          />
+          <input @input="(event) => (username = event.target.value)" type="text" placeholder="Username"
+            class="w-full p-3 border rounded-md border-gray-300" />
+          <input @input="(event) => (phoneNumber = event.target.value)" type="number" placeholder="Phone number"
+            class="w-full p-3 border rounded-md border-gray-300" />
+          <input @input="(event) => (email = event.target.value)" type="text" placeholder="Email address"
+            class="w-full p-3 border rounded-md border-gray-300" />
+          <input @input="(event) => (password = event.target.value)" type="password" placeholder="Password"
+            class="w-full p-3 border rounded-md border-gray-300" />
+          <input @input="(event) => (confirmPassword = event.target.value)" type="password"
+            placeholder="Confirm password" class="w-full p-3 border rounded-md border-gray-300" />
           <div class="flex">
             <input type="checkbox" class="mr-2" />
-            <label for="save-login" class="text-gray-700"
-              >I have read and agree to the terms of service</label
-            >
+            <label for="save-login" class="text-gray-700">I have read and agree to the terms of service</label>
           </div>
         </form>
-        <Toast/>
-        <button
-          class="w-full flex justify-center p-3 rounded-md bg-[#00A884] text-white"
-          @click="handleRegister"
-        >
+        <Toast />
+        <button class="w-full flex justify-center p-3 rounded-md bg-[#00A884] text-white" @click="handleRegister">
           Sign up
         </button>
       </div>

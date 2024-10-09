@@ -9,14 +9,11 @@
         Sorry, we couldn’t find the page you’re looking for.
       </p>
       <div class="mt-10 flex items-center justify-center gap-x-6">
-        <a
-          href="#"
-          class="rounded-md px-3.5 py-2.5 text-sm font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 bg-[#00A884] hover:bg-[#3d907e] text-lightMode"
-          >Go back home</a
-        >
-        <a href="#" class="text-sm font-semibold text-darkMode"
-          >Contact support <span aria-hidden="true">&rarr;</span></a
-        >
+        <a href="#"
+          class="rounded-md px-3.5 py-2.5 text-sm font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 bg-[#00A884] hover:bg-[#3d907e] text-lightMode">Go
+          back home</a>
+        <a href="#" class="text-sm font-semibold text-darkMode">Contact support <span
+            aria-hidden="true">&rarr;</span></a>
       </div>
     </div>
   </main>

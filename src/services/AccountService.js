@@ -9,7 +9,10 @@ const handleRegisterUser = async (username, email, password, phoneNumber) => {
       phoneNumber: phoneNumber
     })
   } catch (error) {
-    console.error('Error during registration:', error.response ? error.response.data : error.message)
+    console.error(
+      'Error during registration:',
+      error.response ? error.response.data : error.message
+    )
     throw error // Ném lại lỗi để xử lý ở nơi gọi
   }
 }
@@ -46,7 +49,10 @@ const handleDeleteUser = async (userId) => {
       userId: userId
     })
   } catch (error) {
-    console.error('Error during user deletion:', error.response ? error.response.data : error.message)
+    console.error(
+      'Error during user deletion:',
+      error.response ? error.response.data : error.message
+    )
     throw error // Ném lại lỗi để xử lý ở nơi gọi
   }
 }

@@ -20,10 +20,10 @@ const handleLogin = async () => {
       console.log('Login successful:', userData)
       window.location.assign('/')
     }
-    else{
+    else {
       toast.add({ severity: 'error', summary: 'Có lỗi xảy ra !', detail: 'Lỗi đăng nhập', life: 2000 });
     }
-  }  catch (error) {
+  } catch (error) {
     console.log('error', error)
   }
 }
@@ -44,52 +44,29 @@ const handleLogin = async () => {
           Sign in to your account
         </div>
         <form class="flex flex-col space-y-4 pb-5" @submit.prevent="handleLogin" @keyup.enter="handleLogin">
-          <input
-            id="email"
-            name="email"
-            type="email"
-            autocomplete="email"
-            required="true"
-            placeholder="Email address"
-            tabindex="1"
-            class="w-full p-3 border rounded-md border-gray-300"
-            @input="(event) => (email = event.target.value)"
-          />
+          <input id="email" name="email" type="email" autocomplete="email" required="true" placeholder="Email address"
+            tabindex="1" class="w-full p-3 border rounded-md border-gray-300"
+            @input="(event) => (email = event.target.value)" />
           <div class="flex justify-end items-center">
-            <a href="#" class="font-semibold text-[#00A884] hover:text-[#00bc93]"
-              >Forgot password?</a
-            >
+            <a href="#" class="font-semibold text-[#00A884] hover:text-[#00bc93]">Forgot password?</a>
           </div>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            autocomplete="current-password"
-            required="true"
-            placeholder="Password"
-            tabindex="2"
-            class="w-full p-3 border rounded-md border-gray-300"
-            @input="(event) => (password = event.target.value)"
-          />
+          <input id="password" name="password" type="password" autocomplete="current-password" required="true"
+            placeholder="Password" tabindex="2" class="w-full p-3 border rounded-md border-gray-300"
+            @input="(event) => (password = event.target.value)" />
           <div class="flex">
             <input type="checkbox" v-model="rememberMe" class="mr-2" />
             <label for="save-login" class="text-gray-700">Save login information</label>
           </div>
         </form>
-        <Toast/>
-        <button
-          @click="handleLogin"
-          type="submit"
-          class="font-semibold w-full flex justify-center p-3 rounded-md bg-[#00A884] hover:bg-[#00bc93] text-white"
-        >
+        <Toast />
+        <button @click="handleLogin" type="submit"
+          class="font-semibold w-full flex justify-center p-3 rounded-md bg-[#00A884] hover:bg-[#00bc93] text-white">
           Login
         </button>
         <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p>
         <div class="flex justify-center gap-2 my-2">
           <p class="text-gray-700">Don't have an account?</p>
-          <RouterLink to="/signup" href="#" class="text-[#00A884] hover:text-[#00bc93]"
-            >Sign up</RouterLink
-          >
+          <RouterLink to="/signup" href="#" class="text-[#00A884] hover:text-[#00bc93]">Sign up</RouterLink>
         </div>
       </div>
     </div>

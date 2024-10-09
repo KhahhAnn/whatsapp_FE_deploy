@@ -1,11 +1,6 @@
-// Tại plugins/fontawesome.js
 import { library } from '@fortawesome/fontawesome-svg-core'
-
-// Import các icon mà bạn muốn dùng
-
 import * as Icons from '@fortawesome/free-solid-svg-icons'
 
-// Thêm các icon vào thư viện
 library.add(
   Icons.faEllipsisVertical,
   Icons.faDownload,
