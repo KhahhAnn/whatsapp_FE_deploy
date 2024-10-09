@@ -51,6 +51,7 @@ const handleLogin = async () => {
             autocomplete="email"
             required="true"
             placeholder="Email address"
+            tabindex="1"
             class="w-full p-3 border rounded-md border-gray-300"
             @input="(event) => (email = event.target.value)"
           />
@@ -66,6 +67,7 @@ const handleLogin = async () => {
             autocomplete="current-password"
             required="true"
             placeholder="Password"
+            tabindex="2"
             class="w-full p-3 border rounded-md border-gray-300"
             @input="(event) => (password = event.target.value)"
           />

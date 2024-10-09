@@ -5,7 +5,10 @@ import { useUserStore } from '../stores/AccountStore'
 import CustomIcon from './custom/CustomIcon.vue'
 import CustomAvatar from './custom/CustomAvatar.vue'
 import CustomInput from './custom/CustomInput.vue'
+import EmojiPicker from './EmojiPicker.vue'
 
+const showEmojiPicker = ref(false);
+const messageInput = ref(''); // Thêm biến để lưu trữ giá trị của CustomInput
 const isModalOpen = ref(false)
 const userStore = useUserStore()
 
@@ -13,14 +16,18 @@ const isLoading = computed(() => !userStore.selectedUser)
 
 const imageUrl = ref(null);
 
-    const handleFileChange = (event) => {
-      const file = event.target.files[0];
-      if (file) {
-        imageUrl.value = URL.createObjectURL(file);
-      } else {
-        imageUrl.value = null;
-      }
-    };
+function handleEmojiSelect(emoji) {
+  messageInput.value += emoji; // Cập nhật giá trị của messageInput với emoji được chọn
+}
+
+const handleFileChange = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    imageUrl.value = URL.createObjectURL(file);
+  } else {
+    imageUrl.value = null;
+  }
+};
 
 function toggleModal() {
   isModalOpen.value = !isModalOpen.value
@@ -243,13 +250,17 @@ function toggleModal() {
     <div
       class="flex justify-center items-end gap-2 px-4 py-2 border-t border-darkModeHover dark:border-lightModeHover"
     >
-      <CustomIcon icon="circle-plus" size="lg" />
+    <CustomIcon 
+    icon="face-smile" 
+    size="lg" 
+    @click="showEmojiPicker = !showEmojiPicker" />
+    <EmojiPicker :isOpen="showEmojiPicker" @select="handleEmojiSelect" />
       <div>
         <CustomIcon icon="image" size="lg" @click="$refs.fileInput.click()" />
         <input type="file" ref="fileInput" @change="handleFileChange" hidden multiple />
       </div>
       <CustomIcon icon="note-sticky" size="lg" />
-      <CustomInput type="text" placeholder="Aa" v-model="imageUrl"/>
+      <CustomInput type="text" placeholder="Aa" v-model="messageInput"/>
       <button>
         <CustomIcon icon="paper-plane" size="lg" />
       </button>

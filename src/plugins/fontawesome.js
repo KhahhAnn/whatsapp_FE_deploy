@@ -30,5 +30,6 @@ library.add(
   Icons.faUserGroup,
   Icons.faPlus,
   Icons.faBars,
-  Icons.faRightFromBracket
+  Icons.faRightFromBracket,
+  Icons.faFaceSmile
 )
