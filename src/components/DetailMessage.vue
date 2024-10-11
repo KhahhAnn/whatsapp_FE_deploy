@@ -2,10 +2,11 @@
 import { ref, computed, onMounted } from 'vue'
 
 import CustomIcon from './custom/CustomIcon.vue'
-import CustomAvatar from './custom/CustomAvatar.vue'
 import CustomInput from './custom/CustomInput.vue'
-import UserModal from './UserModal.vue'
+import RightModal from './RightModal.vue'
 import EmojiPicker from './EmojiPicker.vue'
+import Avatar from 'primevue/avatar'
+import { getRandomColor } from '../plugins/randomColor'
 import { useUserStore } from '../stores/AccountStore'
 
 const userStore = useUserStore()
@@ -35,6 +36,11 @@ const handleFileChange = (event) => {
   }
 };
 
+// Compute the first letter of the username
+const userInitial = computed(() => {
+  return userStore.selectedUser?.nickname?.charAt(0).toUpperCase() || '';
+});
+
 function toggleModal() {
   isModalOpen.value = !isModalOpen.value
 }
@@ -57,7 +63,7 @@ function toggleModal() {
 
       <!-- User information -->
       <div v-else class="flex items-center gap-4 select-none">
-        <CustomAvatar :avatar="userStore.selectedUser.avatar" width="3rem" height="3rem" />
+        <Avatar :label="userInitial" class="mr-2" size="large" shape="circle" :style="{ backgroundColor: getRandomColor() }" />
         <div class="user-data text-darkMode dark:text-lightMode">
           <h1>{{ userStore.selectedUser.nickname }}</h1>
           <p>{{ userStore.selectedUser.isActive ? 'Đang hoạt động' : 'Không hoạt động' }}</p>
@@ -228,5 +234,5 @@ function toggleModal() {
       </button>
     </div>
   </div>
-  <UserModal :isOpen="isModalOpen" @update:isOpen="isModalOpen = $event" />
+  <RightModal :isOpen="isModalOpen" @update:isOpen="isModalOpen = $event" />
 </template>

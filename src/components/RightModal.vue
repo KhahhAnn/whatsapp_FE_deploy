@@ -2,11 +2,13 @@
 import { ref, computed } from 'vue'
 
 import CustomIcon from './custom/CustomIcon.vue'
-import CustomAvatar from './custom/CustomAvatar.vue'
 import ThemeModal from './ThemeModal.vue'
 import NicknameModal from './NicknameModal.vue'
 import ButtonOption from './custom/CustomButton.vue'
 import { useUserStore } from '../stores/AccountStore'
+import { getRandomColor } from '../plugins/randomColor'
+import Avatar from 'primevue/avatar'
+
 
 defineProps({
   isOpen: Boolean
@@ -25,6 +27,11 @@ function toggleNicknameModal() {
   console.log('clicked')
 }
 
+// Compute the first letter of the username
+const userInitial = computed(() => {
+  return userStore.selectedUser?.nickname?.charAt(0).toUpperCase() || '';
+});
+
 </script>
 
 <template>
@@ -40,7 +47,7 @@ function toggleNicknameModal() {
 
       <!-- User information -->
       <template v-else>
-        <CustomAvatar :avatar="userStore.selectedUser.avatar" />
+        <Avatar :label="userInitial" class="mr-2" size="xlarge" shape="circle" :style="{ backgroundColor: getRandomColor() }" />
         <p>{{ userStore.selectedUser.name }}</p>
         <p>{{ userStore.selectedUser.isActive ? 'Đang hoạt động' : 'Không hoạt động' }}</p>
       </template>

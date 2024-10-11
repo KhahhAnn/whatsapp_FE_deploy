@@ -4,7 +4,7 @@ import { ref, onMounted } from 'vue'
 import CustomIcon from './custom/CustomIcon.vue'
 import CustomInput from './custom/CustomInput.vue'
 import UserItems from './UserItems.vue'
-import SidebarModal from './SidebarModal.vue'
+import LeftModal from './LeftModal.vue'
 import { useUserStore } from '../stores/AccountStore'
 
 const userStore = useUserStore()
@@ -12,7 +12,7 @@ const isSidebarOpen = ref(false)
 
 const selectUser = (user) => {
   userStore.selectUser(user)
-  console.log(userStore.selectedUser.name)
+  console.log(userStore.selectedUser.nickname)
 }
 
 onMounted(() => {
@@ -48,7 +48,7 @@ const toggleSidebar = () => {
       </div>
     </div>
 
-    <SidebarModal :is-open="isSidebarOpen" @close="toggleSidebar" />
+    <LeftModal :is-open="isSidebarOpen" @close="toggleSidebar" />
     <div :class="[isSidebarOpen ? 'hidden' : '']" class="grow overflow-auto scroll-smooth">
       <UserItems v-for="user in userStore.users" :key="user.id" :user="user" @click="selectUser(user)" />
     </div>
