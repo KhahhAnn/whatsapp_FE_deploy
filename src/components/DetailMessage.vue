@@ -2,7 +2,6 @@
 import { ref, computed, onMounted } from 'vue'
 
 import CustomIcon from './custom/CustomIcon.vue'
-import CustomInput from './custom/CustomInput.vue'
 import RightModal from './RightModal.vue'
 import EmojiPicker from './EmojiPicker.vue'
 import Avatar from 'primevue/avatar'
@@ -228,7 +227,11 @@ function toggleModal() {
         <input type="file" ref="fileInput" @change="handleFileChange" hidden multiple />
       </div>
       <CustomIcon icon="note-sticky" size="lg" />
-      <CustomInput type="text" placeholder="Aa" v-model="messageInput" />
+      <input
+        type="text"
+        class="w-full py-2 px-4 rounded-full bg-lightModeHover dark:bg-darkModeHover text-darkMode dark:text-lightMode placeholder-darkModeHover dark:placeholder-lightModeHover"
+        placeholder="Tìm kiếm"
+      />
       <button>
         <CustomIcon icon="paper-plane" size="lg" />
       </button>

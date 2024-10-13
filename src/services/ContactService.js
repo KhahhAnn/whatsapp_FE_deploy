@@ -33,7 +33,7 @@ const handleGetContactByUser = async (userId) => {
 
 const handleUpdateContact = async (contactId) => {
   try {
-    return await apiClient.put(`:contactId`, {
+    return await apiClient.put(`${contactId}`, {
       contactId: contactId
     })
   } catch (error) {

@@ -10,6 +10,9 @@ import { getRandomColor } from '../plugins/randomColor'
 
 import Avatar from 'primevue/avatar';
 
+import { defineEmits } from 'vue'
+
+defineEmits(['close'])
 
 const userStore = useUserStore();
 const isDark = useDark()
