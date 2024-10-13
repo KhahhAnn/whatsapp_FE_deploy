@@ -8,26 +8,12 @@ import './plugins/fontawesome'
 import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura'
 import ToastService from 'primevue/toastservice'
+import WebSocketPlugin from './plugins/webSocket';
 
 const app = createApp(App)
 
-const socket = new WebSocket('ws://localhost:8081') // Địa chỉ WebSocket server
-
-socket.onopen = () => {
-  console.log('Connected to WebSocket server')
-}
-
-socket.onclose = () => {
-  console.log('Disconnected from WebSocket server')
-  // Có thể thêm logic để tự động kết nối lại
-}
-
-socket.onerror = (error) => {
-  console.error('WebSocket error:', error)
-}
-
 app.component('font-awesome-icon', FontAwesomeIcon)
-
+app.use(WebSocketPlugin, { url: 'ws://localhost:8082' });
 app.use(createPinia())
 app.use(router)
 app.use(ToastService)

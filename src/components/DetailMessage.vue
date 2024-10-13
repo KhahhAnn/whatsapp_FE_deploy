@@ -3,20 +3,20 @@ import { ref, computed, onMounted } from 'vue'
 
 import CustomIcon from './custom/CustomIcon.vue'
 import RightModal from './RightModal.vue'
-import EmojiPicker from './EmojiPicker.vue'
+// import EmojiPicker from './EmojiPicker.vue'
 import Avatar from 'primevue/avatar'
 import { useUserStore } from '../stores/AccountStore'
 
 const userStore = useUserStore()
 const showEmojiPicker = ref(false);
-const messageInput = ref(''); // Thêm biến để lưu trữ giá trị của CustomInput
+// const messageInput = ref(''); // Thêm biến để lưu trữ giá trị của CustomInput
 const isModalOpen = ref(false)
 const isLoading = computed(() => !userStore.selectedUser)
 const imageUrl = ref(null);
 
-function handleEmojiSelect(emoji) {
-  messageInput.value += emoji; // Cập nhật giá trị của messageInput với emoji được chọn
-}
+// function handleEmojiSelect(emoji) {
+//   messageInput.value += emoji; // Cập nhật giá trị của messageInput với emoji được chọn
+// }
 
 onMounted(() => {
   const userId = localStorage.getItem('userId');
@@ -220,7 +220,7 @@ function toggleModal() {
     </div>
     <div class="flex justify-center items-end gap-2 px-4 py-2 border-t border-darkModeHover dark:border-lightModeHover">
       <CustomIcon icon="face-smile" size="lg" @click="showEmojiPicker = !showEmojiPicker" />
-      <EmojiPicker :isOpen="showEmojiPicker" @select="handleEmojiSelect" />
+      <!-- <EmojiPicker :isOpen="showEmojiPicker" @select="handleEmojiSelect" /> -->
       <div>
         <CustomIcon icon="image" size="lg" @click="$refs.fileInput.click()" />
         <input type="file" ref="fileInput" @change="handleFileChange" hidden multiple />
