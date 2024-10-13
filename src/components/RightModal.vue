@@ -6,7 +6,6 @@ import ThemeModal from './ThemeModal.vue'
 import NicknameModal from './NicknameModal.vue'
 import ButtonOption from './custom/CustomButton.vue'
 import { useUserStore } from '../stores/AccountStore'
-import { getRandomColor } from '../plugins/randomColor'
 import Avatar from 'primevue/avatar'
 
 
@@ -47,7 +46,7 @@ const userInitial = computed(() => {
 
       <!-- User information -->
       <template v-else>
-        <Avatar :label="userInitial" class="mr-2" size="xlarge" shape="circle" :style="{ backgroundColor: getRandomColor() }" />
+        <Avatar :label="userInitial" class="mr-2" size="xlarge" shape="circle" />
         <p>{{ userStore.selectedUser.name }}</p>
         <p>{{ userStore.selectedUser.isActive ? 'Đang hoạt động' : 'Không hoạt động' }}</p>
       </template>

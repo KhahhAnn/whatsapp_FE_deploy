@@ -5,7 +5,6 @@ import CustomIcon from './custom/CustomIcon.vue'
 import RightModal from './RightModal.vue'
 import EmojiPicker from './EmojiPicker.vue'
 import Avatar from 'primevue/avatar'
-import { getRandomColor } from '../plugins/randomColor'
 import { useUserStore } from '../stores/AccountStore'
 
 const userStore = useUserStore()
@@ -62,7 +61,7 @@ function toggleModal() {
 
       <!-- User information -->
       <div v-else class="flex items-center gap-4 select-none">
-        <Avatar :label="userInitial" class="mr-2" size="large" shape="circle" :style="{ backgroundColor: getRandomColor() }" />
+        <Avatar :label="userInitial" class="mr-2" size="large" shape="circle" />
         <div class="user-data text-darkMode dark:text-lightMode">
           <h1>{{ userStore.selectedUser.nickname }}</h1>
           <p>{{ userStore.selectedUser.isActive ? 'Đang hoạt động' : 'Không hoạt động' }}</p>

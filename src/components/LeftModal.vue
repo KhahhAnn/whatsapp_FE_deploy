@@ -3,10 +3,8 @@ import { defineProps, ref, onMounted, computed } from 'vue'
 import { useDark, useToggle } from '@vueuse/core'
 
 import CustomButton from './custom/CustomButton.vue'
-// import CustomAvatar from './custom/CustomAvatar.vue'
 import CustomModal from './custom/CustomModal.vue'
 import { useUserStore } from '../stores/AccountStore'
-import { getRandomColor } from '../plugins/randomColor'
 
 import Avatar from 'primevue/avatar';
 
@@ -58,16 +56,15 @@ function handleLogout() {
     <div v-if="isOpen"
       class="w-full h-[100%] rounded-3xl text-darkMode dark:text-lightMode bg-lightMode dark:bg-darkMode shadow-lg">
       <div v-if="userStore.selectedUser" class="flex flex-col justify-center items-center gap-4 px-4 py-8">
-        <Avatar :label="userInitial" class="mr-2" size="xlarge" shape="circle" :style="{ backgroundColor: getRandomColor() }" />
-        
+        <Avatar :label="userInitial" class="mr-2" size="xlarge" shape="circle" />
+
         <h1>username: {{ userStore.selectedUser.username }}</h1> <!-- Hiển thị username -->
         <h1>username: {{ userStore.selectedUser.email }}</h1> <!-- Hiển thị username -->
-
-
 
         <CustomButton icon="user-plus" text="Thêm liên hệ" @click="toggleContactModal" />
         <CustomButton icon="user-group" text="Tạo nhóm" @click="toggleGroupModal" />
         <CustomButton icon="plus" text="Tham gia nhóm" @click="toggleJoinGroupModal" />
+        <CustomButton icon="clock-rotate-left" text="Lịch sử cuộc gọi" />
         <CustomButton @click="toggle()" :icon="isDark ? 'sun' : 'moon'" :text="isDark ? 'Light Mode' : 'Dark Mode'" />
         <CustomButton icon="right-from-bracket" text="Đăng xuất" @click="handleLogout" /> <!-- Gọi handleLogout -->
       </div>
