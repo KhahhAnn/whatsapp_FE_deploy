@@ -27,5 +27,6 @@ library.add(
   Icons.faBars,
   Icons.faRightFromBracket,
   Icons.faFaceSmile,
-  Icons.faClockRotateLeft
+  Icons.faClockRotateLeft,
+  Icons.faChevronDown
 )

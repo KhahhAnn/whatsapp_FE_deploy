@@ -62,8 +62,7 @@ function handleLogout() {
       <div v-if="userStore.selectedUser" class="flex flex-col justify-center items-center gap-4 px-4 py-8">
         <Avatar :label="userInitial" class="mr-2" size="xlarge" shape="circle" />
 
-        <h1>username: {{ userStore.selectedUser.username }}</h1> <!-- Hiển thị username -->
-        <h1>username: {{ userStore.selectedUser.email }}</h1> <!-- Hiển thị username -->
+        <h1 class="text-xl font-semibold">{{ userStore.selectedUser.username }}</h1>
 
         <CustomButton icon="user-plus" text="Thêm liên hệ" @click="toggleContactModal" />
         <CustomButton icon="user-group" text="Tạo nhóm" @click="toggleGroupModal" />
@@ -83,6 +82,6 @@ function handleLogout() {
       @update:isOpen="isCustomGroupModalOpen = $event" />
     <CustomModal title="Tham gia nhóm" placeholder="Tham gia nhóm" label="Tham gia nhóm"
       :isOpen="isCustomJoinGroupModalOpen" @update:isOpen="isCustomJoinGroupModalOpen = $event" />
-    <HistoryCallModal :isOpen="isHistoryCallModalOpen" @close="toggleHistoryCallModal" />
+    <HistoryCallModal :isOpen="isHistoryCallModalOpen" @update:isOpen="isHistoryCallModalOpen = $event" />
   </Teleport>
 </template>
