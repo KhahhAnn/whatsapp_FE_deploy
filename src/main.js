@@ -13,7 +13,7 @@ import WebSocketPlugin from './plugins/webSocket';
 const app = createApp(App)
 
 app.component('font-awesome-icon', FontAwesomeIcon)
-app.use(WebSocketPlugin, { url: 'ws://localhost:8082' });
+app.use(WebSocketPlugin, { url: 'ws://localhost:8081' });
 app.use(createPinia())
 app.use(router)
 app.use(ToastService)

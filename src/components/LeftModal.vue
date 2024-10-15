@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, ref, onMounted, computed } from 'vue'
+import { defineProps, ref, computed } from 'vue'
 import { useDark, useToggle } from '@vueuse/core'
 
 import CustomButton from './custom/CustomButton.vue'
@@ -43,12 +43,7 @@ function toggleHistoryCallModal() {
   isHistoryCallModalOpen.value = !isHistoryCallModalOpen.value
 }
 
-onMounted(() => {
-  const userId = localStorage.getItem('userId');
-  if (userId) {
-    userStore.getContactByUser(userId);
-  }
-});
+const username = localStorage.getItem('username');
 
 function handleLogout() {
   userStore.logoutUser() // Gọi hàm logoutUser từ userStore
@@ -62,7 +57,7 @@ function handleLogout() {
       <div v-if="userStore.selectedUser" class="flex flex-col justify-center items-center gap-4 px-4 py-8">
         <Avatar :label="userInitial" class="mr-2" size="xlarge" shape="circle" />
 
-        <h1 class="text-xl font-semibold">{{ userStore.selectedUser.username }}</h1>
+        <h1 class="text-xl font-semibold">{{ username }}</h1>
 
         <CustomButton icon="user-plus" text="Thêm liên hệ" @click="toggleContactModal" />
         <CustomButton icon="user-group" text="Tạo nhóm" @click="toggleGroupModal" />

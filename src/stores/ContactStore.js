@@ -1,12 +1,14 @@
-// ContactStore.js
 import { ref } from 'vue'
-// ContactStore.js
 import { defineStore } from 'pinia'
 import ContactService from '../services/ContactService.js'
 
 export const useContactStore = defineStore('contact', () => {
   const contacts = ref([])
-  const selectedUser = ref(null)
+  const selectedContact = ref(null)
+
+  function selectContact(contact) {
+    selectedContact.value = contact
+  }
 
   const getContactByUser = async (userId) => {
     try {
@@ -21,6 +23,7 @@ export const useContactStore = defineStore('contact', () => {
   return {
     contacts,
     getContactByUser,
-    selectedUser
+    selectedContact,
+    selectContact
   }
 })

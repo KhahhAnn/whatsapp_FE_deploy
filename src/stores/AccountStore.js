@@ -12,7 +12,6 @@ export const useUserStore = defineStore('user', () => {
     selectedUser.value = user
   }
 
-  // Thêm hàm để gọi handleLoginUser và lưu access token
   const loginUser = async (email, password, rememberMe) => {
     try {
       const response = await AccountService.handleLoginUser(email, password, rememberMe)
@@ -22,6 +21,7 @@ export const useUserStore = defineStore('user', () => {
         // Lưu access token vào localStorage
         localStorage.setItem('accessToken', response.data.accessToken)
         localStorage.setItem('userId', response.data.user.userId)
+        localStorage.setItem('username', response.data.user.username)
         return response.data // Trả về dữ liệu người dùng
       } else {
         console.error('No user data received')
@@ -64,7 +64,6 @@ export const useUserStore = defineStore('user', () => {
     selectedUser.value = null
     users.value = []
 
-    // Chuyển hướng về trang đăng nhập
     window.location.assign('/login')
   }
 
@@ -81,7 +80,7 @@ export const useUserStore = defineStore('user', () => {
   const getContactByUser = async (userId) => {
     try {
       const contacts = await ContactService.handleGetContactByUser(userId)
-      users.value = contacts // Assuming `users` is where you store the contacts
+      users.value = contacts
     } catch (error) {
       console.error('Failed to fetch contacts:', error)
     }

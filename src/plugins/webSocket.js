@@ -8,7 +8,6 @@ export default {
   
       connection.onclose = () => {
         console.log('Disconnected from WebSocket server');
-        // Để tái kết nối tự động, bạn có thể dùng setInterval hoặc cơ chế khác ở đây
       };
   
       connection.onerror = (error) => {
@@ -18,7 +17,7 @@ export default {
       // Cung cấp cho toàn bộ ứng dụng
       app.config.globalProperties.$socket = connection;
       
-      // Tuỳ chỉnh: Cung cấp thêm các phương thức để gửi/ nhận dữ liệu
+      // Các phương thức để gửi/ nhận dữ liệu
       app.config.globalProperties.$sendMessage = (data) => {
         connection.send(JSON.stringify(data));
       };
