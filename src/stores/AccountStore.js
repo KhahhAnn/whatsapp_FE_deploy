@@ -21,7 +21,7 @@ export const useUserStore = defineStore('user', () => {
         // Lưu access token vào localStorage
         localStorage.setItem('accessToken', response.data.accessToken)
         localStorage.setItem('userId', response.data.user.userId)
-        localStorage.setItem('username', response.data.user.username)
+        // localStorage.setItem('username', response.data.user.username)
         return response.data // Trả về dữ liệu người dùng
       } else {
         console.error('No user data received')

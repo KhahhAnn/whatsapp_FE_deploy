@@ -13,6 +13,18 @@ export default {
       connection.onerror = (error) => {
         console.error('WebSocket error:', error);
       };
+
+      // connection.onmessage = (message) => {
+      //   const parsedMessage = JSON.parse(message)
+
+      //   if (parsedMessage.type === 'receiveMessage') {
+      //     useMessageStore().addNewMessage(parsedMessage)
+      //   }
+      //   if (parsedMessage.type === 'markMessageAsSent') {
+      //     useMessageStore().markMessageAsSent(parsedMessage)
+      //   }
+      // }
+  
   
       // Cung cấp cho toàn bộ ứng dụng
       app.config.globalProperties.$socket = connection;

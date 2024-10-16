@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 
 import CustomIcon from './custom/CustomIcon.vue'
 import UserItems from './UserItems.vue'
@@ -11,17 +11,9 @@ const isSidebarOpen = ref(false)
 
 const selectUser = (user) => {
   userStore.selectUser(user)
+  // messageStore.openMessageFromUser(user)
   console.log(userStore.selectedUser.nickname)
 }
-
-onMounted(() => {
-  const userId = localStorage.getItem('userId');
-  if (userId) {
-    userStore.getUserDetail(userId);
-  }
-});
-
-
 
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value
