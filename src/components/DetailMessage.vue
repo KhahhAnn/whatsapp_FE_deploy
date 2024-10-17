@@ -6,8 +6,10 @@ import RightModal from './RightModal.vue'
 // import EmojiPicker from './EmojiPicker.vue'
 import Avatar from 'primevue/avatar'
 import { useUserStore } from '../stores/AccountStore'
+import { useMessageStore } from '../stores/MessageStore'
 
 const userStore = useUserStore()
+const messageStore = useMessageStore()
 const showEmojiPicker = ref(false);
 // const messageInput = ref(''); // Thêm biến để lưu trữ giá trị của CustomInput
 const isModalOpen = ref(false)
@@ -22,6 +24,7 @@ onMounted(() => {
   const userId = localStorage.getItem('userId');
   if (userId) {
     userStore.getContactByUser(userId);
+    // messageStore.getMessagesByUser(userId); // Fetch messages for the user
   }
 });
 
@@ -90,28 +93,26 @@ function toggleModal() {
       </template>
 
       <div v-else>
-        <!-- Incoming Message -->
-        <div class="flex mb-4 cursor-pointer">
-          <div class="w-9 h-9 rounded-full flex items-center justify-center mr-2">
-            <img src="https://placehold.co/200x/ffa8e4/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato" alt="User Avatar"
-              class="w-8 h-8 rounded-full" />
+        <div v-for="message in messageStore.messages" :key="message.messageId" class="flex mb-4 cursor-pointer">
+          <div v-if="message.senderId !== userStore.selectedUser.id" class="flex items-center">
+            <div class="w-9 h-9 rounded-full flex items-center justify-center mr-2">
+              <img src="https://placehold.co/200x/ffa8e4/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato" alt="User Avatar"
+                class="w-8 h-8 rounded-full" />
+            </div>
+            <div class="flex max-w-96 bg-white rounded-lg p-3 gap-3">
+              <p class="text-gray-700">{{ messageStore.messageDetails.content }}</p>
+            </div>
           </div>
-          <div class="flex max-w-96 bg-white rounded-lg p-3 gap-3">
-            <p class="text-gray-700">Hey Bob, how's it going?</p>
+          <div v-else class="flex justify-end">
+            <div class="flex max-w-96 bg-indigo-500 text-white rounded-lg p-3 gap-3">
+              <p>{{ messageStore.messageDetails.content }}</p>
+            </div>
+            <div class="w-9 h-9 rounded-full flex items-center justify-center ml-2">
+              <img src="https://placehold.co/200x/b7a8ff/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato" alt="My Avatar"
+                class="w-8 h-8 rounded-full" />
+            </div>
           </div>
         </div>
-
-        <!-- Outgoing Message -->
-        <div class="flex justify-end mb-4 cursor-pointer">
-          <div class="flex max-w-96 bg-indigo-500 text-white rounded-lg p-3 gap-3">
-            <p>Hi Alice! I'm good, just finished a great book. How about you?</p>
-          </div>
-          <div class="w-9 h-9 rounded-full flex items-center justify-center ml-2">
-            <img src="https://placehold.co/200x/b7a8ff/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato" alt="My Avatar"
-              class="w-8 h-8 rounded-full" />
-          </div>
-        </div>
-      
       </div>
     </div>
     <div class="flex justify-center items-end gap-2 px-4 py-2 border-t border-darkModeHover dark:border-lightModeHover">
