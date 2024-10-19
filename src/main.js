@@ -9,7 +9,6 @@ import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura'
 import ToastService from 'primevue/toastservice'
 import WebSocketPlugin from './plugins/webSocket';
-
 const app = createApp(App)
 
 app.component('font-awesome-icon', FontAwesomeIcon)

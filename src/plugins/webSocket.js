@@ -1,25 +1,41 @@
+import { ref, readonly } from 'vue';
+
 export default {
   install: (app, { url }) => {
-    const connection = new WebSocket(url)
+    const connection = new WebSocket(url);
+    const receivedMessages = ref([]);
 
     connection.onopen = () => {
-      console.log('Connected to WebSocket server:', url)
-    }
+      console.log('Connected to WebSocket server:', url);
+    };
 
     connection.onclose = () => {
-      console.log('Disconnected from WebSocket server')
-    }
+      console.log('Disconnected from WebSocket server');
+    };
 
     connection.onerror = (error) => {
-      console.error('WebSocket error:', error)
-    }
+      console.error('WebSocket error:', error);
+    };
 
-    // Cung cấp cho toàn bộ ứng dụng
-    app.config.globalProperties.$socket = connection
+    connection.onmessage = (event) => {
+      console.log('Message received:', event.data);
+      const message = JSON.parse(event.data);
+      receivedMessages.value.push(message);
+    };
 
-    // Các phương thức để gửi/ nhận dữ liệu
-    app.config.globalProperties.$sendMessage = (data) => {
-      connection.send(JSON.stringify(data))
-    }
+    app.config.globalProperties.$socket = {
+      sendMessage: (data) => {
+        if (connection.readyState === WebSocket.OPEN) {
+          connection.send(JSON.stringify(data));
+        }
+      },
+    };
+
+    app.provide('receivedMessages', readonly(receivedMessages));
+    app.provide('sendMessage', (data) => {
+      if (connection.readyState === WebSocket.OPEN) {
+        connection.send(JSON.stringify(data));
+      }
+    });
   }
 }
