@@ -1,11 +1,11 @@
 <script setup>
 import { ref, computed } from 'vue'
 
-import CustomIcon from './custom/CustomIcon.vue'
-import ThemeModal from './ThemeModal.vue'
-import NicknameModal from './NicknameModal.vue'
-import ButtonOption from './custom/CustomButton.vue'
-import { useUserStore } from '../stores/AccountStore'
+import CustomIcon from '../custom/CustomIcon.vue'
+import ThemeModal from '../modal/ThemeModal.vue'
+import NicknameModal from '../modal/NicknameModal.vue'
+import ButtonOption from '../custom/CustomButton.vue'
+import { useUserStore } from '../../stores/AccountStore'
 import Avatar from 'primevue/avatar'
 
 

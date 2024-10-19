@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 
 import CustomIcon from './custom/CustomIcon.vue'
-import RightModal from './RightModal.vue'
+import RightModal from './modal/RightModal.vue'
 // import EmojiPicker from './EmojiPicker.vue'
 import Avatar from 'primevue/avatar'
 import { useUserStore } from '../stores/AccountStore'

@@ -2,10 +2,11 @@
 import { defineProps, ref, computed, onMounted } from 'vue'
 import { useDark, useToggle } from '@vueuse/core'
 
-import CustomButton from './custom/CustomButton.vue'
-import CustomModal from './custom/CustomModal.vue'
+import CustomButton from '../custom/CustomButton.vue'
+import CustomModal from '../custom/CustomModal.vue'
 import HistoryCallModal from './HistoryCallModal.vue'
-import { useUserStore } from '../stores/AccountStore'
+import ContactModal from './ContactModal.vue'
+import { useUserStore } from '../../stores/AccountStore'
 
 import Avatar from 'primevue/avatar'
 
@@ -16,7 +17,7 @@ defineEmits(['close'])
 const userStore = useUserStore()
 const isDark = useDark()
 const toggle = useToggle(isDark)
-const isCustomContactModalOpen = ref(false)
+const isContactModalOpen = ref(false)
 const isCustomGroupModalOpen = ref(false)
 const isCustomJoinGroupModalOpen = ref(false)
 const isHistoryCallModalOpen = ref(false)
@@ -30,7 +31,7 @@ const userInitial = computed(() => {
 })
 
 function toggleContactModal() {
-  isCustomContactModalOpen.value = !isCustomContactModalOpen.value
+  isContactModalOpen.value = !isContactModalOpen.value
 }
 function toggleGroupModal() {
   isCustomGroupModalOpen.value = !isCustomGroupModalOpen.value
@@ -83,7 +84,7 @@ onMounted(() => {
         <CustomButton
           @click="toggle()"
           :icon="isDark ? 'sun' : 'moon'"
-          :text="isDark ? 'Light Mode' : 'Dark Mode'"
+          :text="isDark ? 'Chế độ sáng' : 'Chế độ tối'"
         />
         <CustomButton icon="right-from-bracket" text="Đăng xuất" @click="handleLogout" />
         <!-- Gọi handleLogout -->
@@ -91,12 +92,9 @@ onMounted(() => {
     </div>
   </Transition>
   <Teleport to="#app">
-    <CustomModal
-      title="Thêm liên hệ"
-      placeholder="Thêm liên hệ"
-      label="Thêm liên hệ"
-      :isOpen="isCustomContactModalOpen"
-      @update:isOpen="isCustomContactModalOpen = $event"
+    <ContactModal
+      :isOpen="isContactModalOpen"
+      @update:isOpen="isContactModalOpen = $event"
     />
     <CustomModal
       title="Tạo nhóm"

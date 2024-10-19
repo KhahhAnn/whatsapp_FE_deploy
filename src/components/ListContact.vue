@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 import CustomIcon from './custom/CustomIcon.vue'
 import UserItems from './UserItems.vue'
-import LeftModal from './LeftModal.vue'
+import LeftModal from './modal/LeftModal.vue'
 import { useUserStore } from '../stores/AccountStore'
 
 const userStore = useUserStore()
