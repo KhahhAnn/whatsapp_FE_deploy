@@ -4,15 +4,12 @@ import { ref } from 'vue'
 import CustomIcon from './custom/CustomIcon.vue'
 import UserItems from './UserItems.vue'
 import LeftModal from './modal/LeftModal.vue'
-import { useUserStore } from '../stores/AccountStore'
+import { useAccountStore } from '../stores/AccountStore'
 
-const userStore = useUserStore()
+const accountStore = useAccountStore()
 const isSidebarOpen = ref(false)
-
-const selectUser = (user) => {
-  userStore.selectUser(user)
-  // messageStore.openMessageFromUser(user)
-  console.log(userStore.selectedUser.nickname)
+const selectAccount = (account) => {
+  accountStore.selectAccount(account)
 }
 
 const toggleSidebar = () => {
@@ -31,7 +28,7 @@ const toggleSidebar = () => {
     </div>
 
     <!-- Skeleton loader for user items -->
-    <div :class="[isSidebarOpen ? 'hidden' : '']" v-if="userStore.users.length === 0"
+    <div :class="[isSidebarOpen ? 'hidden' : '']" v-if="accountStore.accounts.length === 0"
       class="grow overflow-auto scroll-smooth">
       <div v-for="i in 7" :key="i"
         class="flex items-center gap-4 p-4 border-darkModeHover dark:border-lightModeHover animate-pulse">
@@ -45,7 +42,7 @@ const toggleSidebar = () => {
 
     <LeftModal :is-open="isSidebarOpen" @close="toggleSidebar" />
     <div :class="[isSidebarOpen ? 'hidden' : '']" class="grow overflow-auto scroll-smooth">
-      <UserItems v-for="user in userStore.users" :key="user.id" :user="user" @click="selectUser(user)" />
+      <UserItems v-for="account in accountStore.accounts" :key="account.id" :account="account" @click="selectAccount(account)" />
     </div>
   </div>
 </template>

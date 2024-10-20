@@ -5,9 +5,9 @@ import CustomIcon from '../custom/CustomIcon.vue'
 import ThemeModal from '../modal/ThemeModal.vue'
 import NicknameModal from '../modal/NicknameModal.vue'
 import ButtonOption from '../custom/CustomButton.vue'
-import { useUserStore } from '../../stores/AccountStore'
+import { useAccountStore } from '../../stores/AccountStore'
 import Avatar from 'primevue/avatar'
-
+import { useDark } from '@vueuse/core'
 
 defineProps({
   isOpen: Boolean
@@ -15,9 +15,9 @@ defineProps({
 
 const isThemeModalOpen = ref(false)
 const isNicknameModalOpen = ref(false)
-const userStore = useUserStore()
-const isLoading = computed(() => !userStore.selectedUser)
-
+const accountStore = useAccountStore()
+const isLoading = computed(() => !accountStore.selectedAccount)
+const isDark = useDark()
 function toggleThemeModal() {
   isThemeModalOpen.value = !isThemeModalOpen.value
 }
@@ -27,8 +27,8 @@ function toggleNicknameModal() {
 }
 
 // Compute the first letter of the username
-const userInitial = computed(() => {
-  return userStore.selectedUser?.nickname?.charAt(0).toUpperCase() || '';
+const accountInitial = computed(() => {
+  return accountStore.selectedAccount?.nickname?.charAt(0).toUpperCase() || '';
 });
 
 </script>
@@ -46,9 +46,12 @@ const userInitial = computed(() => {
 
       <!-- User information -->
       <template v-else>
-        <Avatar :label="userInitial" class="mr-2" size="xlarge" shape="circle" />
-        <p>{{ userStore.selectedUser.name }}</p>
-        <p>{{ userStore.selectedUser.isActive ? 'Đang hoạt động' : 'Không hoạt động' }}</p>
+        <Avatar :label="accountInitial" class="mr-2" size="xlarge" shape="circle" :style="{
+          backgroundColor: isDark ? '#4B5563' : '#c0bab1',
+        }" />
+        <p>{{ accountStore.selectedAccount.nickname }}</p>
+        <!-- Trong contact không có trường isActive nên không thể xác định user hoạt động hay không -->
+        <!-- <p>{{ accountStore.selectedAccount.isActive ? 'Đang hoạt động' : 'Không hoạt động' }}</p> -->
       </template>
 
       <div class="flex gap-6">

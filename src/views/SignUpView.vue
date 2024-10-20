@@ -1,10 +1,10 @@
 <script setup>
 import { ref } from 'vue'
-import { useUserStore } from '../stores/AccountStore'
+import { useAccountStore } from '../stores/AccountStore'
 import Toast from 'primevue/toast';
 import { useToast } from 'primevue/usetoast';
 
-const userStore = useUserStore()
+const accountStore = useAccountStore()
 const email = ref('')
 const password = ref('')
 const confirmPassword = ref('')
@@ -17,15 +17,15 @@ const handleRegister = async () => {
   console.log(email)
   errorMessage.value = '' // Reset thông báo lỗi
   try {
-    const userData = await userStore.registerUser(
+    const accountData = await accountStore.registerAccount(
       username.value,
       email.value,
       password.value,
       phoneNumber.value
     )
-    if (userData) {
+    if (accountData) {
       // Chuyển hướng hoặc thực hiện hành động sau khi đăng nhập thành công
-      console.log('register successful:', userData)
+      console.log('register successful:', accountData)
       window.location.assign('/login')
     }
     else {

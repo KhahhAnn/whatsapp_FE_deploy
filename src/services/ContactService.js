@@ -20,7 +20,6 @@ const handleCreateContact = async (userId, contactUserId, nickname, status) => {
 const handleGetContactByUser = async (userId) => {
   try {
     const response = await apiClient.get(`/contact/contacts-user/${userId}`)
-    console.log('Dữ liệu người dùng nhận được:', response.data) // Log dữ liệu nhận được
     return response.data
   } catch (error) {
     console.error(

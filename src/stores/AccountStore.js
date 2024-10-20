@@ -1,27 +1,26 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import AccountService from '../services/AccountService.js'
-import UserService from '../services/UserService.js'
 import ContactService from '../services/ContactService.js'
 
-export const useUserStore = defineStore('user', () => {
-  const selectedUser = ref(null)
-  const users = ref([])
+export const useAccountStore = defineStore('account', () => {
+  const selectedAccount = ref(null)
+  const accounts = ref([])
 
-  function selectUser(user) {
-    selectedUser.value = user
+  function selectAccount(account) {
+    selectedAccount.value = account
   }
 
-  const loginUser = async (email, password, rememberMe) => {
+  const loginAccount = async (email, password, rememberMe) => {
     try {
       const response = await AccountService.handleLoginUser(email, password, rememberMe)
       if (response && response.data) {
         // Lưu thông tin người dùng vào store hoặc xử lý theo nhu cầu
-        users.value.push(response.data.user)
+        accounts.value.push(response.data.account)
         // Lưu access token vào localStorage
         localStorage.setItem('accessToken', response.data.accessToken)
         localStorage.setItem('userId', response.data.user.userId)
-        // localStorage.setItem('username', response.data.user.username)
+        // localStorage.setItem('username', response.data.account.username)
         return response.data // Trả về dữ liệu người dùng
       } else {
         console.error('No user data received')
@@ -31,7 +30,7 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-  const registerUser = async (username, email, password, phoneNumber) => {
+  const registerAccount = async (username, email, password, phoneNumber) => {
     try {
       const response = await AccountService.handleRegisterUser(
         username,
@@ -41,8 +40,7 @@ export const useUserStore = defineStore('user', () => {
       )
       if (response && response.data) {
         // Lưu thông tin người dùng vào store hoặc xử lý theo nhu cầu
-        users.value.push(response.data.user)
-        // Lưu access token vào localStorage
+        accounts.value.push(response.data.account)
         localStorage.setItem('accessToken', response.data.accessToken)
         return response.data // Trả về dữ liệu người dùng
       } else {
@@ -61,39 +59,28 @@ export const useUserStore = defineStore('user', () => {
     localStorage.removeItem('userId')
 
     // Cập nhật trạng thái người dùng
-    selectedUser.value = null
-    users.value = []
+    selectedAccount.value = null
+    accounts.value = []
 
     window.location.assign('/login')
-  }
-
-  const getUserDetail = async (userId) => {
-    try {
-      const user = await UserService.getUserDetail(userId)
-      selectedUser.value = user // Lưu thông tin người dùng vào store
-      console.log('Thông tin người dùng đã lấy:', selectedUser.value) // Log thông tin người dùng
-    } catch (error) {
-      console.error('Failed to fetch user detail:', error)
-    }
   }
 
   const getContactByUser = async (userId) => {
     try {
       const contacts = await ContactService.handleGetContactByUser(userId)
-      users.value = contacts
+      accounts.value = contacts
     } catch (error) {
       console.error('Failed to fetch contacts:', error)
     }
   }
 
   return {
-    selectedUser,
-    users,
-    selectUser,
-    loginUser,
-    registerUser,
+    selectedAccount,
+    accounts,
+    selectAccount,
+    loginAccount,
+    registerAccount,
     logoutUser,
-    getUserDetail,
     getContactByUser
   }
 })

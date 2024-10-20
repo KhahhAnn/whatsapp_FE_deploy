@@ -5,15 +5,16 @@ import CustomIcon from './custom/CustomIcon.vue'
 import RightModal from './modal/RightModal.vue'
 // import EmojiPicker from './EmojiPicker.vue'
 import Avatar from 'primevue/avatar'
-import { useUserStore } from '../stores/AccountStore'
+import { useAccountStore } from '../stores/AccountStore'
 import { useMessageStore } from '../stores/MessageStore'
-
-const userStore = useUserStore()
+import { useDark } from '@vueuse/core'
+const accountStore = useAccountStore()
 const messageStore = useMessageStore()
+const isDark = useDark()
 const showEmojiPicker = ref(false);
 // const messageInput = ref(''); // Thêm biến để lưu trữ giá trị của CustomInput
 const isModalOpen = ref(false)
-const isLoading = computed(() => !userStore.selectedUser)
+const isLoading = computed(() => !accountStore.selectedAccount)
 const imageUrl = ref(null);
 
 // function handleEmojiSelect(emoji) {
@@ -23,7 +24,7 @@ const imageUrl = ref(null);
 onMounted(() => {
   const userId = localStorage.getItem('userId');
   if (userId) {
-    userStore.getContactByUser(userId);
+    accountStore.getContactByUser(userId);
     // messageStore.getMessagesByUser(userId); // Fetch messages for the user
   }
 });
@@ -38,8 +39,8 @@ const handleFileChange = (event) => {
 };
 
 // Compute the first letter of the username
-const userInitial = computed(() => {
-  return userStore.selectedUser?.nickname?.charAt(0).toUpperCase() || '';
+const accountInitial = computed(() => {
+  return accountStore.selectedAccount?.nickname?.charAt(0).toUpperCase() || '';
 });
 
 function toggleModal() {
@@ -64,10 +65,13 @@ function toggleModal() {
 
       <!-- User information -->
       <div v-else class="flex items-center gap-4 select-none">
-        <Avatar :label="userInitial" class="mr-2" size="large" shape="circle" />
+        <Avatar :label="accountInitial" class="mr-2" size="large" shape="circle" :style="{
+          backgroundColor: isDark ? '#4B5563' : '#c0bab1',
+        }" />
         <div class="user-data text-darkMode dark:text-lightMode">
-          <h1>{{ userStore.selectedUser.nickname }}</h1>
-          <p>{{ userStore.selectedUser.isActive ? 'Đang hoạt động' : 'Không hoạt động' }}</p>
+          <h1>{{ accountStore.selectedAccount.nickname }}</h1>
+          <!-- Trong contact không có trường isActive nên không thể xác định user hoạt động hay không -->
+          <!-- <p>{{ accountStore.selectedAccount.isActive ? 'Đang hoạt động' : 'Không hoạt động' }}</p> -->
         </div>
       </div>
 
@@ -123,11 +127,9 @@ function toggleModal() {
         <input type="file" ref="fileInput" @change="handleFileChange" hidden multiple />
       </div>
       <CustomIcon icon="note-sticky" size="lg" />
-      <input
-        type="text"
+      <input type="text"
         class="w-full py-2 px-4 rounded-full bg-lightModeHover dark:bg-darkModeHover text-darkMode dark:text-lightMode placeholder-darkModeHover dark:placeholder-lightModeHover"
-        placeholder="Tìm kiếm"
-      />
+        placeholder="Tìm kiếm" />
       <button>
         <CustomIcon icon="paper-plane" size="lg" />
       </button>

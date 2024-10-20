@@ -18,18 +18,6 @@ import { defineProps, defineEmits, ref, computed } from 'vue'
 
 defineProps({
   isOpen: Boolean,
-  title: {
-    type: String,
-    required: true
-  },
-  placeholder: {
-    type: String,
-    required: true
-  },
-  label: {
-    type: String,
-    required: true
-  }
 })
 
 const contacts = ref([

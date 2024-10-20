@@ -1,23 +1,22 @@
 <script setup>
 import { ref } from 'vue'
-import { useUserStore } from '../stores/AccountStore'
+import { useAccountStore } from '../stores/AccountStore'
 import { RouterLink } from 'vue-router'
 import Toast from 'primevue/toast';
 import { useToast } from 'primevue/usetoast';
 
-const userStore = useUserStore()
+const accountStore = useAccountStore()
 const email = ref('')
 const password = ref('')
 const rememberMe = ref(false)
 const errorMessage = ref('')
-
 const toast = useToast();
 
 const handleLogin = async () => {
   try {
-    const userData = await userStore.loginUser(email.value, password.value, rememberMe.value)
-    if (userData) {
-      console.log('Login successful:', userData)
+    const accountData = await accountStore.loginAccount(email.value, password.value, rememberMe.value)
+    if (accountData) {
+      console.log('Login successful:', accountData)
       window.location.assign('/')
     }
     else {

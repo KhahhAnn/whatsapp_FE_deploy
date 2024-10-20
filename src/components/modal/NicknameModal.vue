@@ -186,7 +186,7 @@ function closeModal() {
                         <div class="mb-3">
                           <label for="username" class="form-label">Tên đăng nhập</label>
                           <input type="text" v-model="username" class="form-control" id="username"
-                            placeholder="Nhập tên đăng nhập" autofocus required />
+                            placeholder="Nhập tên đăng nhập" />
                         </div>
                         <button type="submit" class="btn btn-primary">Đăng nhập</button>
                       </form>

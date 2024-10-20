@@ -26,7 +26,6 @@ const handleCreateMessage = (senderId, receiverId, content, mediaUrl) => {
 const getMessageDetails = async (messageId) => {
   try {
     const response = await apiClient.get(`/message/${messageId}`)
-    console.log('Dữ liệu nhận được:', response.data); // Thêm log ở đây
     return response.data, 
     console.log('Done', response.data)
   } catch (error) {
