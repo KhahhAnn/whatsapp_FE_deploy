@@ -3,29 +3,22 @@ import { ref, computed, onMounted } from 'vue'
 
 import CustomIcon from './custom/CustomIcon.vue'
 import RightModal from './modal/RightModal.vue'
-// import EmojiPicker from './EmojiPicker.vue'
 import Avatar from 'primevue/avatar'
 import { useAccountStore } from '../stores/AccountStore'
-import { useMessageStore } from '../stores/MessageStore'
 import { useDark } from '@vueuse/core'
+
 const accountStore = useAccountStore()
-const messageStore = useMessageStore()
+// const messageStore = useMessageStore()
 const isDark = useDark()
 const showEmojiPicker = ref(false);
-// const messageInput = ref(''); // Thêm biến để lưu trữ giá trị của CustomInput
 const isModalOpen = ref(false)
 const isLoading = computed(() => !accountStore.selectedAccount)
 const imageUrl = ref(null);
-
-// function handleEmojiSelect(emoji) {
-//   messageInput.value += emoji; // Cập nhật giá trị của messageInput với emoji được chọn
-// }
 
 onMounted(() => {
   const userId = localStorage.getItem('userId');
   if (userId) {
     accountStore.getContactByUser(userId);
-    // messageStore.getMessagesByUser(userId); // Fetch messages for the user
   }
 });
 
@@ -38,7 +31,6 @@ const handleFileChange = (event) => {
   }
 };
 
-// Compute the first letter of the username
 const accountInitial = computed(() => {
   return accountStore.selectedAccount?.nickname?.charAt(0).toUpperCase() || '';
 });
@@ -97,19 +89,21 @@ function toggleModal() {
       </template>
 
       <div v-else>
-        <div v-for="message in messageStore.messages" :key="message.messageId" class="flex mb-4 cursor-pointer">
-          <div v-if="message.senderId !== userStore.selectedUser.id" class="flex items-center">
+        <div class="flex mb-4 cursor-pointer">
+          <!-- You -->
+          <div class="flex  items-start">
             <div class="w-9 h-9 rounded-full flex items-center justify-center mr-2">
               <img src="https://placehold.co/200x/ffa8e4/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato" alt="User Avatar"
                 class="w-8 h-8 rounded-full" />
             </div>
-            <div class="flex max-w-96 bg-white rounded-lg p-3 gap-3">
-              <p class="text-gray-700">{{ messageStore.messageDetails.content }}</p>
+            <div class="flex max-w-96 bg-gray-200 rounded-lg p-3 gap-3 shadow-md">
+              <p class="text-gray-800">Youuuuuuuuuuuuuuuuu</p>
             </div>
           </div>
-          <div v-else class="flex justify-end">
-            <div class="flex max-w-96 bg-indigo-500 text-white rounded-lg p-3 gap-3">
-              <p>{{ messageStore.messageDetails.content }}</p>
+          <!-- Me -->
+          <div class="flex justify-end ml-auto">
+            <div class="flex max-w-96 bg-indigo-500 text-white rounded-lg p-3 gap-3 shadow-md">
+              <p>ME</p>
             </div>
             <div class="w-9 h-9 rounded-full flex items-center justify-center ml-2">
               <img src="https://placehold.co/200x/b7a8ff/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato" alt="My Avatar"

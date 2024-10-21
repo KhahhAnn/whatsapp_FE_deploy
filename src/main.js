@@ -8,11 +8,15 @@ import './plugins/fontawesome'
 import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura'
 import ToastService from 'primevue/toastservice'
-import WebSocketPlugin from './plugins/webSocket';
+import { io } from 'socket.io-client';
 const app = createApp(App)
 
+const socket = io('http://localhost:8080');
+
+// Cung cấp socket instance trên toàn ứng dụng
+app.provide('socket', socket);
+
 app.component('font-awesome-icon', FontAwesomeIcon)
-app.use(WebSocketPlugin, { url: 'ws://localhost:8081' });
 app.use(createPinia())
 app.use(router)
 app.use(ToastService)
@@ -21,12 +25,5 @@ app.use(PrimeVue, {
     preset: Aura
   }
 })
-
-// socket.onmessage = (event) => {
-//     const message = JSON.parse(event.data);
-//     // Xử lý tin nhắn nhận được từ server
-//     console.log('Message received:', message);
-//     // Cập nhật giao diện người dùng hoặc lưu trữ tin nhắn
-// };
 
 app.mount('#app')
