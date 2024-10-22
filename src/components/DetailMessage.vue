@@ -1,19 +1,23 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-
 import CustomIcon from './custom/CustomIcon.vue'
 import RightModal from './modal/RightModal.vue'
 import Avatar from 'primevue/avatar'
 import { useAccountStore } from '../stores/AccountStore'
 import { useDark } from '@vueuse/core'
+// import socket from '@/plugins/webSocket'
+import { useSocketStore } from '../stores/SocketStore'
 
 const accountStore = useAccountStore()
 // const messageStore = useMessageStore()
 const isDark = useDark()
+const socketStore = useSocketStore()
 const showEmojiPicker = ref(false);
 const isModalOpen = ref(false)
 const isLoading = computed(() => !accountStore.selectedAccount)
 const imageUrl = ref(null);
+const message = ref('');
+
 
 onMounted(() => {
   const userId = localStorage.getItem('userId');
@@ -38,6 +42,12 @@ const accountInitial = computed(() => {
 function toggleModal() {
   isModalOpen.value = !isModalOpen.value
 }
+
+const sendMessage = () => {
+  socketStore.sendMessageStore(message.value)
+  console.log('message', message.value)
+}
+
 </script>
 
 <template>
@@ -91,13 +101,13 @@ function toggleModal() {
       <div v-else>
         <div class="flex mb-4 cursor-pointer">
           <!-- You -->
-          <div class="flex  items-start">
+          <div class="flex items-start">
             <div class="w-9 h-9 rounded-full flex items-center justify-center mr-2">
               <img src="https://placehold.co/200x/ffa8e4/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato" alt="User Avatar"
                 class="w-8 h-8 rounded-full" />
             </div>
             <div class="flex max-w-96 bg-gray-200 rounded-lg p-3 gap-3 shadow-md">
-              <p class="text-gray-800">Youuuuuuuuuuuuuuuuu</p>
+              <p class="text-gray-800">You</p> <!-- Hiển thị tin nhắn -->
             </div>
           </div>
           <!-- Me -->
@@ -122,9 +132,11 @@ function toggleModal() {
       </div>
       <CustomIcon icon="note-sticky" size="lg" />
       <input type="text"
+        v-model="message"
+        @keyup.enter="sendMessage"
         class="w-full py-2 px-4 rounded-full bg-lightModeHover dark:bg-darkModeHover text-darkMode dark:text-lightMode placeholder-darkModeHover dark:placeholder-lightModeHover"
-        placeholder="Tìm kiếm" />
-      <button>
+        placeholder="Aa" />
+      <button @click="sendMessage">
         <CustomIcon icon="paper-plane" size="lg" />
       </button>
     </div>

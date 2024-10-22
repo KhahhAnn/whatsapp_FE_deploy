@@ -8,8 +8,10 @@ import { useAccountStore } from '../stores/AccountStore'
 
 const accountStore = useAccountStore()
 const isSidebarOpen = ref(false)
+
 const selectAccount = (account) => {
   accountStore.selectAccount(account)
+  console.log(account.contactId)
 }
 
 const toggleSidebar = () => {
@@ -42,7 +44,8 @@ const toggleSidebar = () => {
 
     <LeftModal :is-open="isSidebarOpen" @close="toggleSidebar" />
     <div :class="[isSidebarOpen ? 'hidden' : '']" class="grow overflow-auto scroll-smooth">
-      <UserItems v-for="account in accountStore.accounts" :key="account.id" :account="account" @click="selectAccount(account)" />
+      <UserItems v-for="account in accountStore.accounts" :key="account ? account.id : null" :account="account"
+        @click="selectAccount(account)" />
     </div>
   </div>
 </template>

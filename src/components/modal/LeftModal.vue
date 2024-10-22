@@ -8,6 +8,7 @@ import HistoryCallModal from './HistoryCallModal.vue'
 import ContactModal from './ContactModal.vue'
 import { useUserStore } from '../../stores/UserStore'
 import { useAccountStore } from '../../stores/AccountStore'
+import { useSocketStore } from '../../stores/SocketStore'
 
 import Avatar from 'primevue/avatar'
 
@@ -19,6 +20,7 @@ const userStore = useUserStore()
 const accountStore = useAccountStore()
 const isDark = useDark()
 const toggle = useToggle(isDark)
+const socketStore = useSocketStore()
 const isContactModalOpen = ref(false)
 const isCustomGroupModalOpen = ref(false)
 const isCustomJoinGroupModalOpen = ref(false)
@@ -43,6 +45,7 @@ function toggleHistoryCallModal() {
 
 function handleLogout() {
   accountStore.logoutUser()
+  socketStore.disconnect()
 }
 
 onMounted(() => {

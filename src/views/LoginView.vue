@@ -4,20 +4,23 @@ import { useAccountStore } from '../stores/AccountStore'
 import { RouterLink } from 'vue-router'
 import Toast from 'primevue/toast';
 import { useToast } from 'primevue/usetoast';
+import router from '../router/router';
+import { useSocketStore } from '../stores/SocketStore'
 
 const accountStore = useAccountStore()
 const email = ref('')
 const password = ref('')
 const rememberMe = ref(false)
+const socketStore = useSocketStore()
 const errorMessage = ref('')
 const toast = useToast();
-
 const handleLogin = async () => {
   try {
     const accountData = await accountStore.loginAccount(email.value, password.value, rememberMe.value)
     if (accountData) {
       console.log('Login successful:', accountData)
-      window.location.assign('/')
+      socketStore.connect()
+      router.push('/')
     }
     else {
       toast.add({ severity: 'error', summary: 'Có lỗi xảy ra !', detail: 'Lỗi đăng nhập', life: 2000 });

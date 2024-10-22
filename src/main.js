@@ -8,13 +8,7 @@ import './plugins/fontawesome'
 import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura'
 import ToastService from 'primevue/toastservice'
-import { io } from 'socket.io-client';
 const app = createApp(App)
-
-const socket = io('http://localhost:8080');
-
-// Cung cấp socket instance trên toàn ứng dụng
-app.provide('socket', socket);
 
 app.component('font-awesome-icon', FontAwesomeIcon)
 app.use(createPinia())

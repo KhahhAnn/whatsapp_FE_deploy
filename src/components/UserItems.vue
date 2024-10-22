@@ -13,7 +13,7 @@ const props = defineProps({
 })
 
 const accountInitial = computed(() => {
-  return props.account.nickname?.charAt(0).toUpperCase() || '';
+  return props.account?.nickname?.charAt(0).toUpperCase() || '';
 });
 
 </script>
@@ -26,8 +26,8 @@ const accountInitial = computed(() => {
         backgroundColor: isDark ? '#4B5563' : '#c0bab1',
       }" />
 
-      <h1>{{ account.nickname }}</h1>
-      <p class="truncate max-w-[200px]">{{ account.message }}</p>
+      <h1>{{ account?.nickname }}</h1>
+      <p class="truncate max-w-[200px]">{{ account?.message }}</p>
     </div>
     <font-awesome-icon class="p-3 rounded-2xl dark:text-lightMode hover:bg-[#d3cdc4] dark:hover:bg-gray-500"
       icon="ellipsis-vertical" size="lg" />
