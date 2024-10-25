@@ -1,44 +1,50 @@
 // src/stores/useSocketStore.js
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import socket from '../plugins/webSocket' // Giả sử bạn đã có socket client
-import { useAccountStore } from './AccountStore'
+import socket from '../plugins/webSocket'
 
 export const useSocketStore = defineStore('socket', () => {
-  const isConnected = ref(false)
-  const accountStore = useAccountStore()
+  const isLoggedIn = ref(false)
 
   const connect = () => {
-    if (!isConnected.value && !socket.connected) {
-      //truyen userid tu localstorage vao socket
+    if (!isLoggedIn.value && !socket.connected) {
+      //Truyền userid từ localstorage vào socket để xác thực
       socket.auth = {
         userId: localStorage.getItem('userId')
       }
-      console.log('socket.auth', socket.auth)
+      console.log('Connect socket: ', socket.auth)
       socket.connect()
     }
   }
 
+  //Lắng nghe sự kiện kết nối socket
   socket.on('connect', () => {
-    isConnected.value = true
-    console.log('Socket connected')
+    isLoggedIn.value = true
   })
 
-  const sendMessageStore = (message) => {
-    console.log(accountStore.selectedAccount.contactId)
+  socket.on('getUsersOnline', (usersData) => {
+    console.log('Users online: ', usersData)
+  })
 
-    socket.emit('sendPrivateMessage', {
-      message: message,
-      to: accountStore.selectedAccount.contactId
-    })
+  socket.on('userJustConnected', (userData) => {
+    console.log('User just connected: ', userData)
+  })
 
-    console.log('message client', message)
-  }
+  socket.on('privateMessageToReceiver', ({ message, from }) => {
+    console.log('Received message: ', message, from)
+    // server -> socketio -> privateMessageToReceiver -> store -> component render
+    // load -> api -> store -> component
+    // messageStore.addMessage(message,from)
+  })
 
   socket.on('disconnect', () => {
-    isConnected.value = false
+    isLoggedIn.value = false
     console.log('Socket disconnected')
   })
 
-  return { isConnected, connect, sendMessageStore, disconnect: () => socket.disconnect() }
+  return {
+    isLoggedIn,
+    connect,
+    disconnect: () => socket.disconnect()
+  }
 })

@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onBeforeMount } from 'vue'
 
 import CustomIcon from './custom/CustomIcon.vue'
 import UserItems from './UserItems.vue'
@@ -11,12 +11,20 @@ const isSidebarOpen = ref(false)
 
 const selectAccount = (account) => {
   accountStore.selectAccount(account)
-  console.log(account.contactId)
+  console.log(account.contactUserId)
 }
 
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value
 }
+
+onBeforeMount(async () => {
+  const userId = localStorage.getItem('userId');
+  if (userId) {
+    await accountStore.getContactByUser(userId);
+    accountStore.selectAccount(accountStore.accounts[0])
+  }
+});
 </script>
 
 <template>
