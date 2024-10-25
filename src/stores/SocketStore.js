@@ -5,6 +5,7 @@ import socket from '../plugins/webSocket'
 
 export const useSocketStore = defineStore('socket', () => {
   const isLoggedIn = ref(false)
+  const messages = ref([]); // Danh sách tin nhắn
 
   const connect = () => {
     if (!isLoggedIn.value && !socket.connected) {
@@ -30,12 +31,27 @@ export const useSocketStore = defineStore('socket', () => {
     console.log('User just connected: ', userData)
   })
 
-  socket.on('privateMessageToReceiver', ({ message, from }) => {
-    console.log('Received message: ', message, from)
-    // server -> socketio -> privateMessageToReceiver -> store -> component render
-    // load -> api -> store -> component
-    // messageStore.addMessage(message,from)
-  })
+  const sendMessage = (message, from, to) => {
+    socket.emit('privateMessage', {
+      message,
+      from,
+      to
+    });
+    console.log('Send message: ', message, to);
+  }
+
+  const listenForMessages = () => {
+    socket.on('privateMessageToReceiver', ({ message, from }) => {
+      messages.value.push({ content: message, from }); // Thêm tin nhắn vào danh sách
+      console.log('Received message: ', message, from);
+      // server -> socketio -> privateMessageToReceiver -> store -> component render
+      // load -> api -> store -> component
+      // messageStore.addMessage(message,from)
+    });
+  };
+
+  // Gọi phương thức này khi khởi tạo store
+  listenForMessages();
 
   socket.on('disconnect', () => {
     isLoggedIn.value = false
@@ -45,6 +61,8 @@ export const useSocketStore = defineStore('socket', () => {
   return {
     isLoggedIn,
     connect,
-    disconnect: () => socket.disconnect()
+    sendMessage,
+    disconnect: () => socket.disconnect(),
+    messages // Thêm danh sách tin nhắn vào return
   }
 })

@@ -1,16 +1,17 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import CustomIcon from './custom/CustomIcon.vue'
 import RightModal from './modal/RightModal.vue'
+import { useDark } from '@vueuse/core'
 import Avatar from 'primevue/avatar'
 import { useAccountStore } from '../stores/AccountStore'
-import { useDark } from '@vueuse/core'
-// import { useSocketStore } from '../stores/SocketStore'
-import socketConnect from '@/plugins/webSocket'
+import { useUserStore } from '../stores/UserStore'
+import { useSocketStore } from '../stores/SocketStore'
 
 const accountStore = useAccountStore()
+const userStore = useUserStore()
 const isDark = useDark()
-// const socketStore = useSocketStore()
+const socketStore = useSocketStore()
 const isModalOpen = ref(false)
 const isLoading = computed(() => !accountStore.selectedAccount)
 
@@ -30,41 +31,26 @@ const accountInitial = computed(() => {
   return accountStore.selectedAccount?.nickname?.charAt(0).toUpperCase() || '';
 });
 
+const userInitial = computed(() => {
+  return userStore.selectedUser?.username?.charAt(0).toUpperCase() || ''
+})
+
+
 function toggleModal() {
   isModalOpen.value = !isModalOpen.value
 }
 
-// onMounted(() => {
-//   socketConnect.on('privateMessageToReceiver', ({ message, from }) => {
-//     console.log('Received private message: ', message, from)
-//   })
-// })
-
 const sendMessage = () => {
-  socketConnect.emit('privateMessage', {
-    message: message.value,
-    from: accountStore.selectedAccount.userId,
-    to: accountStore.selectedAccount.contactUserId
-  })
-  console.log('Send message: ', message.value, accountStore.selectedAccount.contactUserId)
+  socketStore.sendMessage(message.value, accountStore.selectedAccount.userId, accountStore.selectedAccount.contactUserId);
+  socketStore.messages.push({ content: message.value, from: accountStore.selectedAccount.userId }); // Thêm tin nhắn đã gửi vào danh sách
   message.value = ''
 }
-
-// const sendMessage = () => {
-//   const msg = { content: message.value, reviceId: accountStore.selectedAccount.contactUserId, reviceName: accountStore.selectedAccount.nickname };
-//   sendChat.value.push(msg);
-//   socketStore.sendMessageStore(msg);
-//   socketStore.receiveMessageStore(msg);
-//   message.value = ''; // Xóa nội dung tin nhắn sau khi gửi
-// }
 
 </script>
 
 <template>
-  <div :class="[
-    'flex flex-col justify-between h-[calc(100vh-32px)] rounded-3xl shadow-2xl bg-lightMode dark:text-lightMode dark:bg-darkMode',
-    isModalOpen ? 'w-1/2' : 'w-3/4'
-  ]">
+  <div
+    :class="['flex flex-col justify-between h-[calc(100vh-32px)] rounded-3xl shadow-2xl bg-lightMode dark:text-lightMode dark:bg-darkMode ', isModalOpen ? 'w-1/2' : 'w-3/4']">
     <div class="flex justify-between items-center p-4 border-b border-darkModeHover dark:border-lightModeHover">
       <!-- Skeleton loader for user info -->
       <div v-if="isLoading" class="flex items-center gap-4">
@@ -77,13 +63,10 @@ const sendMessage = () => {
 
       <!-- User information -->
       <div v-else class="flex items-center gap-4 select-none">
-        <Avatar :label="accountInitial" class="mr-2" size="large" shape="circle" :style="{
-          backgroundColor: isDark ? '#4B5563' : '#c0bab1',
-        }" />
+        <Avatar :label="accountInitial" class="mr-2" size="large" shape="circle"
+          :style="{ backgroundColor: isDark ? '#4B5563' : '#c0bab1' }" />
         <div class="user-data text-darkMode dark:text-lightMode">
           <h1>{{ accountStore.selectedAccount.nickname }}</h1>
-          <!-- Trong contact không có trường isActive nên không thể xác định user hoạt động hay không -->
-          <!-- <p>{{ accountStore.selectedAccount.isActive ? 'Đang hoạt động' : 'Không hoạt động' }}</p> -->
         </div>
       </div>
 
@@ -97,11 +80,7 @@ const sendMessage = () => {
       </div>
     </div>
 
-    <div :class="[
-      'flex flex-col-reverse overflow-auto p-4',
-      isLoading ? '' : 'bg-custom-pattern' // Chỉ áp dụng lớp nền khi không đang tải
-    ]">
-      <!-- Skeleton loader for messages -->
+    <div :class="['flex flex-col-reverse overflow-auto p-4', isLoading ? '' : 'bg-custom-pattern']">
       <template v-if="isLoading">
         <div v-for="i in 5" :key="i" class="flex mb-4" :class="i % 2 === 0 ? 'justify-end' : ''">
           <div class="w-3/4 h-16 bg-gray-300 dark:bg-gray-700 rounded-lg animate-pulse"></div>
@@ -109,30 +88,23 @@ const sendMessage = () => {
       </template>
 
       <div v-else>
-        <!-- Incoming Message -->
-        <div class="flex mb-4 cursor-pointer">
-          <div class="w-9 h-9 rounded-full flex items-center justify-center mr-2">
-            <img src="https://placehold.co/200x/ffa8e4/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato" alt="User Avatar"
-              class="w-8 h-8 rounded-full" />
-          </div>
-          <div class="flex max-w-96 bg-white rounded-lg p-3 gap-3">
-            <p class="text-gray-700">YOU</p>
-          </div>
-        </div>
-
-        <!-- Outgoing Message -->
-        <div class="flex justify-end mb-4 cursor-pointer">
-          <div class="flex max-w-96 bg-indigo-500 text-white rounded-lg p-3 gap-3">
-            <p>ME</p>
+        <!-- Hiển thị tin nhắn -->
+        <div v-for="msg in socketStore.messages" :key="msg.content" class="flex mb-4 "
+          :class="msg.from === accountStore.selectedAccount.userId ? 'justify-end' : ''">
+          <div class="flex max-w-96 rounded-2xl px-3 py-1"
+            :class="msg.from === accountStore.selectedAccount.userId ? 'bg-lightModeHover dark:bg-darkModeHover' : 'bg-lightModeHover dark:bg-darkModeHover text-darkMode dark:text-lightMode'">
+            <p class="text-darkMode dark:text-lightMode">{{ msg.content }}</p>
           </div>
           <div class="w-9 h-9 rounded-full flex items-center justify-center ml-2">
-            <img src="https://placehold.co/200x/b7a8ff/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato" alt="My Avatar"
-              class="w-8 h-8 rounded-full" />
+            <Avatar v-if="msg.from === accountStore.selectedAccount.userId" :label="userInitial" size="small"
+              shape="circle" :style="{ backgroundColor: isDark ? '#4B5563' : '#c0bab1' }" />
+            <Avatar v-else :label="accountInitial" size="small" shape="circle"
+              :style="{ backgroundColor: isDark ? '#4B5563' : '#c0bab1' }" />
           </div>
         </div>
-
       </div>
     </div>
+
     <div class="flex justify-center items-end gap-2 px-4 py-2 border-t border-darkModeHover dark:border-lightModeHover">
       <CustomIcon icon="face-smile" size="lg" />
       <div>
