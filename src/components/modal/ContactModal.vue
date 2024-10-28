@@ -14,9 +14,12 @@ const userStore = useUserStore() // Khởi tạo store
 const searchQuery = ref('') // Biến để lưu trữ giá trị tìm kiếm
 
 // Theo dõi sự thay đổi của props.isOpen
-watch(() => props.isOpen, async (newValue) => {
-  if (newValue) { // Kiểm tra nếu modal mở
-    await userStore.getAllUsers(); // Lấy tất cả người dùng
+watch(() => props.isOpen, async (newValue, oldValue) => {
+  if (newValue && !oldValue) { // Kiểm tra khi modal mở từ trạng thái đóng
+    // Chỉ gọi getAllUsers nếu users là rỗng hoặc bạn muốn cập nhật theo lịch cụ thể
+    if (userStore.users.length === 0) {
+      await userStore.getAllUsers();
+    }
   }
 });
 
@@ -61,6 +64,9 @@ function closeModal() {
                       }" />
                     <div class="flex flex-col justify-center items-start ml-4">
                       <div class="text-sm font-semibold">{{ user.username }}</div> <!-- Hiển thị tên người dùng -->
+                      <div class="text-xs" :class="{ 'text-green-500': user.isOnline, 'text-red-500': !user.isOnline }">
+                        {{ user.isOnline ? 'Đang hoạt động' : 'Không hoạt động' }}
+                      </div> <!-- Hiển thị trạng thái người dùng -->
                     </div>
                   </div>
                 </div>

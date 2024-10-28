@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import UserService from '../services/UserService.js'
-
+import socket from '../plugins/webSocket.js'
 export const useUserStore = defineStore('users', () => {
   const selectedUser = ref(null)
   const users = ref([])
@@ -27,6 +27,18 @@ export const useUserStore = defineStore('users', () => {
       console.error('Failed to fetch users:', error)
     }
   }
+
+  const updateUserStatus = (userId, isOnline) => {
+    const user = users.value.find(user => user.userId === userId);
+    if (user) {
+      user.isOnline = isOnline; // Cập nhật trạng thái
+    }
+  };
+  
+  // Lắng nghe sự kiện từ server
+  socket.on("userStatusUpdate", ({ userId, isOnline }) => {
+    updateUserStatus(userId, isOnline);
+  });
 
   return {
     selectedUser,

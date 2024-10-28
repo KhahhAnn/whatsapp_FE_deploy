@@ -88,21 +88,23 @@ const sendMessage = () => {
       </template>
 
       <div v-else>
-        <!-- Hiển thị tin nhắn -->
-        <div v-for="msg in socketStore.messages" :key="msg.content" class="flex mb-4 "
-          :class="msg.from === accountStore.selectedAccount.userId ? 'justify-end' : ''">
-          <div class="flex max-w-96 rounded-2xl px-3 py-1"
-            :class="msg.from === accountStore.selectedAccount.userId ? 'bg-lightModeHover dark:bg-darkModeHover' : 'bg-lightModeHover dark:bg-darkModeHover text-darkMode dark:text-lightMode'">
-            <p class="text-darkMode dark:text-lightMode">{{ msg.content }}</p>
-          </div>
-          <div class="w-9 h-9 rounded-full flex items-center justify-center ml-2">
-            <Avatar v-if="msg.from === accountStore.selectedAccount.userId" :label="userInitial" size="small"
-              shape="circle" :style="{ backgroundColor: isDark ? '#4B5563' : '#c0bab1' }" />
-            <Avatar v-else :label="accountInitial" size="small" shape="circle"
-              :style="{ backgroundColor: isDark ? '#4B5563' : '#c0bab1' }" />
-          </div>
-        </div>
-      </div>
+  <!-- Hiển thị tin nhắn -->
+  <div v-for="msg in socketStore.messages" :key="msg.content" class="flex mb-4"
+    :class="msg.from === accountStore.selectedAccount.userId ? 'justify-end' : 'flex-row-reverse justify-end'">
+    <div class="flex flex-col max-w-full overflow-hidden rounded-2xl px-3 py-1"
+      :class="msg.from === accountStore.selectedAccount.userId ? 'bg-lightModeHover dark:bg-darkModeHover' : 'bg-lightModeHover dark:bg-darkModeHover text-darkMode dark:text-lightMode'">
+      <!-- Thêm break-words và max-w-xs cấu hình lại thành min-w-0 và w-full để kéo dài tối đa hoặc dung lượng tùy theo nội dung -->
+      <p class="text-darkMode dark:text-lightMode break-words min-w-0 w-full">{{ msg.content }}</p>
+    </div>
+    <div class="w-9 h-9 rounded-full flex items-center justify-center ml-2 mr-2">
+      <Avatar v-if="msg.from === accountStore.selectedAccount.userId" :label="userInitial" size="small"
+        shape="circle" :style="{ backgroundColor: isDark ? '#4B5563' : '#c0bab1' }" />
+      <Avatar v-else :label="accountInitial" size="small" shape="circle"
+        :style="{ backgroundColor: isDark ? '#4B5563' : '#c0bab1' }" />
+    </div>
+  </div>
+</div>
+
     </div>
 
     <div class="flex justify-center items-end gap-2 px-4 py-2 border-t border-darkModeHover dark:border-lightModeHover">
