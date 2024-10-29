@@ -1,27 +1,19 @@
 import apiClient from '../api/api'
 
-const handleCreateMessage = (senderId, receiverId, content, mediaUrl) => {
+const handleCreateMessage = async (senderId, receiverId, content, mediaUrl) => {
   try {
-    return apiClient.post(`/create`, {
-      senderId: senderId,
-      receiverId: receiverId,
-      content: content,
-      mediaUrl: mediaUrl
-    })
+    const response = await apiClient.post('/message/create', {
+      senderId,
+      receiverId,
+      content,
+      mediaUrl,
+    });
+    return response.data;
   } catch (error) {
-    console.error(error)
+    console.error('Error creating message:', error);
+    throw error;
   }
-}
-
-// const handleGetMessageDetails = (messageId) => {
-//   try {
-//     return apiClient.get(`/message/${messageId}`, {
-//       messageId: messageId
-//     })
-//   } catch (error) {
-//     console.error(error)
-//   }
-// }
+};
 
 const getMessageDetails = async (messageId) => {
   try {
@@ -34,18 +26,7 @@ const getMessageDetails = async (messageId) => {
   }
 }
 
-// const handleGetMessageByUser = (userId) => {
-//   try {
-//     return apiClient.get(`/messages-user/${userId}`, {
-//       userId: userId
-//     })
-//   } catch (error) {
-//     console.error(error)
-//   }
-// }
-
 export default {
   handleCreateMessage,
   getMessageDetails,
-  // handleGetMessageByUser
 }

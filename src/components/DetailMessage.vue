@@ -7,7 +7,7 @@ import Avatar from 'primevue/avatar'
 import { useAccountStore } from '../stores/AccountStore'
 import { useUserStore } from '../stores/UserStore'
 import { useSocketStore } from '../stores/SocketStore'
-
+import MessageService from '../services/MessageService'
 const accountStore = useAccountStore()
 const userStore = useUserStore()
 const isDark = useDark()
@@ -40,11 +40,16 @@ function toggleModal() {
   isModalOpen.value = !isModalOpen.value
 }
 
-const sendMessage = () => {
-  socketStore.sendMessage(message.value, accountStore.selectedAccount.userId, accountStore.selectedAccount.contactUserId);
-  socketStore.messages.push({ content: message.value, from: accountStore.selectedAccount.userId }); // Thêm tin nhắn đã gửi vào danh sách
-  message.value = ''
-}
+const sendMessage = async () => {
+  try {
+    await socketStore.sendMessage(message.value, accountStore.selectedAccount.userId, accountStore.selectedAccount.contactUserId);
+    await MessageService.handleCreateMessage(accountStore.selectedAccount.userId, accountStore.selectedAccount.contactUserId, message.value);
+    socketStore.messages.push({ content: message.value, from: accountStore.selectedAccount.userId });
+    message.value = '';
+  } catch (error) {
+    console.error('Error sending message:', error);
+  }
+};
 
 </script>
 

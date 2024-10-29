@@ -7,11 +7,12 @@ import { useSocketStore } from '../stores/SocketStore'
 import { useAccountStore } from '../stores/AccountStore'
 
 const accountStore = useAccountStore()
+const socketStore = useSocketStore()
 
 let socket;
 
 onMounted(() => {
-  useSocketStore().connect()
+  socketStore.connect()
 });
 
 onBeforeUnmount(() => {
