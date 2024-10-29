@@ -14,6 +14,16 @@ export const useMessageStore = defineStore('message', () => {
     }
   };
 
+  const fetchMessagesBetweenUsers = async (senderId, receiverId) => {
+    try {
+      const fetchedMessages = await MessageService.getMessagesBetweenUsers(senderId, receiverId);
+      messages.value = fetchedMessages; // Cập nhật danh sách tin nhắn
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+    }
+  };
+  
+
   function addMessage(message) {
     messages.value.push(message);
   }
@@ -22,5 +32,6 @@ export const useMessageStore = defineStore('message', () => {
     messages,
     addMessage,
     fetchMessagesByUser, // Thêm phương thức này
+    fetchMessagesBetweenUsers, // Thêm phương thức này
   };
 });

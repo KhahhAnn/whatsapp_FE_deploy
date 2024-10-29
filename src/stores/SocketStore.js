@@ -2,11 +2,13 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import socket from '../plugins/webSocket'
+import { useMessageStore } from './MessageStore'
+
 
 export const useSocketStore = defineStore('socket', () => {
   const isLoggedIn = ref(false)
   const messages = ref([]); // Danh sách tin nhắn
-
+  const messageStore = useMessageStore();
   const connect = () => {
     if (!isLoggedIn.value && !socket.connected) {
       //Truyền userid từ localstorage vào socket để xác thực
@@ -40,13 +42,21 @@ export const useSocketStore = defineStore('socket', () => {
     console.log('Send message: ', message, to);
   }
 
+  // const listenForMessages = () => {
+  //   socket.on('privateMessageToReceiver', ({ message, from }) => {
+  //     messages.value.push({ content: message, from }); // Thêm tin nhắn vào danh sách
+  //     console.log('Received message: ', message, from);
+  //     // server -> socketio -> privateMessageToReceiver -> store -> component render
+  //     // load -> api -> store -> component
+  //     // messageStore.addMessage(message,from)
+  //   });
+  // };
+
   const listenForMessages = () => {
     socket.on('privateMessageToReceiver', ({ message, from }) => {
       messages.value.push({ content: message, from }); // Thêm tin nhắn vào danh sách
+      messageStore.addMessage({ content: message, from }); // Cập nhật vào MessageStore
       console.log('Received message: ', message, from);
-      // server -> socketio -> privateMessageToReceiver -> store -> component render
-      // load -> api -> store -> component
-      // messageStore.addMessage(message,from)
     });
   };
 

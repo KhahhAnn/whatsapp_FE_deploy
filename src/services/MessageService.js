@@ -36,8 +36,19 @@ const getMessagesByUser = async (userId) => {
   }
 };
 
+const getMessagesBetweenUsers = async (senderId, receiverId) => {
+  try {
+    const response = await apiClient.get(`/message/messages-between/${senderId}/${receiverId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching messages:', error);
+    throw error;
+  }
+};
+
 export default {
   handleCreateMessage,
   getMessageDetails,
-  getMessagesByUser, // Thêm phương thức này
+  getMessagesByUser,
+  getMessagesBetweenUsers, // Thêm phương thức này
 };

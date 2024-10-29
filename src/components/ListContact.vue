@@ -11,6 +11,7 @@ const isSidebarOpen = ref(false)
 
 const selectAccount = (account) => {
   accountStore.selectAccount(account)
+  accountStore.selectedAccount.contactUserId = account.contactUserId; // Cập nhật contactUserId
   console.log(account.contactUserId)
 }
 

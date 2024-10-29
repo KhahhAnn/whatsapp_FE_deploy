@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import CustomIcon from './custom/CustomIcon.vue'
 import RightModal from './modal/RightModal.vue'
 import { useDark } from '@vueuse/core'
@@ -43,23 +43,34 @@ function toggleModal() {
   isModalOpen.value = !isModalOpen.value
 }
 
+// Gọi API để lấy tin nhắn khi component được khởi tạo
+onMounted(() => {
+  const senderId = accountStore.selectedAccount.userId;
+  const receiverId = accountStore.selectedAccount.contactUserId;
+
+  if (receiverId) {
+    messageStore.fetchMessagesBetweenUsers(senderId, receiverId);
+  }
+});
+
+// Theo dõi sự thay đổi của contactUserId
+watch(() => accountStore.selectedAccount.contactUserId, (newContactId) => {
+  if (newContactId) {
+    const senderId = accountStore.selectedAccount.userId;
+    messageStore.fetchMessagesBetweenUsers(senderId, newContactId);
+  }
+});
+
 const sendMessage = async () => {
   try {
     await socketStore.sendMessage(message.value, accountStore.selectedAccount.userId, accountStore.selectedAccount.contactUserId);
     await MessageService.handleCreateMessage(accountStore.selectedAccount.userId, accountStore.selectedAccount.contactUserId, message.value);
-    socketStore.messages.push({ content: message.value, from: accountStore.selectedAccount.userId });
+    messageStore.addMessage({ content: message.value, from: accountStore.selectedAccount.userId, messageId: Date.now() }); // Tạo messageId tạm thời hoặc sử dụng UUID
     message.value = '';
   } catch (error) {
     console.error('Error sending message:', error);
   }
 };
-
-// Gọi API để lấy tin nhắn khi component được khởi tạo
-onMounted(() => {
-  const userId = accountStore.selectedAccount.userId;
-  messageStore.fetchMessagesByUser(userId);
-});
-
 </script>
 
 <template>
@@ -101,7 +112,7 @@ onMounted(() => {
 
       <div v-else>
         <!-- Hiển thị tin nhắn -->
-        <div v-for="msg in messageStore.messages" :key="msg.messageId" class="flex mb-4"
+        <div v-for="msg in messageStore.messages.slice().reverse()" :key="msg.messageId" class="flex mb-4"
           :class="msg.senderId === accountStore.selectedAccount.userId ? 'justify-end' : 'flex-row-reverse justify-end'">
           <div class="flex flex-col max-w-full overflow-hidden rounded-2xl px-3 py-1"
             :class="msg.senderId === accountStore.selectedAccount.userId ? 'bg-lightModeHover dark:bg-darkModeHover' : 'bg-lightModeHover dark:bg-darkModeHover text-darkMode dark:text-lightMode'">
