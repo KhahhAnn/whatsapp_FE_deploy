@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import CustomIcon from './custom/CustomIcon.vue'
 import RightModal from './modal/RightModal.vue'
 import { useDark } from '@vueuse/core'
@@ -7,11 +7,14 @@ import Avatar from 'primevue/avatar'
 import { useAccountStore } from '../stores/AccountStore'
 import { useUserStore } from '../stores/UserStore'
 import { useSocketStore } from '../stores/SocketStore'
+import { useMessageStore } from '../stores/MessageStore'
 import MessageService from '../services/MessageService'
+
 const accountStore = useAccountStore()
 const userStore = useUserStore()
 const isDark = useDark()
 const socketStore = useSocketStore()
+const messageStore = useMessageStore()
 const isModalOpen = ref(false)
 const isLoading = computed(() => !accountStore.selectedAccount)
 
@@ -51,13 +54,18 @@ const sendMessage = async () => {
   }
 };
 
+// Gọi API để lấy tin nhắn khi component được khởi tạo
+onMounted(() => {
+  const userId = accountStore.selectedAccount.userId;
+  messageStore.fetchMessagesByUser(userId);
+});
+
 </script>
 
 <template>
   <div
     :class="['flex flex-col justify-between h-[calc(100vh-32px)] rounded-3xl shadow-2xl bg-lightMode dark:text-lightMode dark:bg-darkMode ', isModalOpen ? 'w-1/2' : 'w-3/4']">
     <div class="flex justify-between items-center p-4 border-b border-darkModeHover dark:border-lightModeHover">
-      <!-- Skeleton loader for user info -->
       <div v-if="isLoading" class="flex items-center gap-4">
         <div class="w-14 h-14 rounded-full bg-gray-300 dark:bg-gray-700 animate-pulse"></div>
         <div class="space-y-2">
@@ -66,7 +74,6 @@ const sendMessage = async () => {
         </div>
       </div>
 
-      <!-- User information -->
       <div v-else class="flex items-center gap-4 select-none">
         <Avatar :label="accountInitial" class="mr-2" size="large" shape="circle"
           :style="{ backgroundColor: isDark ? '#4B5563' : '#c0bab1' }" />
@@ -93,23 +100,21 @@ const sendMessage = async () => {
       </template>
 
       <div v-else>
-  <!-- Hiển thị tin nhắn -->
-  <div v-for="msg in socketStore.messages" :key="msg.content" class="flex mb-4"
-    :class="msg.from === accountStore.selectedAccount.userId ? 'justify-end' : 'flex-row-reverse justify-end'">
-    <div class="flex flex-col max-w-full overflow-hidden rounded-2xl px-3 py-1"
-      :class="msg.from === accountStore.selectedAccount.userId ? 'bg-lightModeHover dark:bg-darkModeHover' : 'bg-lightModeHover dark:bg-darkModeHover text-darkMode dark:text-lightMode'">
-      <!-- Thêm break-words và max-w-xs cấu hình lại thành min-w-0 và w-full để kéo dài tối đa hoặc dung lượng tùy theo nội dung -->
-      <p class="text-darkMode dark:text-lightMode break-words min-w-0 w-full">{{ msg.content }}</p>
-    </div>
-    <div class="w-9 h-9 rounded-full flex items-center justify-center ml-2 mr-2">
-      <Avatar v-if="msg.from === accountStore.selectedAccount.userId" :label="userInitial" size="small"
-        shape="circle" :style="{ backgroundColor: isDark ? '#4B5563' : '#c0bab1' }" />
-      <Avatar v-else :label="accountInitial" size="small" shape="circle"
-        :style="{ backgroundColor: isDark ? '#4B5563' : '#c0bab1' }" />
-    </div>
-  </div>
-</div>
-
+        <!-- Hiển thị tin nhắn -->
+        <div v-for="msg in messageStore.messages" :key="msg.messageId" class="flex mb-4"
+          :class="msg.senderId === accountStore.selectedAccount.userId ? 'justify-end' : 'flex-row-reverse justify-end'">
+          <div class="flex flex-col max-w-full overflow-hidden rounded-2xl px-3 py-1"
+            :class="msg.senderId === accountStore.selectedAccount.userId ? 'bg-lightModeHover dark:bg-darkModeHover' : 'bg-lightModeHover dark:bg-darkModeHover text-darkMode dark:text-lightMode'">
+            <p class="text-darkMode dark:text-lightMode break-words min-w-0 w-full">{{ msg.content }}</p>
+          </div>
+          <div class="w-9 h-9 rounded-full flex items-center justify-center ml-2 mr-2">
+            <Avatar v-if="msg.senderId === accountStore.selectedAccount.userId" :label="userInitial" size="small"
+              shape="circle" :style="{ backgroundColor: isDark ? '#4B5563' : '#c0bab1' }" />
+            <Avatar v-else :label="accountInitial" size="small" shape="circle"
+              :style="{ backgroundColor: isDark ? '#4B5563' : '#c0bab1' }" />
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="flex justify-center items-end gap-2 px-4 py-2 border-t border-darkModeHover dark:border-lightModeHover">

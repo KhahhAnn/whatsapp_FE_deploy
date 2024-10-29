@@ -26,7 +26,18 @@ const getMessageDetails = async (messageId) => {
   }
 }
 
+const getMessagesByUser = async (userId) => {
+  try {
+    const response = await apiClient.get(`/message/messages-user/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching messages:', error);
+    throw error;
+  }
+};
+
 export default {
   handleCreateMessage,
   getMessageDetails,
-}
+  getMessagesByUser, // Thêm phương thức này
+};
