@@ -4,11 +4,10 @@ import { defineStore } from 'pinia'
 import socket from '../plugins/webSocket'
 import { useMessageStore } from './MessageStore'
 
-
 export const useSocketStore = defineStore('socket', () => {
   const isLoggedIn = ref(false)
-  const messages = ref([]); // Danh sách tin nhắn
-  const messageStore = useMessageStore();
+  const messages = ref([]) // Danh sách tin nhắn
+  const messageStore = useMessageStore()
   const connect = () => {
     if (!isLoggedIn.value && !socket.connected) {
       //Truyền userid từ localstorage vào socket để xác thực
@@ -38,8 +37,8 @@ export const useSocketStore = defineStore('socket', () => {
       message,
       from,
       to
-    });
-    console.log('Send message: ', message, to);
+    })
+    console.log('Send message: ', message, to)
   }
 
   // const listenForMessages = () => {
@@ -54,14 +53,14 @@ export const useSocketStore = defineStore('socket', () => {
 
   const listenForMessages = () => {
     socket.on('privateMessageToReceiver', ({ message, from }) => {
-      messages.value.push({ content: message, from }); // Thêm tin nhắn vào danh sách
-      messageStore.addMessage({ content: message, from }); // Cập nhật vào MessageStore
-      console.log('Received message: ', message, from);
-    });
-  };
+      messages.value.push({ content: message, from }) // Thêm tin nhắn vào danh sách
+      messageStore.addMessage({ content: message, from }) // Cập nhật vào MessageStore
+      console.log('Received message: ', message, from)
+    })
+  }
 
   // Gọi phương thức này khi khởi tạo store
-  listenForMessages();
+  listenForMessages()
 
   socket.on('disconnect', () => {
     isLoggedIn.value = false

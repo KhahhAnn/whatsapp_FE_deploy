@@ -18,26 +18,25 @@ const messageStore = useMessageStore()
 const isModalOpen = ref(false)
 const isLoading = computed(() => !accountStore.selectedAccount)
 
-const imageUrl = ref(null);
-const message = ref("");
+const imageUrl = ref(null)
+const message = ref('')
 
 const handleFileChange = (event) => {
-  const file = event.target.files[0];
+  const file = event.target.files[0]
   if (file) {
-    imageUrl.value = URL.createObjectURL(file);
+    imageUrl.value = URL.createObjectURL(file)
   } else {
-    imageUrl.value = null;
+    imageUrl.value = null
   }
-};
+}
 
 const accountInitial = computed(() => {
-  return accountStore.selectedAccount?.nickname?.charAt(0).toUpperCase() || '';
-});
+  return accountStore.selectedAccount?.nickname?.charAt(0).toUpperCase() || ''
+})
 
 const userInitial = computed(() => {
   return userStore.selectedUser?.username?.charAt(0).toUpperCase() || ''
 })
-
 
 function toggleModal() {
   isModalOpen.value = !isModalOpen.value
@@ -45,38 +44,65 @@ function toggleModal() {
 
 // Gọi API để lấy tin nhắn khi component được khởi tạo
 onMounted(() => {
-  const senderId = accountStore.selectedAccount.userId;
-  const receiverId = accountStore.selectedAccount.contactUserId;
+  const senderId = accountStore.selectedAccount.userId
+  const receiverId = accountStore.selectedAccount.contactUserId
 
   if (receiverId) {
-    messageStore.fetchMessagesBetweenUsers(senderId, receiverId);
+    messageStore.fetchMessagesBetweenUsers(senderId, receiverId)
   }
-});
+})
 
 // Theo dõi sự thay đổi của contactUserId
-watch(() => accountStore.selectedAccount.contactUserId, (newContactId) => {
-  if (newContactId) {
-    const senderId = accountStore.selectedAccount.userId;
-    messageStore.fetchMessagesBetweenUsers(senderId, newContactId);
+watch(
+  () => accountStore.selectedAccount.contactUserId,
+  (newContactId) => {
+    if (newContactId) {
+      const senderId = accountStore.selectedAccount.userId
+      messageStore.fetchMessagesBetweenUsers(senderId, newContactId)
+
+      // const receiverId = accountStore.selectedAccount.userId;
+      // messageStore.fetchMessagesBetweenUsers(receiverId, senderId);
+    }
   }
-});
+)
 
 const sendMessage = async () => {
   try {
-    await socketStore.sendMessage(message.value, accountStore.selectedAccount.userId, accountStore.selectedAccount.contactUserId);
-    await MessageService.handleCreateMessage(accountStore.selectedAccount.userId, accountStore.selectedAccount.contactUserId, message.value);
-    messageStore.addMessage({ content: message.value, from: accountStore.selectedAccount.userId, messageId: Date.now() }); // Tạo messageId tạm thời hoặc sử dụng UUID
-    message.value = '';
+    if (message.value.trim() === '') {
+      return
+    }
+    await socketStore.sendMessage(
+      message.value,
+      accountStore.selectedAccount.userId,
+      accountStore.selectedAccount.contactUserId
+    )
+    await MessageService.handleCreateMessage(
+      accountStore.selectedAccount.userId,
+      accountStore.selectedAccount.contactUserId,
+      message.value
+    )
+    messageStore.addMessage({
+      content: message.value,
+      from: accountStore.selectedAccount.userId,
+      messageId: Date.now()
+    }) // Tạo messageId tạm thời hoặc sử dụng UUID
+    message.value = ''
   } catch (error) {
-    console.error('Error sending message:', error);
+    console.error('Error sending message:', error)
   }
-};
+}
 </script>
 
 <template>
   <div
-    :class="['flex flex-col justify-between h-[calc(100vh-32px)] rounded-3xl shadow-2xl bg-lightMode dark:text-lightMode dark:bg-darkMode ', isModalOpen ? 'w-1/2' : 'w-3/4']">
-    <div class="flex justify-between items-center p-4 border-b border-darkModeHover dark:border-lightModeHover">
+    :class="[
+      'flex flex-col justify-between h-[calc(100vh-32px)] rounded-3xl shadow-2xl bg-lightMode dark:text-lightMode dark:bg-darkMode ',
+      isModalOpen ? 'w-1/2' : 'w-3/4'
+    ]"
+  >
+    <div
+      class="flex justify-between items-center p-4 border-b border-darkModeHover dark:border-lightModeHover"
+    >
       <div v-if="isLoading" class="flex items-center gap-4">
         <div class="w-14 h-14 rounded-full bg-gray-300 dark:bg-gray-700 animate-pulse"></div>
         <div class="space-y-2">
@@ -86,8 +112,13 @@ const sendMessage = async () => {
       </div>
 
       <div v-else class="flex items-center gap-4 select-none">
-        <Avatar :label="accountInitial" class="mr-2" size="large" shape="circle"
-          :style="{ backgroundColor: isDark ? '#4B5563' : '#c0bab1' }" />
+        <Avatar
+          :label="accountInitial"
+          class="mr-2"
+          size="large"
+          shape="circle"
+          :style="{ backgroundColor: isDark ? '#4B5563' : '#c0bab1' }"
+        />
         <div class="user-data text-darkMode dark:text-lightMode">
           <h1>{{ accountStore.selectedAccount.nickname }}</h1>
         </div>
@@ -112,32 +143,66 @@ const sendMessage = async () => {
 
       <div v-else>
         <!-- Hiển thị tin nhắn -->
-        <div v-for="msg in messageStore.messages.slice().reverse()" :key="msg.messageId" class="flex mb-4"
-          :class="msg.senderId === accountStore.selectedAccount.userId ? 'justify-end' : 'flex-row-reverse justify-end'">
-          <div class="flex flex-col max-w-full overflow-hidden rounded-2xl px-3 py-1"
-            :class="msg.senderId === accountStore.selectedAccount.userId ? 'bg-lightModeHover dark:bg-darkModeHover' : 'bg-lightModeHover dark:bg-darkModeHover text-darkMode dark:text-lightMode'">
-            <p class="text-darkMode dark:text-lightMode break-words min-w-0 w-full">{{ msg.content }}</p>
+        <div
+          v-for="msg in messageStore.messages"
+          :key="msg.messageId"
+          class="flex mb-4"
+          :class="
+            msg.senderId === accountStore.selectedAccount.userId
+              ? 'justify-end'
+              : 'flex-row-reverse justify-end'
+          "
+        >
+          <div
+            class="flex flex-col max-w-full overflow-hidden rounded-2xl px-3 py-1"
+            :class="
+              msg.senderId === accountStore.selectedAccount.userId
+                ? 'bg-lightModeHover dark:bg-darkModeHover'
+                : 'bg-lightModeHover dark:bg-darkModeHover text-darkMode dark:text-lightMode'
+            "
+          >
+            <p class="text-darkMode dark:text-lightMode break-words min-w-0 w-full">
+              {{ msg.content }}
+            </p>
           </div>
+
+          <!-- Hien thi tin nhan -->
           <div class="w-9 h-9 rounded-full flex items-center justify-center ml-2 mr-2">
-            <Avatar v-if="msg.senderId === accountStore.selectedAccount.userId" :label="userInitial" size="small"
-              shape="circle" :style="{ backgroundColor: isDark ? '#4B5563' : '#c0bab1' }" />
-            <Avatar v-else :label="accountInitial" size="small" shape="circle"
-              :style="{ backgroundColor: isDark ? '#4B5563' : '#c0bab1' }" />
+            <Avatar
+              v-if="msg.senderId === accountStore.selectedAccount.userId"
+              :label="userInitial"
+              size="small"
+              shape="circle"
+              :style="{ backgroundColor: isDark ? '#4B5563' : '#c0bab1' }"
+            />
+            <Avatar
+              v-else
+              :label="accountInitial"
+              size="small"
+              shape="circle"
+              :style="{ backgroundColor: isDark ? '#4B5563' : '#c0bab1' }"
+            />
           </div>
         </div>
       </div>
     </div>
 
-    <div class="flex justify-center items-end gap-2 px-4 py-2 border-t border-darkModeHover dark:border-lightModeHover">
+    <div
+      class="flex justify-center items-end gap-2 px-4 py-2 border-t border-darkModeHover dark:border-lightModeHover"
+    >
       <CustomIcon icon="face-smile" size="lg" />
       <div>
         <CustomIcon icon="image" size="lg" @click="$refs.fileInput.click()" />
         <input type="file" ref="fileInput" @change="handleFileChange" hidden multiple />
       </div>
       <CustomIcon icon="note-sticky" size="lg" />
-      <input type="text" v-model="message" @keyup.enter="sendMessage"
+      <input
+        type="text"
+        v-model="message"
+        @keyup.enter="sendMessage"
         class="w-full py-2 px-4 rounded-full bg-lightModeHover dark:bg-darkModeHover text-darkMode dark:text-lightMode placeholder-darkModeHover dark:placeholder-lightModeHover"
-        placeholder="Aa" />
+        placeholder="Aa"
+      />
       <button @click="sendMessage">
         <CustomIcon icon="paper-plane" size="lg" />
       </button>

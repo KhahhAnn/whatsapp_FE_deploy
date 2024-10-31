@@ -1,25 +1,25 @@
 ```vue-whatsapp-client/src/views/HomeView.vue
 <script setup>
-import { onMounted, onBeforeUnmount } from 'vue';
-import ListContact from '@/components/ListContact.vue';
-import DetailMessage from '@/components/DetailMessage.vue';
+import { onMounted, onBeforeUnmount } from 'vue'
+import ListContact from '@/components/ListContact.vue'
+import DetailMessage from '@/components/DetailMessage.vue'
 import { useSocketStore } from '../stores/SocketStore'
 import { useAccountStore } from '../stores/AccountStore'
 
 const accountStore = useAccountStore()
 const socketStore = useSocketStore()
 
-let socket;
+let socket
 
 onMounted(() => {
   socketStore.connect()
-});
+})
 
 onBeforeUnmount(() => {
   if (socket) {
-    socket.disconnect();
+    socket.disconnect()
   }
-});
+})
 </script>
 
 <template>

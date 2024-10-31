@@ -29,16 +29,16 @@ export const useUserStore = defineStore('users', () => {
   }
 
   const updateUserStatus = (userId, isOnline) => {
-    const user = users.value.find(user => user.userId === userId);
+    const user = users.value.find((user) => user.userId === userId)
     if (user) {
-      user.isOnline = isOnline; // Cập nhật trạng thái
+      user.isOnline = isOnline // Cập nhật trạng thái
     }
-  };
-  
+  }
+
   // Lắng nghe sự kiện từ server
-  socket.on("userStatusUpdate", ({ userId, isOnline }) => {
-    updateUserStatus(userId, isOnline);
-  });
+  socket.on('userStatusUpdate', ({ userId, isOnline }) => {
+    updateUserStatus(userId, isOnline)
+  })
 
   return {
     selectedUser,
