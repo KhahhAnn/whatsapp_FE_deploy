@@ -2,7 +2,7 @@ import apiClient from '../api/api'
 
 const handleCreateContact = async (userId, contactUserId, nickname, status) => {
   try {
-    return await apiClient.post(``, {
+    return await apiClient.post('/contact', {
       userId: userId,
       contactUserId: contactUserId,
       nickname: nickname,
@@ -32,7 +32,7 @@ const handleGetContactByUser = async (userId) => {
 
 const handleUpdateContact = async (contactId) => {
   try {
-    return await apiClient.put(`${contactId}`, {
+    return await apiClient.put(`/contact/${contactId}`, {
       contactId: contactId
     })
   } catch (error) {
@@ -46,7 +46,7 @@ const handleUpdateContact = async (contactId) => {
 
 const handleDeleteContact = async (contactId) => {
   try {
-    return await apiClient.delete(`:contactId`, {
+    return await apiClient.delete(`/contact/${contactId}`, {
       contactId: contactId
     })
   } catch (error) {

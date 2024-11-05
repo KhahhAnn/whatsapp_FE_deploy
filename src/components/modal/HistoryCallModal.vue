@@ -134,50 +134,29 @@ const filteredContacts = computed(() => {
 </script>
 
 <template>
-  <div
-    v-if="isOpen"
-    class="relative z-10 text-darkMode dark:text-lightMode"
-    aria-labelledby="modal-title"
-    role="dialog"
-    aria-modal="true"
-  >
-    <div
-      class="fixed inset-0 bg-opacity-75 transition-opacity bg-gray-900"
-      aria-hidden="true"
-    ></div>
+  <div v-if="isOpen" class="relative z-10 text-darkMode dark:text-lightMode" aria-labelledby="modal-title" role="dialog"
+    aria-modal="true">
+    <div class="fixed inset-0 bg-opacity-75 transition-opacity bg-gray-900" aria-hidden="true"></div>
 
     <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
       <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
         <div
-          class="relative transform overflow-hidden rounded-2xl shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm bg-lightMode dark:bg-darkMode"
-        >
+          class="relative transform overflow-hidden rounded-2xl shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm bg-lightMode dark:bg-darkMode">
           <div class="bg-lightMode dark:bg-darkMode w-full rounded-lg shadow-lg">
-            <div
-              class="flex justify-center items-center p-4 border-b border-darkMode dark:border-lightMode"
-            >
+            <div class="flex justify-center items-center p-4 border-b border-darkMode dark:border-lightMode">
               <h2 class="text-lg font-semibold">Lịch sử cuộc gọi</h2>
             </div>
             <div class="p-4">
-              <input
-                type="text"
-                placeholder="Tìm kiếm"
-                v-model="searchQuery"
-                class="w-full p-2 border border-darkMode dark:border-lightMode rounded-lg bg-lightMode dark:bg-darkMode"
-              />
+              <input type="text" placeholder="Tìm kiếm" v-model="searchQuery"
+                class="w-full p-2 border border-darkMode dark:border-lightMode rounded-lg bg-lightMode dark:bg-darkMode" />
             </div>
             <div class="overflow-y-auto h-96 border-b border-darkMode dark:border-lightMode">
-              <div
-                v-for="contact in filteredContacts"
-                :key="contact.name"
-                @click="toggleDropdown(contact)"
-                class="py-2 px-4 cursor-pointer hover:bg-lightModeHover dark:hover:bg-darkModeHover"
-              >
+              <div v-for="contact in filteredContacts" :key="contact.name" @click="toggleDropdown(contact)"
+                class="py-2 px-4 cursor-pointer hover:bg-lightModeHover dark:hover:bg-darkModeHover">
                 <div class="flex items-center justify-between">
                   <div class="flex item-center">
-                    <div
-                      class="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center"
-                      :class="contact.bgColor"
-                    >
+                    <div class="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center"
+                      :class="contact.bgColor">
                       <span class="font-semibold">{{ contact.initials }}</span>
                     </div>
                     <div class="flex flex-col justify-center items-start ml-4">
@@ -189,10 +168,8 @@ const filteredContacts = computed(() => {
                   <font-awesome-icon v-else icon="chevron-right" />
                 </div>
 
-                <div
-                  v-if="selectedContact === contact"
-                  class="flex flex-col items-start w-full mt-2 p-2 border border-gray-300 rounded-lg bg-lightMode dark:bg-darkMode"
-                >
+                <div v-if="selectedContact === contact"
+                  class="flex flex-col items-start w-full mt-2 p-2 border border-gray-300 rounded-lg bg-lightMode dark:bg-darkMode">
                   <div class="text-sm">Số điện thoại: {{ contact.phoneNumber }}</div>
                   <div class="text-sm">Ngày, giờ: {{ contact.datetime }}</div>
                   <div class="text-sm">Loại cuộc gọi: {{ contact.callType }}</div>

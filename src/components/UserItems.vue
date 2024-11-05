@@ -19,26 +19,16 @@ const accountInitial = computed(() => {
 
 <template>
   <div
-    class="flex justify-between items-center p-3 text-darkMode dark:text-lightMode hover:bg-lightModeHover dark:hover:bg-darkModeHover"
-  >
+    class="flex justify-between items-center p-3 text-darkMode dark:text-lightMode hover:bg-lightModeHover dark:hover:bg-darkModeHover">
     <div class="flex items-center gap-4">
-      <Avatar
-        :label="accountInitial"
-        class="mr-2"
-        size="xlarge"
-        shape="circle"
-        :style="{
-          backgroundColor: isDark ? '#4B5563' : '#c0bab1'
-        }"
-      />
+      <Avatar :label="accountInitial" class="mr-2" size="xlarge" shape="circle" :style="{
+        backgroundColor: isDark ? '#4B5563' : '#c0bab1'
+      }" />
 
       <h1>{{ account?.nickname }}</h1>
       <p class="truncate max-w-[200px]">{{ account?.message }}</p>
     </div>
-    <font-awesome-icon
-      class="p-3 rounded-2xl dark:text-lightMode hover:bg-[#d3cdc4] dark:hover:bg-gray-500"
-      icon="ellipsis-vertical"
-      size="lg"
-    />
+    <font-awesome-icon class="p-3 rounded-2xl dark:text-lightMode hover:bg-[#d3cdc4] dark:hover:bg-gray-500"
+      icon="ellipsis-vertical" size="lg" />
   </div>
 </template>
