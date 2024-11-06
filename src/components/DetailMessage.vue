@@ -28,7 +28,7 @@ const handleFileChange = (event) => {
   } else {
     imageUrl.value = null
   }
-}
+}  
 
 const accountInitial = computed(() => {
   return accountStore.selectedAccount?.nickname?.charAt(0).toUpperCase() || ''
@@ -44,7 +44,6 @@ function toggleModal() {
 
 // Call API to get messages when DetailMessage component is mounted
 onMounted(() => {
-  fetchTokenAndConnect();
   const senderId = accountStore.selectedAccount.userId
   const receiverId = accountStore.selectedAccount.contactUserId
 
@@ -93,6 +92,13 @@ const sendMessage = async () => {
     console.error('Error sending message:', error)
   }
 }
+
+function openCallPopUp() {
+  const url = `http://localhost:5173/call?from=${accountStore.selectedAccount.userId}&to=${accountStore.selectedAccount.contactUserId}`;
+  const features = 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=800,height=600';
+  window.open(url, '_blank', features);
+}
+
 </script>
 
 <template>
@@ -118,7 +124,9 @@ const sendMessage = async () => {
       </div>
 
       <div class="flex gap-4">
-        <CustomIcon icon="phone" size="lg" />
+        <button @click="openCallPopUp">
+          <CustomIcon icon="phone" size="lg" />
+        </button>
         <CustomIcon icon="video" size="lg" />
         <button @click="toggleModal">
           <CustomIcon v-if="isModalOpen" icon="angle-right" size="lg" />

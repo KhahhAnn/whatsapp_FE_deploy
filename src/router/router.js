@@ -22,6 +22,11 @@ const routes = [
     component: () => import('../views/SignUpView.vue')
   },
   {
+    path: '/call',
+    name: 'call',
+    component: () => import('../components/CallPopUp.vue')
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'error',
     component: () => import('../views/BrokenLink.vue')
