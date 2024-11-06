@@ -44,6 +44,7 @@ function toggleModal() {
 
 // Call API to get messages when DetailMessage component is mounted
 onMounted(() => {
+  fetchTokenAndConnect();
   const senderId = accountStore.selectedAccount.userId
   const receiverId = accountStore.selectedAccount.contactUserId
 
