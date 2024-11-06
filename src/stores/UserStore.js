@@ -28,6 +28,17 @@ export const useUserStore = defineStore('users', () => {
     }
   }
 
+  const getUserDetailByPhoneNumber = async (phoneNumber) => {
+    try {
+      const user = await UserService.getUserDetailByPhoneNumber(phoneNumber)
+      if (!user) {
+        throw new Error('User not found') // Thêm xử lý trường hợp không tìm thấy người dùng
+      }
+      selectedUser.value = user
+    } catch (error) {
+      console.error('Failed to fetch user detail:', error)
+    }
+  }
   const updateUserStatus = (userId, isOnline) => {
     const user = users.value.find((user) => user.userId === userId)
     if (user) {
@@ -45,6 +56,7 @@ export const useUserStore = defineStore('users', () => {
     users,
     selectUser,
     getAllUsers,
-    getUserDetail
+    getUserDetail,
+    getUserDetailByPhoneNumber
   }
 })

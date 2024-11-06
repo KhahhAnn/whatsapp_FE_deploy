@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onBeforeMount } from 'vue'
+import { ref, onBeforeMount, computed } from 'vue'
 
 import CustomIcon from './custom/CustomIcon.vue'
 import UserItems from './UserItems.vue'
@@ -9,6 +9,8 @@ import { useAccountStore } from '../stores/AccountStore'
 const accountStore = useAccountStore()
 const isSidebarOpen = ref(false)
 
+const selectedNickname = computed(() => accountStore.selectedAccount?.nickname)
+
 const selectAccount = (account) => {
   accountStore.selectAccount(account)
   accountStore.selectedAccount.contactUserId = account.contactUserId // Cập nhật contactUserId
@@ -17,6 +19,7 @@ const selectAccount = (account) => {
 
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value
+  console.log(selectedNickname.value)
 }
 
 onBeforeMount(async () => {

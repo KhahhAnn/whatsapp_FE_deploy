@@ -20,7 +20,18 @@ const getAllUsers = async () => {
   }
 }
 
+const getUserDetailByPhoneNumber = async (phoneNumber) => {
+  try {
+    const response = await apiClient.get(`/user?phoneNumber=${phoneNumber}`)
+    return response.data // Trả về dữ liệu người dùng
+  } catch (error) {
+    console.error('Lỗi khi lấy thông tin người dùng:', error)
+    throw error // Ném lỗi để xử lý ở nơi gọi
+  }
+}
+
 export default {
   getUserDetail,
-  getAllUsers
+  getAllUsers,
+  getUserDetailByPhoneNumber
 }

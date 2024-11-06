@@ -1,7 +1,7 @@
 <script setup>
-import { ref } from 'vue'
-import { useContactStore } from '../../stores/ContactStore'
+import { ref, watch } from 'vue'
 import ContactService from '../../services/ContactService'
+import { useAccountStore } from '../../stores/AccountStore'
 
 const props = defineProps({
   isOpen: Boolean,
@@ -12,12 +12,21 @@ const props = defineProps({
 const emit = defineEmits(['update:isOpen'])
 
 const newNickname = ref(props.currentNickname)
-const contactStore = useContactStore()
+const accountStore = useAccountStore()
+// Theo dõi sự thay đổi của currentNickname
+watch(() => props.currentNickname, (newValue) => {
+  newNickname.value = newValue
+})
 
 async function updateNickname() {
   try {
-    await ContactService.handleUpdateContact(props.contactId, { nickname: newNickname.value })
-    contactStore.selectContact({ ...contactStore.selectedContact, nickname: newNickname.value }) // Cập nhật contact trong store
+    // Gọi API để cập nhật nickname trong cơ sở dữ liệu
+    await ContactService.handleUpdateContact(props.contactId, newNickname.value) // Chỉ truyền giá trị của nickname
+    accountStore.selectAccount({ ...accountStore.selectedAccount, nickname: newNickname.value })
+    accountStore.selectedAccount.nickname = newNickname.value
+    console.log('Cập nhật biệt danh thành công', accountStore.selectedAccount.nickname)
+
+    // Đóng modal
     closeModal()
   } catch (error) {
     console.error('Error updating nickname:', error)

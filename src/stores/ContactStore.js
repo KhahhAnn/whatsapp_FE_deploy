@@ -20,10 +20,18 @@ export const useContactStore = defineStore('contact', () => {
     }
   }
 
+  const updateContactNickname = (contactId, newNickname) => {
+    const contact = contacts.value.find(contact => contact.id === contactId);
+    if (contact) {
+      contact.nickname = newNickname; // Cập nhật nickname
+    }
+  }
+
   return {
     contacts,
     getContactByUser,
     selectedContact,
-    selectContact
+    selectContact,
+    updateContactNickname
   }
 })

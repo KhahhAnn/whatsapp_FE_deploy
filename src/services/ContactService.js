@@ -30,10 +30,11 @@ const handleGetContactByUser = async (userId) => {
   }
 }
 
-const handleUpdateContact = async (contactId) => {
+const handleUpdateContact = async (contactId, nickname) => {
   try {
     return await apiClient.put(`/contact/${contactId}`, {
-      contactId: contactId
+      contactId: contactId,
+      nickname: nickname
     })
   } catch (error) {
     console.error(

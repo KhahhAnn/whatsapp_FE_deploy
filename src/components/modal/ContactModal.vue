@@ -18,8 +18,6 @@ watch(
   () => props.isOpen,
   async (newValue, oldValue) => {
     if (newValue && !oldValue) {
-      // Kiểm tra khi modal mở từ trạng thái đóng
-      // Chỉ gọi getAllUsers nếu users là rỗng hoặc bạn muốn cập nhật theo lịch cụ thể
       if (userStore.users.length === 0) {
         await userStore.getAllUsers()
       }
@@ -30,12 +28,18 @@ watch(
 // Computed property để lọc người dùng dựa trên giá trị tìm kiếm
 const filteredUsers = computed(() => {
   return userStore.users.filter(
-    (user) => user.username && user.username.toLowerCase().includes(searchQuery.value.toLowerCase()) // Kiểm tra user.username
+    (user) =>
+      (user.phoneNumber && user.phoneNumber.toLowerCase().includes(searchQuery.value.toLowerCase())) || // Tìm kiếm theo phoneNumber
+      (user.username && user.username.toLowerCase().includes(searchQuery.value.toLowerCase())) // Tìm kiếm theo username
   )
 })
 
 function closeModal() {
   emit('update:isOpen', false)
+}
+
+function logUser(user) {
+  console.log("user", user);
 }
 </script>
 
@@ -53,13 +57,13 @@ function closeModal() {
               <h2 class="text-lg font-semibold">Thêm liên hệ</h2>
             </div>
             <div class="p-4">
-              <input type="text" v-model="searchQuery" placeholder="Tìm kiếm"
+              <input type="text" v-model="searchQuery" @keyup.enter="searchUser" placeholder="Tìm kiếm"
                 class="w-full p-2 border border-darkMode dark:border-lightMode rounded-lg bg-lightMode dark:bg-darkMode" />
             </div>
             <div class="overflow-y-auto h-96 border-b border-darkMode dark:border-lightMode">
               <div v-for="user in filteredUsers" :key="user.userId"
                 class="py-2 px-4 cursor-pointer hover:bg-lightModeHover dark:hover:bg-darkModeHover">
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between" @click="logUser(user)">
                   <div v-if="userStore.selectedUser" class="flex item-center">
                     <!-- Add user avatar or image here if available -->
                     <Avatar :label="user.username.charAt(0).toUpperCase()" class="mr-2" size="large" shape="circle"

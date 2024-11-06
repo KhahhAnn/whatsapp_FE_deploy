@@ -23,7 +23,6 @@ function toggleThemeModal() {
 }
 function toggleNicknameModal() {
   isNicknameModalOpen.value = !isNicknameModalOpen.value
-  console.log('clicked')
 }
 
 // Compute the first letter of the username
@@ -66,6 +65,11 @@ const accountInitial = computed(() => {
   </div>
   <Teleport to="#app">
     <ThemeModal :isOpen="isThemeModalOpen" @update:isOpen="isThemeModalOpen = $event" />
-    <NicknameModal :isOpen="isNicknameModalOpen" @update:isOpen="isNicknameModalOpen = $event" />
+    <NicknameModal 
+  :isOpen="isNicknameModalOpen" 
+  @update:isOpen="isNicknameModalOpen = $event" 
+  :contactId="accountStore.selectedAccount?.contactId" 
+  :currentNickname="accountStore.selectedAccount?.nickname" 
+/>
   </Teleport>
 </template>
