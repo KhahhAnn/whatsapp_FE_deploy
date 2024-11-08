@@ -8,6 +8,7 @@ import './plugins/fontawesome'
 import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura'
 import ToastService from 'primevue/toastservice'
+import 'primeicons/primeicons.css'
 const app = createApp(App)
 
 app.component('font-awesome-icon', FontAwesomeIcon)

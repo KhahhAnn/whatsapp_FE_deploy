@@ -44,7 +44,7 @@ function closeModal() {
 
 async function addContact(user) {
   try {
-    console.log("User to be added:", user); // Log giá trị user
+    console.log("User to be added:", user);
     const userId = localStorage.getItem('userId');
     const response = await accountStore.addContact(userId, user.userId, user.username, 'friend');
     console.log("Contact request sent:", response);
@@ -52,12 +52,17 @@ async function addContact(user) {
   } catch (error) {
     console.error('Error adding contact:', error);
     if (error.response && error.response.data) {
-      alert(error.response.data.message); // Hiển thị thông báo lỗi từ server
+      if (error.response.data.message === "User đã có liên hệ này rồi") {
+        alert('User đã có liên hệ này rồi');
+      } else {
+        alert(error.response.data.message);
+      }
     } else {
       alert('Có lỗi xảy ra khi thêm liên hệ.');
     }
   }
 }
+
 </script>
 
 <template>
