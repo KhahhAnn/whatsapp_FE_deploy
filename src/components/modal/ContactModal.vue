@@ -1,8 +1,11 @@
 <script setup>
-import { defineProps, defineEmits, ref, computed, watch } from 'vue' // Thêm watch
+import { defineProps, defineEmits, ref, computed, watch } from 'vue'
 import { useUserStore } from '../../stores/UserStore.js'
+import { useAccountStore } from '../../stores/AccountStore.js'
 import Avatar from 'primevue/avatar'
 import { useDark } from '@vueuse/core'
+// import ContactService from '../../services/ContactService'
+import Button from 'primevue/button';
 
 const isDark = useDark()
 
@@ -10,8 +13,9 @@ const props = defineProps({
   isOpen: Boolean
 })
 const emit = defineEmits(['update:isOpen'])
-const userStore = useUserStore() // Khởi tạo store
-const searchQuery = ref('') // Biến để lưu trữ giá trị tìm kiếm
+const userStore = useUserStore()
+const accountStore = useAccountStore()
+const searchQuery = ref('')
 
 // Theo dõi sự thay đổi của props.isOpen
 watch(
@@ -38,8 +42,21 @@ function closeModal() {
   emit('update:isOpen', false)
 }
 
-function logUser(user) {
-  console.log("user", user);
+async function addContact(user) {
+  try {
+    console.log("User to be added:", user); // Log giá trị user
+    const userId = localStorage.getItem('userId');
+    const response = await accountStore.addContact(userId, user.userId, user.username, 'friend');
+    console.log("Contact request sent:", response);
+    closeModal();
+  } catch (error) {
+    console.error('Error adding contact:', error);
+    if (error.response && error.response.data) {
+      alert(error.response.data.message); // Hiển thị thông báo lỗi từ server
+    } else {
+      alert('Có lỗi xảy ra khi thêm liên hệ.');
+    }
+  }
 }
 </script>
 
@@ -62,24 +79,21 @@ function logUser(user) {
             </div>
             <div class="overflow-y-auto h-96 border-b border-darkMode dark:border-lightMode">
               <div v-for="user in filteredUsers" :key="user.userId"
-                class="py-2 px-4 cursor-pointer hover:bg-lightModeHover dark:hover:bg-darkModeHover">
-                <div class="flex items-center justify-between" @click="logUser(user)">
-                  <div v-if="userStore.selectedUser" class="flex item-center">
-                    <!-- Add user avatar or image here if available -->
-                    <Avatar :label="user.username.charAt(0).toUpperCase()" class="mr-2" size="large" shape="circle"
-                      :style="{
-                        backgroundColor: isDark ? '#4B5563' : '#c0bab1'
-                      }" />
-                    <div class="flex flex-col justify-center items-start ml-4">
-                      <div class="text-sm font-semibold">{{ user.username }}</div>
-                      <!-- Hiển thị tên người dùng -->
-                      <div class="text-xs" :class="{ 'text-green-500': user.isOnline, 'text-red-500': !user.isOnline }">
-                        {{ user.isOnline ? 'Đang hoạt động' : 'Không hoạt động' }}
-                      </div>
-                      <!-- Hiển thị trạng thái người dùng -->
+                class="flex justify-between items-center py-2 px-4 cursor-pointer hover:bg-lightModeHover dark:hover:bg-darkModeHover">
+                <div class="flex items-center justify-start">
+                  <Avatar :label="user.username.charAt(0).toUpperCase()" class="mr-2" size="large" shape="circle"
+                    :style="{
+                      backgroundColor: isDark ? '#4B5563' : '#c0bab1'
+                    }" />
+                  <div class="flex flex-col justify-center items-start ml-4">
+                    <div class="text-sm font-semibold">{{ user.username }}</div>
+                    <div class="text-xs" :class="{ 'text-green-500': user.isOnline, 'text-red-500': !user.isOnline }">
+                      {{ user.isOnline ? 'Đang hoạt động' : 'Không hoạt động' }}
                     </div>
                   </div>
+
                 </div>
+                <Button @click="addContact(user)" label="Thêm liên hệ" size="small" severity="primary" />
               </div>
             </div>
             <div class="flex justify-end p-4 border-t border-darkMode dark:border-lightMode">

@@ -20,7 +20,6 @@ export const useAccountStore = defineStore('account', () => {
         // Lưu access token vào localStorage
         localStorage.setItem('accessToken', response.data.accessToken)
         localStorage.setItem('userId', response.data.user.userId)
-        // localStorage.setItem('username', response.data.account.username)
         return response.data // Trả về dữ liệu người dùng
       } else {
         console.error('No user data received')
@@ -74,6 +73,23 @@ export const useAccountStore = defineStore('account', () => {
     }
   }
 
+  const addContact = async (userId, contactUserId, nickname, status) => {
+    try {
+      console.log("Adding contact with data:", { userId, contactUserId, nickname, status }); // Log dữ liệu
+      const response = await ContactService.handleCreateContact(userId, contactUserId, nickname, status);
+      console.log("Response from server:", response); // Log phản hồi từ server
+      if (response && response.data) {
+        accounts.value.push(response.data.account); // Cập nhật danh sách contacts
+        console.log("Updated contacts:", accounts.value); // Log danh sách contacts sau khi cập nhật
+        return response.data; // Trả về dữ liệu contact vừa thêm
+      } else {
+        console.error('No contact data received');
+      }
+    } catch (error) {
+      console.error('Error adding contact:', error);
+    }
+  }
+
   return {
     selectedAccount,
     accounts,
@@ -81,6 +97,7 @@ export const useAccountStore = defineStore('account', () => {
     loginAccount,
     registerAccount,
     logoutUser,
-    getContactByUser
+    getContactByUser,
+    addContact
   }
 })

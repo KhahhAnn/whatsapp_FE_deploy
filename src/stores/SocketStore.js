@@ -32,6 +32,12 @@ export const useSocketStore = defineStore('socket', () => {
     console.log('User just connected: ', userData)
   })
 
+  // Lắng nghe sự kiện contactRequest
+  socket.on('contactRequest', (data) => {
+    alert(`User ${data.from} wants to add you as a contact!`);
+    // Bạn có thể thêm logic để xử lý yêu cầu thêm liên hệ ở đây
+  })
+
   const sendMessage = (message, from, to) => {
     socket.emit('privateMessage', {
       message,

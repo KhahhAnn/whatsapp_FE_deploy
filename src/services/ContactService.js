@@ -2,20 +2,18 @@ import apiClient from '../api/api'
 
 const handleCreateContact = async (userId, contactUserId, nickname, status) => {
   try {
-    return await apiClient.post('/contact', {
-      userId: userId,
-      contactUserId: contactUserId,
-      nickname: nickname,
-      status: status
-    })
+    console.log("Creating contact with data:", { userId, contactUserId, nickname, status }); // Log input data
+      return await apiClient.post('/contact', {
+          userId,
+          contactUserId,
+          nickname,
+          status
+      });
   } catch (error) {
-    console.error(
-      'Error during contact creation:',
-      error.response ? error.response.data : error.message
-    )
-    throw error // Ném lại lỗi để xử lý ở nơi gọi
+      console.error('Error during adding contact:', error.response ? error.response.data : error.message);
+      throw error;
   }
-}
+};
 
 const handleGetContactByUser = async (userId) => {
   try {
