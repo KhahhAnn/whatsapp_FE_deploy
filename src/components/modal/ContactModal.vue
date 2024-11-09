@@ -6,8 +6,11 @@ import Avatar from 'primevue/avatar'
 import { useDark } from '@vueuse/core'
 // import ContactService from '../../services/ContactService'
 import Button from 'primevue/button';
+import Toast from 'primevue/toast';
+import { useToast } from 'primevue/usetoast'
 
 const isDark = useDark()
+const toast = useToast();
 
 const props = defineProps({
   isOpen: Boolean
@@ -44,18 +47,37 @@ function closeModal() {
 
 async function addContact(user) {
   try {
-    console.log("User to be added:", user);
     const userId = localStorage.getItem('userId');
     const response = await accountStore.addContact(userId, user.userId, user.username, 'friend');
     console.log("Contact request sent:", response);
+    
+    toast.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: 'Contact added successfully',
+      life: 3000
+    });
+    // Cập nhật lại danh sách contacts
+    await accountStore.getContactByUser(userId); // Lấy lại danh sách contacts sau khi thêm
+
     closeModal();
   } catch (error) {
     console.error('Error adding contact:', error);
     if (error.response && error.response.data) {
       if (error.response.data.message === "User đã có liên hệ này rồi") {
-        alert('User đã có liên hệ này rồi');
+        toast.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'User đã có liên hệ này rồi',
+          life: 3000
+        });
       } else {
-        alert(error.response.data.message);
+        toast.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.response.data.message,
+          life: 3000
+        });
       }
     } else {
       alert('Có lỗi xảy ra khi thêm liên hệ.');
@@ -99,6 +121,7 @@ async function addContact(user) {
 
                 </div>
                 <Button @click="addContact(user)" label="Thêm liên hệ" size="small" severity="primary" />
+                <Toast />
               </div>
             </div>
             <div class="flex justify-end p-4 border-t border-darkMode dark:border-lightMode">

@@ -90,6 +90,15 @@ export const useAccountStore = defineStore('account', () => {
     }
   }
 
+  const deleteContact = async (contactId) => {
+    try {
+      await ContactService.handleDeleteContact(contactId)
+      accounts.value = accounts.value.filter(account => account.contactId !== contactId)
+    } catch (error) {
+      console.error('Error deleting contact:', error)
+    }
+  }
+
   return {
     selectedAccount,
     accounts,
@@ -98,6 +107,7 @@ export const useAccountStore = defineStore('account', () => {
     registerAccount,
     logoutUser,
     getContactByUser,
-    addContact
+    addContact,
+    deleteContact
   }
 })

@@ -21,15 +21,23 @@ watch(() => props.currentNickname, (newValue) => {
 async function updateNickname() {
   try {
     // Gọi API để cập nhật nickname trong cơ sở dữ liệu
-    await ContactService.handleUpdateContact(props.contactId, newNickname.value) // Chỉ truyền giá trị của nickname
-    accountStore.selectAccount({ ...accountStore.selectedAccount, nickname: newNickname.value })
-    accountStore.selectedAccount.nickname = newNickname.value
-    console.log('Cập nhật biệt danh thành công', accountStore.selectedAccount.nickname)
+    await ContactService.handleUpdateContact(props.contactId, newNickname.value);
+    
+    // Cập nhật nickname trong selectedAccount
+    accountStore.selectAccount({ ...accountStore.selectedAccount, nickname: newNickname.value });
+    
+    // Cập nhật nickname trong danh sách contacts
+    const contact = accountStore.accounts.find(account => account.contactId === props.contactId);
+    if (contact) {
+      contact.nickname = newNickname.value; // Cập nhật nickname trong danh sách
+    }
+
+    console.log('Cập nhật biệt danh thành công', accountStore.selectedAccount.nickname);
 
     // Đóng modal
-    closeModal()
+    closeModal();
   } catch (error) {
-    console.error('Error updating nickname:', error)
+    console.error('Error updating nickname:', error);
   }
 }
 

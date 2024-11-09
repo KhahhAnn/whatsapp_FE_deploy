@@ -29,6 +29,10 @@ onBeforeMount(async () => {
     accountStore.selectAccount(accountStore.accounts[0])
   }
 })
+
+const filteredAccounts = computed(() => {
+  return accountStore.accounts.filter(account => account) // Filter out any falsy accounts
+})
 </script>
 
 <template>
@@ -56,7 +60,10 @@ onBeforeMount(async () => {
 
     <LeftModal :is-open="isSidebarOpen" @close="toggleSidebar" />
     <div :class="[isSidebarOpen ? 'hidden' : '']" class="grow overflow-auto scroll-smooth">
-      <UserItems v-for="account in accountStore.accounts" :key="account ? account.id : null" :account="account"
+      <UserItems 
+        v-for="account in filteredAccounts" 
+        :key="account?.id"
+        :account="account"
         @click="selectAccount(account)" />
     </div>
   </div>
