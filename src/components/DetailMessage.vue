@@ -1,4 +1,5 @@
 <script setup>
+import axios from 'axios';
 import { ref, computed, onMounted, watch } from 'vue'
 import CustomIcon from './custom/CustomIcon.vue'
 import RightModal from './modal/RightModal.vue'
@@ -8,6 +9,8 @@ import { useUserStore } from '../stores/UserStore'
 import { useSocketStore } from '../stores/SocketStore'
 import { useMessageStore } from '../stores/MessageStore'
 import MessageService from '../services/MessageService'
+import { StringeeClient } from 'stringee-chat-js-sdk';
+
 
 import Avatar from 'primevue/avatar'
 import Image from 'primevue/image';
@@ -21,6 +24,13 @@ const socketStore = useSocketStore()
 const messageStore = useMessageStore()
 const isModalOpen = ref(false)
 const isLoading = ref(false); // Thêm biến loading
+
+const client = new StringeeClient();
+const token = ref('');
+const showPopup = ref(false);
+const incomingCall = ref(null);
+const callerName = ref('');
+const clientConnected = ref(false);
 
 const imageUrl = ref(null)
 const message = ref('')
@@ -100,12 +110,13 @@ const handleFileChange = (event) => {
 }
 
 // Call API to get messages when DetailMessage component is mounted
-onMounted(() => {
+onMounted(async () => {
   const senderId = accountStore.selectedAccount.userId
   const receiverId = accountStore.selectedAccount.contactUserId
   if (receiverId) {
     fetchMessages(senderId, receiverId);
   }
+  await fetchTokenAndConnect();
 })
 
 // Theo dõi sự thay đổi của contactUserId khi click vào contact khác trong list contact
@@ -152,6 +163,63 @@ function openCallPopUp() {
   const features = 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=800,height=600';
   window.open(url, '_blank', features);
 }
+
+
+
+async function fetchTokenAndConnect() {
+  try {
+    const response = await axios.post('http://localhost:8080/api/token', { from: accountStore.selectedAccount.userId });
+    token.value = response.data.access_token;
+    client.connect(token.value);
+
+    client.on('connect', () => {
+      console.log('Connected to Stringee!');
+      clientConnected.value = true;
+    });
+
+    client.on('authen', (res) => {
+      if (res.r !== 0) {
+        console.error('Authentication failed!', res.message);
+      }
+    });
+
+    client.on('authensuccess', (res) => {
+      if (res.r === 0) {
+        console.log('Authentication successful:', res.message);
+      } else {
+        console.error('Authentication success failed:', res.message);
+      }
+    });
+
+    client.on('incomingcall', (call) => {
+      incomingCall.value = call;
+      console.log("incomingCall:", incomingCall);
+
+      callerName.value = call.fromNumber;
+      showPopup.value = true;
+      console.log('Incoming call received:', call);
+    });
+
+
+  } catch (error) {
+    console.error('Error fetching token:', error);
+  }
+}
+
+const acceptCall = () => {
+  incomingCall.value.answer((res) => {
+        openCallPopUp()
+        console.log("answer call callback: " + JSON.stringify(res));
+    });
+};
+
+const rejectCall = () => {
+  if (incomingCall.value) {
+    incomingCall.value.reject();
+    showPopup.value = false; 
+    console.log('Cuộc gọi đã bị từ chối');
+  }
+};
 </script>
 
 <template>
@@ -243,4 +311,17 @@ function openCallPopUp() {
     </div>
   </div>
   <RightModal :isOpen="isModalOpen" @update:isOpen="isModalOpen = $event" />
+  <div v-if="showPopup" class="popup fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+      <p class="text-lg font-semibold text-black">Bạn có một cuộc gọi đến từ {{ callerName }}</p>
+      <div class="flex justify-center mt-4 space-x-4">
+        <button @click="acceptCall" class="bg-green-500 text-white py-2 px-4 rounded-full">
+          Chấp nhận
+        </button>
+        <button @click="rejectCall" class="bg-red-500 text-white py-2 px-4 rounded-full">
+          Từ chối
+        </button>
+      </div>
+    </div>
+  </div>
 </template>
