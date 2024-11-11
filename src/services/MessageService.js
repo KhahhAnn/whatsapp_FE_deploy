@@ -46,9 +46,19 @@ const getMessagesBetweenUsers = async (senderId, receiverId) => {
   }
 };
 
+const handleDeleteMessage = async (messageId) => {
+  try {
+    return await apiClient.delete(`/message/${messageId}`);
+  } catch (error) {
+    console.error('Error during message deletion:', error.response ? error.response.data : error.message);
+    throw error; // Ném lại lỗi để xử lý ở nơi gọi
+  }
+};
+
 export default {
   handleCreateMessage,
   getMessageDetails,
   getMessagesByUser,
   getMessagesBetweenUsers, // Thêm phương thức này
+  handleDeleteMessage,
 };

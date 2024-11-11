@@ -3,11 +3,13 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import socket from '../plugins/webSocket'
 import { useMessageStore } from './MessageStore'
+import { useAccountStore } from './AccountStore'
 
 export const useSocketStore = defineStore('socket', () => {
   const isLoggedIn = ref(false)
   const messages = ref([]) // Danh sách tin nhắn
   const messageStore = useMessageStore()
+  const accountStore = useAccountStore()
   const connect = () => {
     if (!isLoggedIn.value && !socket.connected) {
       //Truyền userid từ localstorage vào socket để xác thực
@@ -36,6 +38,10 @@ export const useSocketStore = defineStore('socket', () => {
   socket.on('contactRequest', (data) => {
     alert(`User ${data.from} wants to add you as a contact!`);
     // Bạn có thể thêm logic để xử lý yêu cầu thêm liên hệ ở đây
+    // socket.emit('contactRequestResponse', {
+    //   from: data.from,
+    //   response: 'accept'
+    // })
   })
 
   const sendMessage = (message, from, to) => {
@@ -47,23 +53,16 @@ export const useSocketStore = defineStore('socket', () => {
     console.log('Send message: ', message, to)
   }
 
-  // const listenForMessages = () => {
-  //   socket.on('privateMessageToReceiver', ({ message, from }) => {
-  //     messages.value.push({ content: message, from }); // Thêm tin nhắn vào danh sách
-  //     console.log('Received message: ', message, from);
-  //     // server -> socketio -> privateMessageToReceiver -> store -> component render
-  //     // load -> api -> store -> component
-  //     // messageStore.addMessage(message,from)
-  //   });
-  // };
-
   const listenForMessages = () => {
     socket.on('privateMessageToReceiver', ({ message, from }) => {
-      messages.value.push({ content: message, from }) // Thêm tin nhắn vào danh sách
-      messageStore.addMessage({ content: message, from }) // Cập nhật vào MessageStore
-      console.log('Received message: ', message, from)
-    })
-  }
+      const currentContactId = accountStore.selectedAccount.contactUserId; // Lấy contactUserId hiện tại
+      if (currentContactId === from) { // Kiểm tra xem tin nhắn có đến từ người đang trò chuyện không
+        messages.value.push({ content: message, from }); // Thêm tin nhắn vào danh sách
+        messageStore.addMessage({ content: message, from }); // Cập nhật vào MessageStore
+        console.log('Received message: ', message, from);
+      }
+    });
+  };
 
   // Gọi phương thức này khi khởi tạo store
   listenForMessages()

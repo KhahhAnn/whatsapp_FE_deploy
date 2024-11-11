@@ -3,12 +3,16 @@ import { ref, computed, onMounted, watch } from 'vue'
 import CustomIcon from './custom/CustomIcon.vue'
 import RightModal from './modal/RightModal.vue'
 import { useDark } from '@vueuse/core'
-import Avatar from 'primevue/avatar'
 import { useAccountStore } from '../stores/AccountStore'
 import { useUserStore } from '../stores/UserStore'
 import { useSocketStore } from '../stores/SocketStore'
 import { useMessageStore } from '../stores/MessageStore'
 import MessageService from '../services/MessageService'
+
+import Avatar from 'primevue/avatar'
+import Image from 'primevue/image';
+import Button from 'primevue/button';
+import Menu from 'primevue/menu';
 
 const accountStore = useAccountStore()
 const userStore = useUserStore()
@@ -21,14 +25,41 @@ const isLoading = computed(() => !accountStore.selectedAccount)
 const imageUrl = ref(null)
 const message = ref('')
 
-const handleFileChange = (event) => {
-  const file = event.target.files[0]
-  if (file) {
-    imageUrl.value = URL.createObjectURL(file)
-  } else {
-    imageUrl.value = null
+const selectedMessageId = ref(null);
+
+const menu = ref();
+const items = ref([
+  {
+    label: 'Options',
+    items: [
+      {
+        label: 'Delete Message',
+        icon: 'pi pi-trash',
+        // Use an asynchronous function to delete the message via messageStore
+        command: async () => {
+          try {
+            await messageStore.handleDeleteMessage(selectedMessageId.value);
+            console.log("Message deleted successfully", selectedMessageId.value);
+          } catch (error) {
+            console.error('Error deleting message:', error);
+          }
+        }
+      },
+      {
+        label: 'Export',
+        icon: 'pi pi-upload'
+        // Further commands or actions for export
+      }
+    ]
   }
-}  
+]);
+
+const toggleMenu = (event, messageId) => {
+  menu.value.toggle(event);
+  selectedMessageId.value = messageId; // Store the current messageId to use for actions
+  console.log("Message ID:", messageId);
+};
+
 
 const accountInitial = computed(() => {
   return accountStore.selectedAccount?.nickname?.charAt(0).toUpperCase() || ''
@@ -41,6 +72,29 @@ const userInitial = computed(() => {
 function toggleModal() {
   isModalOpen.value = !isModalOpen.value
 }
+
+const handleFileChange = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    //Kiểm tra kích thước tệp (10mb)
+    if (file.size > 10 * 1024 * 1024) {
+      alert('File size exceeds 10MB');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      imageUrl.value = reader.result; // Lưu trữ dữ liệu Base64 của file ảnh
+    };
+    reader.onerror = (error) => {
+      console.error('Error: ', error);
+    };
+  } else {
+    imageUrl.value = null;
+  }
+}
+
 
 // Call API to get messages when DetailMessage component is mounted
 onMounted(() => {
@@ -68,30 +122,33 @@ watch(
 
 const sendMessage = async () => {
   try {
-    if (message.value.trim() === '') {
+    if (message.value.trim() === '' && !imageUrl.value) {
       return
     }
+    const content = imageUrl.value ? imageUrl.value : message.value; // Sử dụng imageUrl nếu có
     await socketStore.sendMessage(
-      message.value,
+      content,
       accountStore.selectedAccount.userId,
       accountStore.selectedAccount.contactUserId
     )
     await MessageService.handleCreateMessage(
       accountStore.selectedAccount.userId,
       accountStore.selectedAccount.contactUserId,
-      message.value
+      content // Gửi nội dung hình ảnh hoặc tin nhắn
     )
-    //  from = senderId
     messageStore.addMessage({
-      content: message.value,
+      content: content,
       senderId: accountStore.selectedAccount.userId,
       messageId: Date.now()
-    }) // Tạo messageId tạm thời hoặc sử dụng UUID
+    })
     message.value = ''
+    imageUrl.value = null // Reset imageUrl sau khi gửi
   } catch (error) {
     console.error('Error sending message:', error)
   }
 }
+
+
 
 function openCallPopUp() {
   const url = `http://localhost:5173/call?from=${accountStore.selectedAccount.userId}&to=${accountStore.selectedAccount.contactUserId}`;
@@ -148,15 +205,21 @@ function openCallPopUp() {
           ? 'justify-end'
           : 'flex-row-reverse justify-end'
           ">
-          <div class="flex flex-col max-w-full overflow-hidden rounded-2xl px-3 py-1" :class="msg.senderId === accountStore.selectedAccount.userId
+          <Button type="button" icon="pi pi-ellipsis-v" @click="toggleMenu($event, msg.messageId)" aria-haspopup="true"
+            aria-controls="overlay_menu" size="small" variant="outlined" rounded />
+
+          <div class="flex flex-col max-w-full overflow-hidden rounded-2xl" :class="msg.senderId === accountStore.selectedAccount.userId
             ? 'bg-lightModeHover dark:bg-darkModeHover'
             : 'bg-lightModeHover dark:bg-darkModeHover text-darkMode dark:text-lightMode'
             ">
-            <p class="text-darkMode dark:text-lightMode break-words min-w-0 w-full">
+            <p v-if="msg.content.startsWith('data:image/') && msg.content.includes(';base64,')"
+              class="text-darkMode dark:text-lightMode min-w-0 w-full">
+              <Image :src="msg.content" alt="Image" preview class=" lg:max-w-[512px] rounded-lg" />
+            </p>
+            <p v-else class="text-darkMode dark:text-lightMode break-words min-w-0 w-full px-3 py-1">
               {{ msg.content }}
             </p>
           </div>
-
           <!-- Hien thi tin nhan -->
           <div class="w-9 h-9 rounded-full flex items-center justify-center ml-2 mr-2">
             <Avatar v-if="msg.senderId === accountStore.selectedAccount.userId" :label="userInitial" size="small"
@@ -165,6 +228,7 @@ function openCallPopUp() {
               :style="{ backgroundColor: isDark ? '#4B5563' : '#c0bab1' }" />
           </div>
         </div>
+        <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />
       </div>
     </div>
 

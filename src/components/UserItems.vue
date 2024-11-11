@@ -14,10 +14,9 @@ const accountStore = useAccountStore(); // Khởi tạo store
 
 const items = ref([
   {
-    label: 'Options',
     items: [
       {
-        label: 'Delete contact',
+        label: 'Xoá liên hệ',
         icon: 'pi pi-trash',
         command: async () => {
           try {
@@ -67,8 +66,8 @@ const accountInitial = computed(() => {
       <h1 v-if="account">{{ account?.nickname }}</h1>
       <p v-if="account" class="truncate max-w-[200px]">{{ account?.message }}</p>
     </div>
-    <Button type="button" icon="pi pi-ellipsis-v" @click="toggle" aria-haspopup="true" aria-controls="overlay_menu" />
-
+    <Button type="button" icon="pi pi-ellipsis-v" @click="toggle" aria-haspopup="true" aria-controls="overlay_menu"
+      size="small" variant="outlined" rounded />
     <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />
     <Toast />
   </div>
