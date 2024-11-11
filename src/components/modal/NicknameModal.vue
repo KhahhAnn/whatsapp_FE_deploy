@@ -2,6 +2,8 @@
 import { ref, watch } from 'vue'
 import ContactService from '../../services/ContactService'
 import { useAccountStore } from '../../stores/AccountStore'
+import Toast from 'primevue/toast';
+import { useToast } from 'primevue/usetoast';
 
 const props = defineProps({
   isOpen: Boolean,
@@ -10,6 +12,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:isOpen'])
+const toast = useToast();
 
 const newNickname = ref(props.currentNickname)
 const accountStore = useAccountStore()
@@ -33,11 +36,13 @@ async function updateNickname() {
     }
 
     console.log('Cập nhật biệt danh thành công', accountStore.selectedAccount.nickname);
+    toast.add({ severity: 'success', summary: 'Thành công', detail: 'Cập nhật biệt danh thành công', life: 3000 });
 
     // Đóng modal
     closeModal();
   } catch (error) {
     console.error('Error updating nickname:', error);
+    toast.add({ severity: 'error', summary: 'Thất bại', detail: 'Cập nhật biệt danh thất bại', life: 3000 });
   }
 }
 
@@ -77,6 +82,7 @@ function closeModal() {
             </button>
           </div>
         </div>
+        <Toast />
       </div>
     </div>
   </div>

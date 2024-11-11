@@ -20,7 +20,7 @@ const isDark = useDark()
 const socketStore = useSocketStore()
 const messageStore = useMessageStore()
 const isModalOpen = ref(false)
-const isLoading = computed(() => !accountStore.selectedAccount)
+const isLoading = ref(false); // Thêm biến loading
 
 const imageUrl = ref(null)
 const message = ref('')
@@ -35,7 +35,6 @@ const items = ref([
       {
         label: 'Delete Message',
         icon: 'pi pi-trash',
-        // Use an asynchronous function to delete the message via messageStore
         command: async () => {
           try {
             await messageStore.handleDeleteMessage(selectedMessageId.value);
@@ -48,7 +47,6 @@ const items = ref([
       {
         label: 'Export',
         icon: 'pi pi-upload'
-        // Further commands or actions for export
       }
     ]
   }
@@ -68,6 +66,12 @@ const accountInitial = computed(() => {
 const userInitial = computed(() => {
   return userStore.selectedUser?.username?.charAt(0).toUpperCase() || ''
 })
+
+const fetchMessages = async (senderId, receiverId) => {
+  isLoading.value = true; // Bắt đầu loading
+  await messageStore.fetchMessagesBetweenUsers(senderId, receiverId);
+  isLoading.value = false; // Kết thúc loading
+}
 
 function toggleModal() {
   isModalOpen.value = !isModalOpen.value
@@ -95,14 +99,12 @@ const handleFileChange = (event) => {
   }
 }
 
-
 // Call API to get messages when DetailMessage component is mounted
 onMounted(() => {
   const senderId = accountStore.selectedAccount.userId
   const receiverId = accountStore.selectedAccount.contactUserId
-
   if (receiverId) {
-    messageStore.fetchMessagesBetweenUsers(senderId, receiverId)
+    fetchMessages(senderId, receiverId);
   }
 })
 
@@ -112,10 +114,7 @@ watch(
   (newContactId) => {
     if (newContactId) {
       const senderId = accountStore.selectedAccount.userId
-      messageStore.fetchMessagesBetweenUsers(senderId, newContactId)
-
-      // const receiverId = accountStore.selectedAccount.userId;
-      // messageStore.fetchMessagesBetweenUsers(receiverId, senderId);
+      fetchMessages(senderId, newContactId);
     }
   }
 )
@@ -148,14 +147,11 @@ const sendMessage = async () => {
   }
 }
 
-
-
 function openCallPopUp() {
   const url = `http://localhost:5173/call?from=${accountStore.selectedAccount.userId}&to=${accountStore.selectedAccount.contactUserId}`;
   const features = 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=800,height=600';
   window.open(url, '_blank', features);
 }
-
 </script>
 
 <template>
@@ -201,13 +197,12 @@ function openCallPopUp() {
 
       <div v-else>
         <!-- Hiển thị tin nhắn -->
-        <div v-for="msg in messageStore.messages" :key="msg.messageId" class="flex mb-4" :class="msg.senderId === accountStore.selectedAccount.userId
+        <div v-for="msg in messageStore.messages" :key="msg.messageId" class="flex mb-4 items-center" :class="msg.senderId === accountStore.selectedAccount.userId
           ? 'justify-end'
           : 'flex-row-reverse justify-end'
           ">
           <Button type="button" icon="pi pi-ellipsis-v" @click="toggleMenu($event, msg.messageId)" aria-haspopup="true"
             aria-controls="overlay_menu" size="small" variant="outlined" rounded />
-
           <div class="flex flex-col max-w-full overflow-hidden rounded-2xl" :class="msg.senderId === accountStore.selectedAccount.userId
             ? 'bg-lightModeHover dark:bg-darkModeHover'
             : 'bg-lightModeHover dark:bg-darkModeHover text-darkMode dark:text-lightMode'

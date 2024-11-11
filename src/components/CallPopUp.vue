@@ -1,10 +1,12 @@
 <script setup>
 import axios from 'axios';
 import { StringeeCall, StringeeClient } from 'stringee-chat-js-sdk';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, nextTick, watchEffect } from 'vue';
 import { useAccountStore } from '@/stores/AccountStore';
 import Avatar from 'primevue/avatar';
 import ProgressSpinner from 'primevue/progressspinner';
+import { useDark } from '@vueuse/core'
+
 
 const accountStore = useAccountStore();
 const client = new StringeeClient();
@@ -23,10 +25,62 @@ const urlParams = new URLSearchParams(queryString);
 const from = urlParams.get('from');
 const to = urlParams.get('to');
 
+const isWebcamOn = ref(true); // Biến trạng thái cho webcam
+const isDark = useDark()
 
-onMounted(() => {
-    fetchTokenAndConnect();
-})
+
+onMounted(async () => {
+    await fetchTokenAndConnect();
+    await nextTick(); // Đảm bảo DOM đã được cập nhật
+    console.log('localVideo:', localVideo.value); // Kiểm tra giá trị của localVideo
+    await startLocalVideo(); // Khởi động webcam
+});
+
+watchEffect(() => {
+    if (isWebcamOn.value && localVideo.value) {
+        startLocalVideo().catch(console.error);
+    }
+});
+
+async function startLocalVideo() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        if (localVideo.value) { // Kiểm tra xem localVideo.value có phải là null không
+            localVideo.value.srcObject = stream; // Gán stream cho localVideo
+            console.log('localVideo after:', localVideo.value); // Kiểm tra giá trị của localVideo
+        } else {
+            console.error('localVideo is not available');
+        }
+    } catch (error) {
+        console.error('Error accessing webcam:', error);
+    }
+}
+
+async function toggleWebcam() {
+    isWebcamOn.value = !isWebcamOn.value;
+    if (!isWebcamOn.value) {
+        // Tắt webcam
+        stopAndResetLocalVideo();
+    } else {
+        // Bật webcam
+        console.log('Turning on webcam...');
+        await nextTick();
+        await startLocalVideo();
+    }
+}
+
+function stopAndResetLocalVideo() {
+    if (localVideo.value && localVideo.value.srcObject) {
+        const tracks = localVideo.value.srcObject.getTracks();
+        tracks.forEach(track => {
+            track.stop();
+            console.log('Stopping track: ', track.kind); // For debugging: check which tracks are stopped
+        });
+        localVideo.value.srcObject = null;
+        console.log('Webcam tracks stopped and srcObject is reset.');
+    }
+}
+
 
 async function fetchTokenAndConnect() {
     try {
@@ -152,19 +206,38 @@ const accountInitial = computed(() => {
 })
 </script>
 <template>
-    <div class="flex flex-col items-center justify-center bg-slate-500 h-full w-full">
-        
-<ProgressSpinner aria-label="Loading" />
-
-        <Avatar :label="accountInitial" class="mr-2" size="large" shape="circle"
-            :style="{ backgroundColor: isDark ? '#4B5563' : '#c0bab1' }" />
-        <div>
-            <p>Adasd</p>
+    <div class="flex flex-col items-center justify-center bg-gray-800 h-full w-full p-4">
+        <div class="flex flex-col items-center mb-4">
+            <Avatar :label="accountInitial" class="mr-2" size="large" shape="circle"
+                :style="{ backgroundColor: isDark ? '#4B5563' : '#c0bab1' }" />
+            <p class="text-white text-lg">{{ isVideoCall ? 'Video Call' : 'Voice Call' }}</p>
+            <p class="text-gray-400">{{ to }}</p>
         </div>
-        <div>
-            <button @click="acceptCall">Accept Call</button>
-            <button @click="rejectCall">Reject Call</button>
-            <button @click="upgradeToVideoCall">Upgrade to Video Call</button>
+
+        <ProgressSpinner aria-label="Loading" v-if="loading" />
+
+        <div class="relative w-1/2 h-auto rounded-lg">
+            <video v-if="isWebcamOn" ref="localVideo" class="w-full h-auto rounded-lg" autoplay muted></video>
+            <img v-else src="../assets/cameraoff.png" class="w-full h-auto rounded-lg" alt="Webcam is off" />
+        </div>
+
+        <div class="flex space-x-4 mt-4">
+            <button @click="acceptCall" class="bg-green-500 text-white p-2 rounded-full">
+                <i class="fas fa-phone-alt"></i> <!-- Nhấn để chấp nhận cuộc gọi -->
+                Chấp nhận
+            </button>
+            <button @click="rejectCall" class="bg-red-500 text-white p-2 rounded-full">
+                <i class="fas fa-times"></i> <!-- Nhấn để từ chối cuộc gọi -->
+                Từ chối
+            </button>
+            <button @click="upgradeToVideoCall" v-if="!isVideoCall" class="bg-blue-500 text-white p-2 rounded-full">
+                <i class="fas fa-video"></i> <!-- Nhấn để nâng cấp cuộc gọi lên video -->
+                Nâng cấp lên video
+            </button>
+            <button @click="toggleWebcam" class="bg-yellow-500 text-white p-2 rounded-full">
+                <i class="fas" :class="isWebcamOn ? 'fa-video-slash' : 'fa-video'"></i>
+                {{ isWebcamOn ? 'Tắt Webcam' : 'Bật Webcam' }} <!-- Nhấn để bật/tắt webcam -->
+            </button>
         </div>
     </div>
 </template>
