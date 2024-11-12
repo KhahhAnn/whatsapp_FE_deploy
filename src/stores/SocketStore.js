@@ -55,10 +55,10 @@ export const useSocketStore = defineStore('socket', () => {
 
   const listenForMessages = () => {
     socket.on('privateMessageToReceiver', ({ message, from }) => {
-      const currentContactId = accountStore.selectedAccount.contactUserId; // Lấy contactUserId hiện tại
-      if (currentContactId === from) { // Kiểm tra xem tin nhắn có đến từ người đang trò chuyện không
-        messages.value.push({ content: message, from }); // Thêm tin nhắn vào danh sách
-        messageStore.addMessage({ content: message, from }); // Cập nhật vào MessageStore
+      const currentContactId = accountStore.selectedAccount.contactUserId;
+      if (currentContactId === from) {
+        messages.value.push({ content: message, from });
+        messageStore.addMessage({ content: message, from });
         console.log('Received message: ', message, from);
       }
     });

@@ -28,11 +28,21 @@ export const useMessageStore = defineStore('message', () => {
     }
   }
 
+  const fetchMediaMessages = async (senderId, receiverId) => {
+    try {
+      const messages = await MessageService.getMessagesBetweenUsers(senderId, receiverId)
+      return messages.filter(
+        (msg) => msg.content.startsWith('data:image/') || msg.content.startsWith('data:video/')
+      )
+    } catch (error) {
+      console.error('Error fetching media messages:', error)
+    }
+  }
+
   const handleDeleteMessage = async (messageId) => {
     try {
       await MessageService.handleDeleteMessage(messageId)
-      messages.value = messages.value.filter(message => message._id !== messageId)
-      // cập nhật lại tin nhắn sau khi xoá
+      messages.value = messages.value.filter((message) => message.messageId !== messageId)
       selectedMessage.value = null
     } catch (error) {
       console.error('Error deleting message:', error)
@@ -50,6 +60,7 @@ export const useMessageStore = defineStore('message', () => {
     addMessage,
     fetchMessagesByUser, // Thêm phương thức này
     fetchMessagesBetweenUsers, // Thêm phương thức này
-    handleDeleteMessage
+    handleDeleteMessage,
+    fetchMediaMessages
   }
 })
