@@ -24,8 +24,8 @@ const items = ref([
             //Thông báo cho người dùng
             toast.add({
               severity: 'success',
-              summary: 'Success',
-              detail: 'Contact deleted successfully',
+              summary: 'Thành công',
+              detail: 'Liên hệ đã xóa thành công',
               life: 3000
             });
           } catch (error) {

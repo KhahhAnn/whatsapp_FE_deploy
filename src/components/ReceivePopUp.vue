@@ -9,6 +9,7 @@
 import { ref, onMounted } from 'vue';
 import { StringeeClient, StringeeCall } from 'stringee-chat-js-sdk';
 import axios from 'axios';
+import { useCallStore } from '../stores/CallStore'; // Import the CallStore
 
 const client = new StringeeClient();
 const call = ref(null);
@@ -18,8 +19,12 @@ const urlParams = new URLSearchParams(window.location.search);
 const callFrom = urlParams.get('fromNumber');
 const callId = urlParams.get('callId'); // ID của cuộc gọi đến
 
+const callStore = useCallStore(); // Initialize the CallStore
+
 onMounted(async () => {
   await connectClient();
+  const incomingCall = callStore.setIncomingCall(call);
+  console.log('Incoming Call store:', incomingCall); // Log the incoming call value
 });
 
 async function connectClient() {
@@ -28,10 +33,13 @@ async function connectClient() {
     const token = response.data.access_token;
     client.connect(token);
 
+    
+
     client.on('connect', () => {
       console.log('Connected to Stringee!');
       if (callId) {
         joinIncomingCall();
+       
       }
     });
 

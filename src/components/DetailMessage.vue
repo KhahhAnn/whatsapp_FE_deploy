@@ -11,7 +11,7 @@ import { useUserStore } from '../stores/UserStore'
 import { useSocketStore } from '../stores/SocketStore'
 import { useMessageStore } from '../stores/MessageStore'
 import MessageService from '../services/MessageService'
-
+import { useCallStore } from '../stores/CallStore'
 // SDK
 import { StringeeClient } from 'stringee-chat-js-sdk';
 import { useDark } from '@vueuse/core'
@@ -27,7 +27,7 @@ const accountStore = useAccountStore()
 const userStore = useUserStore()
 const socketStore = useSocketStore()
 const messageStore = useMessageStore()
-
+const callStore = useCallStore()
 // Refs handle component
 const isModalOpen = ref(false)
 const isLoading = ref(false);
@@ -251,6 +251,8 @@ async function fetchTokenAndConnect() {
       callId.value = call.callId;
       callFrom.value = call.fromNumber;
       callTo.value = call.toNumber;
+
+      callStore.setIncomingCall(incomingCall);
 
       console.log('Incoming call received:', call);
     });

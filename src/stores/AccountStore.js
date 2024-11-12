@@ -75,20 +75,18 @@ export const useAccountStore = defineStore('account', () => {
 
   const addContact = async (userId, contactUserId, nickname, status) => {
     try {
-      console.log("Adding contact with data:", { userId, contactUserId, nickname, status }); // Log dữ liệu
       const response = await ContactService.handleCreateContact(userId, contactUserId, nickname, status);
-      console.log("Response from server:", response); // Log phản hồi từ server
       if (response && response.data) {
-        accounts.value.push(response.data.account); // Cập nhật danh sách contacts
-        console.log("Updated contacts:", accounts.value); // Log danh sách contacts sau khi cập nhật
-        return response.data; // Trả về dữ liệu contact vừa thêm
+        accounts.value.push(response.data.account);
+        return response.data;
       } else {
         console.error('No contact data received');
       }
     } catch (error) {
-      console.error('Error adding contact:', error);
+      console.error('Error adding contact in AccountStore:', error);
+      throw error; // Ném lại lỗi để Component có thể xử lý
     }
-  }
+  };
 
   const deleteContact = async (contactId) => {
     try {

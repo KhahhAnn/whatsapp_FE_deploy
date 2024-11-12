@@ -2,16 +2,16 @@ import apiClient from '../api/api'
 
 const handleCreateContact = async (userId, contactUserId, nickname, status) => {
   try {
-    console.log("Creating contact with data:", { userId, contactUserId, nickname, status }); // Log input data
-      return await apiClient.post('/contact', {
-          userId,
-          contactUserId,
-          nickname,
-          status
-      });
+    console.log("Creating contact with data:", { userId, contactUserId, nickname, status });
+    return await apiClient.post('/contact', {
+      userId,
+      contactUserId,
+      nickname,
+      status
+    });
   } catch (error) {
-      console.error('Error during adding contact:', error.response ? error.response.data : error.message);
-      throw error;
+    console.error('Error during adding contact:', error.response ? error.response.data : error.message);
+    throw new Error('Failed to create contact: ' + (error.response ? error.response.data.message : error.message));
   }
 };
 

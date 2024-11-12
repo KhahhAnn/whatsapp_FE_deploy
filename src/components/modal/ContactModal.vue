@@ -48,72 +48,26 @@ function closeModal() {
 
 async function addContact(user) {
   try {
-    const userId = localStorage.getItem('userId')
-    // Gọi API để thêm liên hệ
-    await accountStore.addContact(userId, user.userId, user.username, 'friend')
-
-    // Cập nhật danh sách liên hệ
-    await accountStore.getContactByUser(localStorage.getItem('userId'))
-
+    const userId = localStorage.getItem('userId');
+    await accountStore.addContact(userId, user.userId, user.username, 'friend');
+    await accountStore.getContactByUser(userId);
     toast.add({
       severity: 'success',
       summary: 'Thành công',
-      detail: 'Thêm liên hệ thành công',
+      detail: 'Liên hệ đã thêm thành công',
       life: 3000
-    })
-
-    // Đóng modal
-    closeModal()
+    });
+    closeModal();
   } catch (error) {
-    console.error('Error adding contact:', error)
+    console.error('Error adding contact in ContactModal:', error);
     toast.add({
       severity: 'error',
-      summary: 'Thất bại',
-      detail: 'Thêm liên hệ thất bại',
+      summary: 'Lỗi',
+      detail: 'User đã có liên hệ này rồi',
       life: 3000
-    })
+    });
   }
 }
-
-// async function addContact(user) {
-//   try {
-//     const userId = localStorage.getItem('userId')
-//     const response = await accountStore.addContact(userId, user.userId, user.username, 'friend')
-//     console.log('Contact request sent:', response)
-
-//     toast.add({
-//       severity: 'success',
-//       summary: 'Success',
-//       detail: 'Contact added successfully',
-//       life: 3000
-//     })
-//     // Cập nhật lại danh sách contacts
-//     await accountStore.getContactByUser(userId) // Lấy lại danh sách contacts sau khi thêm
-
-//     closeModal()
-//   } catch (error) {
-//     console.error('Error adding contact:', error)
-//     if (error.response && error.response.data) {
-//       if (error.response.data.message === 'User đã có liên hệ này rồi') {
-//         toast.add({
-//           severity: 'error',
-//           summary: 'Error',
-//           detail: 'User đã có liên hệ này rồi',
-//           life: 3000
-//         })
-//       } else {
-//         toast.add({
-//           severity: 'error',
-//           summary: 'Error',
-//           detail: error.response.data.message,
-//           life: 3000
-//         })
-//       }
-//     } else {
-//       alert('Có lỗi xảy ra khi thêm liên hệ.')
-//     }
-//   }
-// }
 </script>
 
 <template>
