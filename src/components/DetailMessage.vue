@@ -34,6 +34,10 @@ const isLoading = ref(false);
 const showPopup = ref(false);
 const incomingCall = ref(null);
 const callerName = ref('');
+const callId = ref('');
+const callFrom = ref('');
+const callTo = ref('');
+
 const clientConnected = ref(false);
 const selectedMessageId = ref(null);
 // Refs sdk
@@ -205,6 +209,12 @@ function openCallPopUp() {
   window.open(url, '_blank', features);
 }
 
+function openReceivePopUp(callId, fromNumber, toNumber) {
+  const url = `http://localhost:5173/receive?callId=${callId}&fromNumber=${fromNumber}&toNumber=${toNumber}`;
+  const features = 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=800,height=600';
+  window.open(url, '_blank', features);
+}
+
 async function fetchTokenAndConnect() {
   try {
     const response = await axios.post('http://localhost:8080/api/token', { from: accountStore.selectedAccount.userId });
@@ -234,8 +244,14 @@ async function fetchTokenAndConnect() {
       incomingCall.value = call;
       console.log("incomingCall:", incomingCall);
 
-      callerName.value = call.fromNumber;
+      callerName.value = accountStore.selectedAccount.nickname;
       showPopup.value = true;
+      console.log('call id:', call  );
+
+      callId.value = call.callId;
+      callFrom.value = call.fromNumber;
+      callTo.value = call.toNumber;
+
       console.log('Incoming call received:', call);
     });
 
@@ -247,7 +263,8 @@ async function fetchTokenAndConnect() {
 
 const acceptCall = () => {
   incomingCall.value.answer((res) => {
-    openCallPopUp()
+    console.log("res: ", callId.value);
+    openReceivePopUp(callId.value, callFrom.value, callTo.value)
     console.log("answer call callback: " + JSON.stringify(res));
   });
 };

@@ -27,6 +27,12 @@ const routes = [
     component: () => import('../components/CallPopUp.vue')
   },
   {
+    path: '/receive',
+    name: 'receive',
+    component: () => import('../components/ReceivePopUp.vue')
+  },
+  
+  {
     path: '/:pathMatch(.*)*',
     name: 'error',
     component: () => import('../views/BrokenLink.vue')
