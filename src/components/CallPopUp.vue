@@ -76,6 +76,7 @@ async function fetchTokenAndConnect() {
     try {
         const response = await axios.post('http://localhost:8080/api/token', { from });
         token.value = response.data.access_token;
+        console.log('token', token.value)
 
         client.on('connect', () => {
             console.log('Connected to Stringee!');
@@ -140,6 +141,7 @@ const toCall = () => {
     call.makeCall((res) => {
         console.log("make call callback: " + JSON.stringify(res));
     });
+    console.log('toCall', call)
 };
 
 const acceptCall = () => {

@@ -4,6 +4,7 @@ import ContactService from '../../services/ContactService'
 import { useAccountStore } from '../../stores/AccountStore'
 import Toast from 'primevue/toast';
 import { useToast } from 'primevue/usetoast';
+import Button from 'primevue/button';
 
 const props = defineProps({
   isOpen: Boolean,
@@ -25,10 +26,10 @@ async function updateNickname() {
   try {
     // Gọi API để cập nhật nickname trong cơ sở dữ liệu
     await ContactService.handleUpdateContact(props.contactId, newNickname.value);
-    
+
     // Cập nhật nickname trong selectedAccount
     accountStore.selectAccount({ ...accountStore.selectedAccount, nickname: newNickname.value });
-    
+
     // Cập nhật nickname trong danh sách contacts
     const contact = accountStore.accounts.find(account => account.contactId === props.contactId);
     if (contact) {
@@ -59,16 +60,19 @@ function closeModal() {
     <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
       <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
         <div
-          class="relative transform overflow-hidden rounded-2xl text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg bg-lightMode dark:bg-darkMode">
-
+          class="relative transform overflow-hidden rounded-2xl text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm bg-lightMode dark:bg-darkMode">
           <!-- Block modal -->
           <div class="relative px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-            <h3 class="text-center font-bold leading-10 text-darkMode dark:text-lightMode" id="modal-title">
+            <h3 class="text-center font-bold leading-10 mb-4 text-darkMode dark:text-lightMode" id="modal-title">
               Biệt danh
             </h3>
-            <input type="text" v-model="newNickname"
-              class="w-full py-2 px-4 rounded-full bg-lightModeHover dark:bg-darkModeHover text-darkMode dark:text-lightMode placeholder-darkModeHover dark:placeholder-lightModeHover"
-              placeholder="Nhập biệt danh mới" />
+            <div class="relative h-11">
+              <input type="text" v-model="newNickname" placeholder="Nhập biệt danh mới"
+                class="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 disabled:cursor-not-allowed transition-all border-b placeholder-shown:border-blue-gray-200 placeholder:opacity-0 focus:placeholder:opacity-100 text-sm pt-4 pb-1.5 border-blue-gray-200 focus:border-darkMode dark:focus:border-lightMode text-darkMode dark:text-lightMode" /><label
+                class="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] after:content[''] after:block after:w-full after:absolute after:-bottom-1.5 after:border-b-2 after:scale-x-0 peer-focus:after:scale-x-100 after:transition-transform after:duration-300 peer-placeholder-shown:leading-[4.25] text-darkMode dark:text-lightMode peer-focus:text-darkMode dark:peer-focus:text-lightMode after:border-darkMode dark:after:border-lightMode peer-focus:after:border-darkMode dark:peer-focus:after:border-lightMode">
+                Biệt danh
+              </label>
+            </div>
           </div>
           <div class="absolute top-4 right-4">
             <button @click="closeModal" type="button">
@@ -77,9 +81,7 @@ function closeModal() {
             </button>
           </div>
           <div class="flex justify-center pb-4">
-            <button @click="updateNickname" class="bg-blue-500 text-white rounded-full px-4 py-2">
-              Cập nhật
-            </button>
+            <Button label="Cập nhật" severity="success" @click="updateNickname" />
           </div>
         </div>
         <Toast />

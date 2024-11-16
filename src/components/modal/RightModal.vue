@@ -73,7 +73,7 @@ function toggleNicknameModal() {
       <!-- User information -->
       <template v-else>
         <Avatar :label="accountInitial" class="mr-2" size="xlarge" shape="circle" :style="{
-          backgroundColor: isDark ? '#4B5563' : '#c0bab1'
+          backgroundColor: isDark ? '#4B5563' : '#dfe1e3'
         }" />
         <p>{{ accountStore.selectedAccount.nickname }}</p>
       </template>

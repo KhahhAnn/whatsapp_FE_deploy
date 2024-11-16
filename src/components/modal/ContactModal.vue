@@ -107,7 +107,7 @@ async function addContact(user) {
               <div
                 v-for="user in filteredUsers"
                 :key="user.userId"
-                class="flex justify-between items-center py-2 px-4 cursor-pointer hover:bg-lightModeHover dark:hover:bg-darkModeHover"
+                class="flex justify-between items-center py-2 px-4 cursor-pointer"
               >
                 <div class="flex items-center justify-start">
                   <Avatar
@@ -116,7 +116,7 @@ async function addContact(user) {
                     size="large"
                     shape="circle"
                     :style="{
-                      backgroundColor: isDark ? '#4B5563' : '#c0bab1'
+                      backgroundColor: isDark ? '#4B5563' : '#dfe1e3'
                     }"
                   />
                   <div class="flex flex-col justify-center items-start ml-4">

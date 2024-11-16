@@ -66,7 +66,7 @@ const userInitial = computed(() => {
       class="w-full h-[100%] rounded-3xl text-darkMode dark:text-lightMode bg-lightMode dark:bg-darkMode shadow-lg">
       <div v-if="userStore.selectedUser" class="flex flex-col justify-center items-center gap-4 px-4 py-8">
         <Avatar :label="userInitial" class="mr-2" size="xlarge" shape="circle" :style="{
-          backgroundColor: isDark ? '#4B5563' : '#c0bab1'
+          backgroundColor: isDark ? '#4B5563' : '#dfe1e3'
         }" />
 
         <h1 class="text-xl font-semibold">{{ userStore.selectedUser.username }}</h1>

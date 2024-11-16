@@ -60,7 +60,7 @@ const accountInitial = computed(() => {
     class="flex justify-between items-center p-3 text-darkMode dark:text-lightMode hover:bg-lightModeHover dark:hover:bg-darkModeHover">
     <div class="flex items-center gap-4">
       <Avatar :label="accountInitial" class="mr-2" size="xlarge" shape="circle" :style="{
-        backgroundColor: isDark ? '#4B5563' : '#c0bab1'
+        backgroundColor: isDark ? '#4B5563' : '#dfe1e3'
       }" />
 
       <h1 v-if="account">{{ account?.nickname }}</h1>

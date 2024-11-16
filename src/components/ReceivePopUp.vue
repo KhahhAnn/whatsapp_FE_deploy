@@ -17,6 +17,7 @@ const localVideo = ref(null);
 const remoteVideo = ref(null);
 const urlParams = new URLSearchParams(window.location.search);
 const callFrom = urlParams.get('fromNumber');
+const callTo = urlParams.get('toNumber');
 const callId = urlParams.get('callId'); // ID của cuộc gọi đến
 
 const callStore = useCallStore(); // Initialize the CallStore
@@ -29,8 +30,9 @@ onMounted(async () => {
 
 async function connectClient() {
   try {
-    const response = await axios.post('http://localhost:8080/api/token', { from: callFrom });
+    const response = await axios.post('http://localhost:8080/api/token', { from: callTo });
     const token = response.data.access_token;
+    console.log('token', token)
     client.connect(token);
 
     
@@ -55,10 +57,10 @@ async function connectClient() {
 
 function joinIncomingCall() {
   // Khởi tạo đối tượng StringeeCall để trả lời cuộc gọi đến
-  call.value = new StringeeCall(client, callId);
-
-  // Trả lời cuộc gọi đến
-  call.value.answer();
+  call.value = new StringeeCall(client,  callFrom,callTo, false);
+  call.value.callId = callId
+  call.value.isIncomingCall = true
+  console.log('join incoming call', callId, callFrom, callTo)
 
   call.value.on('addremotestream', (stream) => {
     if (remoteVideo.value) {
@@ -75,6 +77,11 @@ function joinIncomingCall() {
   call.value.on('signalingstate', (state) => {
     console.log("Signaling state:", state);
   });
+
+// Trả lời cuộc gọi đến
+call.value.answer((r)=>{
+  console.log('answer response:', r)
+});
 }
 </script>
 

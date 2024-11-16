@@ -51,12 +51,18 @@ const imageUrl = ref(null)
 const videoUrl = ref(null)
 const message = ref('')
 const menu = ref();
+
+const formatSentAt = (timestamp) => {
+  const date = new Date(timestamp);
+  return date.toLocaleString(); // Định dạng thời gian theo định dạng địa phương
+};
+
 const items = ref([
   {
     label: 'Options',
     items: [
       {
-        label: 'Delete Message',
+        label: 'Xoá tin nhắn',
         icon: 'pi pi-trash',
         command: async () => {
           try {
@@ -78,9 +84,10 @@ const items = ref([
           }
         }
       },
+      // Hiện thời gian tin nhắn được tạo
       {
-        label: 'Export',
-        icon: 'pi pi-upload'
+        label: `Thời gian: ${formatSentAt(messageStore.messages.sentAt)}`,
+        icon: 'pi pi-clock',
       }
     ]
   }
@@ -170,7 +177,7 @@ const sendMessage = async () => {
     if (message.value.trim() === '' && !imageUrl.value && !videoUrl.value) {
       return;
     }
-    const content = videoUrl.value ? videoUrl.value : (imageUrl.value ? imageUrl.value : message.value);
+    const content = videoUrl.value ??  imageUrl.value ?? message.value;
 
     // Gửi tin nhắn qua socket
     await socketStore.sendMessage(
@@ -190,7 +197,8 @@ const sendMessage = async () => {
     messageStore.addMessage({
       content: content,
       senderId: accountStore.selectedAccount.userId,
-      messageId: Date.now()
+      messageId: Date.now(),
+      sentAt: new Date()
     });
 
     // Reset các giá trị
@@ -244,9 +252,10 @@ async function fetchTokenAndConnect() {
       incomingCall.value = call;
       console.log("incomingCall:", incomingCall);
 
-      callerName.value = accountStore.selectedAccount.nickname;
+      // Đặt callerName là nickname của người gọi
+      callerName.value = call.fromNumber;
       showPopup.value = true;
-      console.log('call id:', call  );
+      console.log('call id:', call);
 
       callId.value = call.callId;
       callFrom.value = call.fromNumber;
@@ -296,7 +305,7 @@ const rejectCall = () => {
 
       <div v-else class="flex items-center gap-4 select-none">
         <Avatar :label="accountInitial" class="mr-2" size="large" shape="circle"
-          :style="{ backgroundColor: isDark ? '#4B5563' : '#c0bab1' }" />
+          :style="{ backgroundColor: isDark ? '#4B5563' : '#dfe1e3' }" />
         <div class="user-data text-darkMode dark:text-lightMode">
           <h1>{{ accountStore.selectedAccount.nickname }}</h1>
         </div>
@@ -329,7 +338,7 @@ const rejectCall = () => {
           ">
           <Button type="button" icon="pi pi-ellipsis-v" @click="toggleMenu($event, msg.messageId)" aria-haspopup="true"
             aria-controls="overlay_menu" size="small" variant="outlined" rounded
-            style=" background-color: transparent; border: none; " />
+            :style="{ border: 'none', backgroundColor: 'transparent', color: isDark ? 'white' : 'black' }" />
           <div class="flex flex-col max-w-full overflow-hidden rounded-2xl" :class="msg.senderId === accountStore.selectedAccount.userId
             ? 'bg-lightModeHover dark:bg-darkModeHover'
             : 'bg-lightModeHover dark:bg-darkModeHover text-darkMode dark:text-lightMode'
@@ -346,13 +355,16 @@ const rejectCall = () => {
             <p v-else class="text-darkMode dark:text-lightMode break-words min-w-0 w-full px-3 py-1">
               {{ msg.content }}
             </p>
+            <p class="text-gray-500 text-xs px-3 py-1">
+              {{ formatSentAt(msg.sentAt) }} <!-- Định dạng thời gian -->
+            </p>
           </div>
           <!-- Hien thi tin nhan -->
           <div class="w-9 h-9 rounded-full flex items-center justify-center ml-2 mr-2">
             <Avatar v-if="msg.senderId === accountStore.selectedAccount.userId" :label="userInitial" size="small"
-              shape="circle" :style="{ backgroundColor: isDark ? '#4B5563' : '#c0bab1' }" />
+              shape="circle" :style="{ backgroundColor: isDark ? '#4B5563' : '#dfe1e3' }" />
             <Avatar v-else :label="accountInitial" size="small" shape="circle"
-              :style="{ backgroundColor: isDark ? '#4B5563' : '#c0bab1' }" />
+              :style="{ backgroundColor: isDark ? '#4B5563' : '#dfe1e3' }" />
           </div>
         </div>
         <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />
@@ -388,18 +400,21 @@ const rejectCall = () => {
     </div>
   </div>
   <RightModal :isOpen="isModalOpen" @update:isOpen="isModalOpen = $event" />
-  <div v-if="showPopup" class="popup fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center">
-    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-      <p class="text-lg font-semibold text-black">Bạn có một cuộc gọi đến từ {{ callerName }}</p>
-      <div class="flex justify-center mt-4 space-x-4">
-        <button @click="acceptCall" class="bg-green-500 text-white py-2 px-4 rounded-full">
-          Chấp nhận
-        </button>
-        <button @click="rejectCall" class="bg-red-500 text-white py-2 px-4 rounded-full">
-          Từ chối
-        </button>
+
+  <Teleport to="#app">
+    <div v-if="showPopup" class="popup fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center">
+      <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+        <p class="text-lg font-semibold text-black">Bạn có một cuộc gọi đến từ {{ callerName }}</p>
+        <div class="flex justify-center mt-4 space-x-4">
+          <button @click="acceptCall" class="bg-green-500 text-white py-2 px-4 rounded-full">
+            Chấp nhận
+          </button>
+          <button @click="rejectCall" class="bg-red-500 text-white py-2 px-4 rounded-full">
+            Từ chối
+          </button>
+        </div>
       </div>
     </div>
-  </div>
+  </Teleport>
   <Toast />
 </template>
