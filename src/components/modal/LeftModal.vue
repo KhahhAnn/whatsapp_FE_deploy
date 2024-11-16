@@ -4,7 +4,7 @@ import { useDark, useToggle } from '@vueuse/core'
 
 import CustomButton from '../custom/CustomButton.vue'
 import CustomModal from '../custom/CustomModal.vue'
-import HistoryCallModal from './HistoryCallModal.vue'
+import ContactRequestModal from './ContactRequestModal.vue'
 import ContactModal from './ContactModal.vue'
 import { useUserStore } from '../../stores/UserStore'
 import { useAccountStore } from '../../stores/AccountStore'
@@ -24,7 +24,7 @@ const socketStore = useSocketStore()
 const isContactModalOpen = ref(false)
 const isCustomGroupModalOpen = ref(false)
 const isCustomJoinGroupModalOpen = ref(false)
-const isHistoryCallModalOpen = ref(false)
+const isContactRequestModalOpen = ref(false)
 defineProps({
   isOpen: Boolean
 })
@@ -39,8 +39,8 @@ function toggleJoinGroupModal() {
   isCustomJoinGroupModalOpen.value = !isCustomJoinGroupModalOpen.value
 }
 
-function toggleHistoryCallModal() {
-  isHistoryCallModalOpen.value = !isHistoryCallModalOpen.value
+function toggleContactRequestModal() {
+  isContactRequestModalOpen.value = !isContactRequestModalOpen.value
 }
 
 function handleLogout() {
@@ -74,7 +74,7 @@ const userInitial = computed(() => {
         <CustomButton icon="user-plus" text="Thêm liên hệ" @click="toggleContactModal" />
         <CustomButton icon="user-group" text="Tạo nhóm" @click="toggleGroupModal" />
         <CustomButton icon="plus" text="Tham gia nhóm" @click="toggleJoinGroupModal" />
-        <CustomButton icon="clock-rotate-left" text="Lịch sử cuộc gọi" @click="toggleHistoryCallModal" />
+        <CustomButton icon="clock-rotate-left" text="Lời mời kết bạn" @click="toggleContactRequestModal" />
         <CustomButton @click="toggle()" :icon="isDark ? 'sun' : 'moon'" :text="isDark ? 'Chế độ sáng' : 'Chế độ tối'" />
         <CustomButton icon="right-from-bracket" text="Đăng xuất" @click="handleLogout" />
         <!-- Gọi handleLogout -->
@@ -87,6 +87,6 @@ const userInitial = computed(() => {
       @update:isOpen="isCustomGroupModalOpen = $event" />
     <CustomModal title="Tham gia nhóm" placeholder="Tham gia nhóm" label="Tham gia nhóm"
       :isOpen="isCustomJoinGroupModalOpen" @update:isOpen="isCustomJoinGroupModalOpen = $event" />
-    <HistoryCallModal :isOpen="isHistoryCallModalOpen" @update:isOpen="isHistoryCallModalOpen = $event" />
+    <ContactRequestModal :isOpen="isContactRequestModalOpen" @update:isOpen="isContactRequestModalOpen = $event" />
   </Teleport>
 </template>

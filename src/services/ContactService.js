@@ -3,7 +3,7 @@ import apiClient from '../api/api'
 const handleCreateContact = async (userId, contactUserId, nickname, status) => {
   try {
     console.log("Creating contact with data:", { userId, contactUserId, nickname, status });
-    return await apiClient.post('/contact', {
+    return await apiClient.post('/contact/accept', {
       userId,
       contactUserId,
       nickname,
@@ -12,6 +12,20 @@ const handleCreateContact = async (userId, contactUserId, nickname, status) => {
   } catch (error) {
     console.error('Error during adding contact:', error.response ? error.response.data : error.message);
     throw new Error('Failed to create contact: ' + (error.response ? error.response.data.message : error.message));
+  }
+};
+
+const handleAcceptContactRequest = async (userId, contactUserId, nickname, status) => {
+  try {
+    return await apiClient.post('/contact/accept', {
+      userId,
+      contactUserId,
+      nickname,
+      status
+    });
+  } catch (error) {
+    console.error('Error accepting contact request:', error);
+    throw error;
   }
 };
 
@@ -61,5 +75,6 @@ export default {
   handleCreateContact,
   handleUpdateContact,
   handleGetContactByUser,
-  handleDeleteContact
+  handleDeleteContact,
+  handleAcceptContactRequest
 }
