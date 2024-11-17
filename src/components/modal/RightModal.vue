@@ -88,13 +88,13 @@ function toggleNicknameModal() {
       <CustomButton @click="toggleThemeModal" text="Đổi chủ đề" />
       <CustomButton @click="toggleNicknameModal" text="Chỉnh sửa biệt danh" />
       <!-- Media Messages Section -->
-      <div class="flex flex-col items-center gap-5 w-full rounded-xl font-semibold p-2">
+      <div class="flex flex-col items-center gap-5 w-full rounded-xl font-semibold p-2 ">
         <h2>Hình ảnh & video</h2>
         <div v-if="isLoading">
           <ProgressSpinner />
         </div>
-        <div v-else class="flex items-center gap-2 flex-wrap">
-          <div v-for="msg in mediaMessages" :key="msg.messageId" class="bg-slate-300 w-[96px] h-[96px] overflow-hidden">
+        <div v-else class="flex items-start gap-2 flex-wrap h-72 w-full overflow-scroll">
+          <div v-for="msg in mediaMessages" :key="msg.messageId" class="bg-slate-300 w-[96px] h-[96px] overflow-hidden shadow-xl">
             <Image v-if="msg.content.startsWith('data:image/')" :src="msg.content" alt="Image" preview
               image-class="object-cover" class="w-full h-full" />
             <video v-else-if="msg.content.startsWith('data:video/')" controls class="w-full h-full object-cover">

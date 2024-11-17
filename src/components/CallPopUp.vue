@@ -5,10 +5,10 @@ import { computed, onMounted, ref, nextTick, watchEffect } from 'vue';
 import { useAccountStore } from '@/stores/AccountStore';
 import Avatar from 'primevue/avatar';
 import ProgressSpinner from 'primevue/progressspinner';
+import Button from 'primevue/button';
 import { useDark } from '@vueuse/core';
 
 const accountStore = useAccountStore();
-console.log(accountStore.selectedAccount);
 
 const client = new StringeeClient();
 const token = ref('');
@@ -33,6 +33,7 @@ onMounted(async () => {
     await fetchTokenAndConnect();
     await nextTick();
     await startLocalVideo();
+
 });
 
 watchEffect(() => {
@@ -133,9 +134,14 @@ function settingCallEvent(callInstance) {
             hasIncomingCall.value = false;
         }
     });
+
+    callInstance.on("mediastate", function (state) {
+        console.log("mediastate ", state);
+    });
 }
 
 const toCall = () => {
+    loading.value = true;
     call = new StringeeCall(client, from, to, false);
     settingCallEvent(call);
     call.makeCall((res) => {
@@ -144,22 +150,32 @@ const toCall = () => {
     console.log('toCall', call)
 };
 
-const acceptCall = () => {
-    call.answer((res) => {
-        console.log("answer call callback: " + JSON.stringify(res));
-        hasIncomingCall.value = false;
-        isCalling.value = true;
+const hangupCall = () => {
+    call.hangup(function (res) {
+        console.log("hangup call callback: " + JSON.stringify(res));
+        isCalling.value = false;
         loading.value = false;
+        hasIncomingCall.value = false;
+        window.close();
     });
 };
 
-const rejectCall = () => {
-    call.reject((res) => {
-        console.log("reject call callback: " + JSON.stringify(res));
-        hasIncomingCall.value = false;
-        loading.value = false;
-    });
-};
+// const acceptCall = () => {
+//     call.answer((res) => {
+//         console.log("answer call callback: " + JSON.stringify(res));
+//         hasIncomingCall.value = false;
+//         isCalling.value = true;
+//         loading.value = false;
+//     });
+// };
+
+// const rejectCall = () => {
+//     call.reject((res) => {
+//         console.log("reject call callback: " + JSON.stringify(res));
+//         hasIncomingCall.value = false;
+//         loading.value = false;
+//     });
+// };
 
 const upgradeToVideoCall = () => {
     call.upgradeToVideoCall();
@@ -174,7 +190,7 @@ const accountInitial = computed(() => {
 <template>
     <div class="flex flex-col items-center justify-center bg-gray-800 h-full w-full p-4">
         <div class="flex flex-col items-center mb-4">
-            <Avatar :label="accountInitial" class="mr-2" size="large" shape="circle"
+            <Avatar :label="accountInitial" class="mr-2" size="xlarge" shape="circle"
                 :style="{ backgroundColor: isDark ? '#4B5563' : '#c0bab1' }" />
             <p class="text-white text-lg">{{ isVideoCall ? 'Video Call' : 'Voice Call' }}</p>
             <p class="text-gray-400">{{ to }}</p>
@@ -188,19 +204,22 @@ const accountInitial = computed(() => {
         </div>
 
         <div class="flex space-x-4 mt-4">
-            <button v-if="hasIncomingCall" @click="acceptCall" class="bg-green-500 text-white p-2 rounded-full">
+            <!-- <button v-if="hasIncomingCall" @click="acceptCall" class="bg-green-500 text-white p-2 rounded-full">
                 <i class="fas fa-phone-alt"></i> Chấp nhận
             </button>
             <button v-if="hasIncomingCall" @click="rejectCall" class="bg-red-500 text-white p-2 rounded-full">
                 <i class="fas fa-times"></i> Từ chối
-            </button>
-            <button v-if="!isVideoCall && isCalling" @click="upgradeToVideoCall" class="bg-blue-500 text-white p-2 rounded-full">
+            </button> -->
+         
+            <button v-if="!isVideoCall && isCalling" @click="upgradeToVideoCall"
+                class="bg-blue-500 text-white p-2 rounded-full">
                 <i class="fas fa-video"></i> Nâng cấp lên video
             </button>
             <button @click="toggleWebcam" class="bg-yellow-500 text-white p-2 rounded-full">
                 <i class="fas" :class="isWebcamOn ? 'fa-video-slash' : 'fa-video'"></i>
                 {{ isWebcamOn ? 'Tắt Webcam' : 'Bật Webcam' }}
             </button>
+            <Button label="Kết thúc" severity="danger" @click="hangupCall" />
         </div>
     </div>
 </template>

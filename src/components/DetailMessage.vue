@@ -57,41 +57,44 @@ const formatSentAt = (timestamp) => {
   return date.toLocaleString(); // Định dạng thời gian theo định dạng địa phương
 };
 
-const items = ref([
-  {
-    label: 'Options',
-    items: [
-      {
-        label: 'Xoá tin nhắn',
-        icon: 'pi pi-trash',
-        command: async () => {
-          try {
-            await messageStore.handleDeleteMessage(selectedMessageId.value);
-            toast.add({
-              severity: 'success',
-              summary: 'Success',
-              detail: 'Xóa tin nhắn thành công',
-              life: 3000
-            });
-          } catch (error) {
-            console.error('Error deleting message:', error);
-            toast.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'Xóa tin nhắn thất bại',
-              life: 3000
-            });
+const items = computed(() => {
+  return [
+    {
+      label: 'Options',
+      items: [
+        {
+          label: 'Xoá tin nhắn',
+          icon: 'pi pi-trash',
+          command: async () => {
+            try {
+              await messageStore.handleDeleteMessage(selectedMessageId.value);
+              toast.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: 'Xóa tin nhắn thành công',
+                life: 3000
+              });
+            } catch (error) {
+              console.error('Error deleting message:', error);
+              toast.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Xóa tin nhắn thất bại',
+                life: 3000
+              });
+            }
           }
+        },
+        // Định dạng thời gian tin nhắn động
+        {
+          label: selectedMessageId.value ? `${formatSentAt(messageStore.messages.find(msg => msg.messageId === selectedMessageId.value).sentAt)}` : 'Thời gian: Không xác định',
+          icon: 'pi pi-clock',
         }
-      },
-      // Hiện thời gian tin nhắn được tạo
-      {
-        label: `Thời gian: ${formatSentAt(messageStore.messages.sentAt)}`,
-        icon: 'pi pi-clock',
-      }
-    ]
-  }
-]);
+      ]
+    }
+  ];
+});
+
 
 //Render
 const fetchMessages = async (senderId, receiverId) => {
@@ -276,6 +279,7 @@ const acceptCall = () => {
   incomingCall.value.answer((res) => {
     console.log("res: ", callId.value);
     openReceivePopUp(callId.value, callFrom.value, callTo.value)
+    showPopup.value = false;
     console.log("answer call callback: " + JSON.stringify(res));
   });
 };
@@ -354,9 +358,6 @@ const rejectCall = () => {
             </video>
             <p v-else class="text-darkMode dark:text-lightMode break-words min-w-0 w-full px-3 py-1">
               {{ msg.content }}
-            </p>
-            <p class="text-gray-500 text-xs px-3 py-1">
-              {{ formatSentAt(msg.sentAt) }} <!-- Định dạng thời gian -->
             </p>
           </div>
           <!-- Hien thi tin nhan -->

@@ -103,7 +103,8 @@ async function addContact(user) {
                 class="w-full p-2 border border-darkMode dark:border-lightMode rounded-lg bg-lightMode dark:bg-darkMode"
               />
             </div>
-            <div class="overflow-y-auto min-h-96 border-b border-darkMode dark:border-lightMode" v-if="searchQuery">
+            <div class="min-h-80">
+              <div class="overflow-y-auto border-darkMode dark:border-lightMode" v-if="searchQuery">
               <div
                 v-for="user in filteredUsers"
                 :key="user.userId"
@@ -138,6 +139,8 @@ async function addContact(user) {
                 <Toast />
               </div>
             </div>
+            </div>
+            
             <div class="flex justify-end p-4 border-t border-darkMode dark:border-lightMode">
               <button @click="closeModal">Đóng</button>
             </div>
