@@ -5,13 +5,14 @@ import Menu from 'primevue/menu';
 import Button from 'primevue/button';
 import { useDark } from '@vueuse/core'
 import { useToast } from 'primevue/usetoast'
-import { useAccountStore } from '../stores/AccountStore' // Import AccountStore
+import { useAccountStore } from '../stores/AccountStore'
+import { useGroupStore } from '../stores/GroupStore'
 import Toast from 'primevue/toast';
 
 const toast = useToast();
 const menu = ref();
-const accountStore = useAccountStore(); // Khởi tạo store
-
+const accountStore = useAccountStore();
+const groupStore = useGroupStore()
 const items = ref([
   {
     items: [
@@ -20,8 +21,7 @@ const items = ref([
         icon: 'pi pi-trash',
         command: async () => {
           try {
-            await accountStore.deleteContact(props.account.contactId); // Gọi deleteContact từ AccountStore
-            //Thông báo cho người dùng
+            await accountStore.deleteContact(props.account.contactId);
             toast.add({
               severity: 'success',
               summary: 'Thành công',
@@ -46,24 +46,32 @@ const isDark = useDark()
 const props = defineProps({
   account: {
     type: Object,
-    required: true
+    required: false
+  },
+  group: {
+    type: Object,
+    required: false
   }
 })
 
-const accountInitial = computed(() => {
-  return props.account?.nickname?.charAt(0).toUpperCase() || ''
-})
+const displayName = computed(() => {
+  return props.account?.nickname || props.group?.groupName || '';
+});
+
+const initial = computed(() => {
+  return props.account?.nickname?.charAt(0).toUpperCase() || props.group?.groupName?.charAt(0).toUpperCase() || '';
+});
 </script>
 
 <template>
   <div
     class="flex justify-between items-center p-3 text-darkMode dark:text-lightMode hover:bg-lightModeHover dark:hover:bg-darkModeHover">
     <div class="flex items-center gap-4">
-      <Avatar :label="accountInitial" class="mr-2" size="xlarge" shape="circle" :style="{
+      <Avatar :label="initial" class="mr-2" size="xlarge" shape="circle" :style="{
         backgroundColor: isDark ? '#4B5563' : '#dfe1e3'
       }" />
 
-      <h1 v-if="account">{{ account?.nickname }}</h1>
+      <h1>{{ displayName }}</h1>
       <p v-if="account" class="truncate max-w-[200px]">{{ account?.message }}</p>
     </div>
     <Button type="button" icon="pi pi-ellipsis-v" @click="toggle" aria-haspopup="true" aria-controls="overlay_menu"

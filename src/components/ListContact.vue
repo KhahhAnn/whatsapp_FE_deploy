@@ -5,8 +5,10 @@ import CustomIcon from './custom/CustomIcon.vue'
 import UserItems from './UserItems.vue'
 import LeftModal from './modal/LeftModal.vue'
 import { useAccountStore } from '../stores/AccountStore'
+import { useGroupStore } from '../stores/GroupStore'
 
 const accountStore = useAccountStore()
+const groupStore = useGroupStore()
 const isSidebarOpen = ref(false)
 
 const selectedNickname = computed(() => accountStore.selectedAccount?.nickname)
@@ -28,10 +30,15 @@ onBeforeMount(async () => {
     await accountStore.getContactByUser(userId)
     accountStore.selectAccount(accountStore.accounts[0])
   }
+  await groupStore.getAllGroups()
 })
 
 const filteredAccounts = computed(() => {
   return accountStore.accounts.filter(account => account) // Filter out any falsy accounts
+})
+
+const filteredGroups = computed(() => {
+  return groupStore.groups.filter(group => group)
 })
 </script>
 
@@ -65,6 +72,11 @@ const filteredAccounts = computed(() => {
         :key="account?.id"
         :account="account"
         @click="selectAccount(account)" />
+        <UserItems 
+        v-for="group in filteredGroups" 
+        :key="group?.id"
+        :account="group"
+        @click="selectAccount(group)" />
     </div>
   </div>
 </template>

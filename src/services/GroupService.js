@@ -34,6 +34,16 @@ const handleUpdateGroupChatStatus = async (groupId, status) => {
    return response.data;
 }
 
+// Lấy ra tất cả các group
+const handleGetAllGroup = async () => {
+   try {
+      const response = await apiClient.get('/group-chat/all-group');
+      return response.data;
+   } catch (error) {
+      console.error('Error during group retrieval:', error.response ? error.response.data : error.message);
+      throw error;
+   }
+}
 
 
 export default {
@@ -41,5 +51,6 @@ export default {
    handleCreateGroupChat,
    handleDeleteGroupChat,
    handleGetGroupChatsByGroupId,
-   handleUpdateGroupChatStatus
+   handleUpdateGroupChatStatus,
+   handleGetAllGroup
 }
