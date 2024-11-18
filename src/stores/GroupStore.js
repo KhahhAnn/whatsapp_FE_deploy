@@ -33,12 +33,35 @@ export const useGroupStore = defineStore('groups', () => {
       }
    }
 
+   //Tạo group
+   const createGroup = async (groupName, createdBy) => {
+      try {
+         const response = await GroupService.handleCreateGroup(groupName, createdBy)
+         
+         console.log("response", response)
+      } catch (error) {
+         console.error('Failed to create group:', error)
+      }
+   }
+
+   //Xóa group
+   const deleteGroup = async (groupId) => {
+      try {
+         const response = await GroupService.handleDeleteGroup(groupId)
+         console.log("response", response)
+      } catch (error) {
+         console.error('Failed to delete group:', error)
+      }
+   }
+
    return {
       groups,
       selectedGroup,
       groupMessages,
       selectGroup,
       getGroupByUserId,
-      getGroupMessagesByGroupId
+      getGroupMessagesByGroupId,
+      createGroup,
+      deleteGroup
    }
 })

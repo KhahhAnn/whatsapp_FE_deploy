@@ -6,11 +6,13 @@ import Button from 'primevue/button';
 import { useDark } from '@vueuse/core'
 import { useToast } from 'primevue/usetoast'
 import { useContactStore } from '../stores/ContactStore'
+import { useGroupStore } from '../stores/GroupStore'
 import Toast from 'primevue/toast';
 
 const toast = useToast();
 const menu = ref();
 const contactStore = useContactStore();
+const groupStore = useGroupStore();
 const items = ref([
   {
     items: [
@@ -28,6 +30,23 @@ const items = ref([
             });
           } catch (error) {
             console.error('Error deleting contact:', error);
+          }
+        }
+      },
+      {
+        label: 'Xoá nhóm',
+        icon: 'pi pi-trash',
+        command: async () => {
+          try {
+            await groupStore.deleteGroup(props.group.groupId);
+            toast.add({
+              severity: 'success',
+              summary: 'Thành công',
+              detail: 'Nhóm đã xóa thành công',
+              life: 3000
+            });
+          } catch (error) {
+            console.error('Error deleting group:', error);
           }
         }
       }

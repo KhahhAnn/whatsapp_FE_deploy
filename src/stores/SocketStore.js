@@ -67,6 +67,25 @@ export const useSocketStore = defineStore('socket', () => {
   // Gọi phương thức này khi khởi tạo store
   listenForMessages()
 
+  const sendGroupMessage = (groupId, message) => {
+    socket.emit('groupMessage', {
+      groupId,
+      message,
+    });
+    console.log('Send group message: ', message, groupId);
+  };
+
+  const listenForGroupMessages = () => {
+    socket.on('groupMessageToMembers', ({ message, from }) => {
+      // Xử lý tin nhắn nhóm nhận được
+      console.log('Received group message: ', message, from);
+      // Bạn có thể thêm logic để cập nhật danh sách tin nhắn nhóm ở đây
+    });
+  };
+
+  // Gọi phương thức này khi khởi tạo store
+  listenForGroupMessages();
+
   socket.on('disconnect', () => {
     isLoggedIn.value = false
     console.log('Socket disconnected')
@@ -76,6 +95,7 @@ export const useSocketStore = defineStore('socket', () => {
     isLoggedIn,
     connect,
     sendMessage,
+    sendGroupMessage,
     disconnect: () => socket.disconnect(),
     messages // Thêm danh sách tin nhắn vào return
   }
