@@ -19,6 +19,12 @@ const selectAccount = (account) => {
   console.log(account.contactUserId)
 }
 
+const selectGroup = (group) => {
+  groupStore.selectGroup(group)
+  groupStore.selectedGroup.groupId = group.groupId
+  console.log(group.groupId)
+}
+
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value
   console.log(selectedNickname.value)
@@ -29,8 +35,9 @@ onBeforeMount(async () => {
   if (userId) {
     await contactStore.getContactByUser(userId)
     contactStore.selectContact(contactStore.contacts[0])
+    await groupStore.getGroupByUserId(userId)
+    groupStore.selectGroup(groupStore.groups[0])
   }
-  await groupStore.getAllGroups()
 })
 
 const filteredAccounts = computed(() => {
@@ -69,7 +76,7 @@ const filteredGroups = computed(() => {
     <div :class="[isSidebarOpen ? 'hidden' : '']" class="grow overflow-auto scroll-smooth">
       <UserItems v-for="account in filteredAccounts" :key="account?.id" :account="account"
         @click="selectAccount(account)" />
-      <UserItems v-for="group in filteredGroups" :key="group?.id" :account="group" @click="selectAccount(group)" />
+      <UserItems v-for="group in filteredGroups" :key="group?.id" :group="group" @click="selectGroup(group)" />
     </div>
   </div>
 </template>

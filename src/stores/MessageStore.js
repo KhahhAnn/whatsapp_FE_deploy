@@ -10,14 +10,14 @@ export const useMessageStore = defineStore('message', () => {
     selectedMessage.value = message
   }
 
-  const fetchMessagesByUser = async (userId) => {
-    try {
-      const fetchedMessages = await MessageService.getMessagesByUser(userId)
-      messages.value = fetchedMessages // Cập nhật danh sách tin nhắn
-    } catch (error) {
-      console.error('Error fetching messages:', error)
-    }
-  }
+  // const fetchMessagesByUser = async (userId) => {
+  //   try {
+  //     const fetchedMessages = await MessageService.getMessagesByUser(userId)
+  //     messages.value = fetchedMessages // Cập nhật danh sách tin nhắn
+  //   } catch (error) {
+  //     console.error('Error fetching messages:', error)
+  //   }
+  // }
 
   const fetchMessagesBetweenUsers = async (senderId, receiverId) => {
     try {
@@ -58,7 +58,6 @@ export const useMessageStore = defineStore('message', () => {
     selectedMessage,
     selectMessage,
     addMessage,
-    fetchMessagesByUser, // Thêm phương thức này
     fetchMessagesBetweenUsers, // Thêm phương thức này
     handleDeleteMessage,
     fetchMediaMessages

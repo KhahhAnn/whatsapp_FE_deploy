@@ -1,19 +1,44 @@
 import { defineStore } from 'pinia'
+import { ref } from 'vue'
 import GroupService from '../services/GroupService'
-import { ref, onMounted } from 'vue'
+
 
 export const useGroupStore = defineStore('groups', () => {
    const groups = ref([])
-
-   // Lấy tất cả các group
-   const getAllGroups = async () => {
-      const groupsData = await GroupService.handleGetAllGroup()
-      groups.value = groupsData
+   const selectedGroup = ref(null)
+   const groupMessages = ref([])
+   
+   function selectGroup(group) {
+      selectedGroup.value = group
    }
-   onMounted(getAllGroups)
+
+   //Lấy ra các group với userId là thành viên
+   const getGroupByUserId = async (userId) => {
+      try {
+         const groupsData = await GroupService.handleGetGroupByUserId(userId)
+         groups.value = groupsData
+      } catch (error) {
+         console.error('Failed to fetch groups:', error)
+      }
+   }
+
+   //Lấy ra tin nhắn theo groupId
+   const getGroupMessagesByGroupId = async (groupId) => {
+      try {
+         const groupMessagesData = await GroupService.handleGetGroupMessagesByGroupId(groupId)
+         groupMessages.value = groupMessagesData
+         console.log("groupMessages", groupMessages.value)
+      } catch (error) {
+         console.error('Failed to fetch group messages:', error)
+      }
+   }
 
    return {
       groups,
-      getAllGroups
+      selectedGroup,
+      groupMessages,
+      selectGroup,
+      getGroupByUserId,
+      getGroupMessagesByGroupId
    }
 })
