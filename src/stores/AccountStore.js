@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import AccountService from '../services/AccountService.js'
-import ContactService from '../services/ContactService.js'
 
 export const useAccountStore = defineStore('account', () => {
   const selectedAccount = ref(null)
@@ -64,38 +63,7 @@ export const useAccountStore = defineStore('account', () => {
     window.location.assign('/login')
   }
 
-  const getContactByUser = async (userId) => {
-    try {
-      const contacts = await ContactService.handleGetContactByUser(userId)
-      accounts.value = contacts
-    } catch (error) {
-      console.error('Failed to fetch contacts:', error)
-    }
-  }
-
-  const addContact = async (userId, contactUserId, nickname, status) => {
-    try {
-      const response = await ContactService.handleCreateContact(userId, contactUserId, nickname, status);
-      if (response && response.data) {
-        accounts.value.push(response.data.account);
-        return response.data;
-      } else {
-        console.error('No contact data received');
-      }
-    } catch (error) {
-      console.error('Error adding contact in AccountStore:', error);
-      throw error; // Ném lại lỗi để Component có thể xử lý
-    }
-  };
-
-  const deleteContact = async (contactId) => {
-    try {
-      await ContactService.handleDeleteContact(contactId)
-      accounts.value = accounts.value.filter(account => account.contactId !== contactId)
-    } catch (error) {
-      console.error('Error deleting contact:', error)
-    }
-  }
+  
 
   return {
     selectedAccount,
@@ -104,8 +72,5 @@ export const useAccountStore = defineStore('account', () => {
     loginAccount,
     registerAccount,
     logoutUser,
-    getContactByUser,
-    addContact,
-    deleteContact
   }
 })

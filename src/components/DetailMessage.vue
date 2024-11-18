@@ -6,7 +6,7 @@ import CustomIcon from './custom/CustomIcon.vue'
 import RightModal from './modal/RightModal.vue'
 
 // Stores
-import { useAccountStore } from '../stores/AccountStore'
+import { useContactStore } from '../stores/ContactStore'
 import { useUserStore } from '../stores/UserStore'
 import { useSocketStore } from '../stores/SocketStore'
 import { useMessageStore } from '../stores/MessageStore'
@@ -23,7 +23,7 @@ import Toast from 'primevue/toast';
 import { useToast } from 'primevue/usetoast';
 
 // Stores
-const accountStore = useAccountStore()
+const contactStore = useContactStore()
 const userStore = useUserStore()
 const socketStore = useSocketStore()
 const messageStore = useMessageStore()
@@ -104,8 +104,8 @@ const fetchMessages = async (senderId, receiverId) => {
 }
 
 onMounted(async () => {
-  const senderId = accountStore.selectedAccount.userId
-  const receiverId = accountStore.selectedAccount.contactUserId
+  const senderId = contactStore.selectedContact.userId
+  const receiverId = contactStore.selectedContact.contactUserId
   if (receiverId) {
     fetchMessages(senderId, receiverId);
   }
@@ -113,17 +113,17 @@ onMounted(async () => {
 })
 
 watch(
-  () => accountStore.selectedAccount.contactUserId,
+  () => contactStore.selectedContact.contactUserId,
   (newContactId) => {
     if (newContactId) {
-      const senderId = accountStore.selectedAccount.userId
+      const senderId = contactStore.selectedContact.userId
       fetchMessages(senderId, newContactId);
     }
   },
 )
 
 const accountInitial = computed(() => {
-  return accountStore.selectedAccount?.nickname?.charAt(0).toUpperCase() || ''
+  return contactStore.selectedContact?.nickname?.charAt(0).toUpperCase() || ''
 })
 
 const userInitial = computed(() => {
@@ -185,21 +185,21 @@ const sendMessage = async () => {
     // Gửi tin nhắn qua socket
     await socketStore.sendMessage(
       content,
-      accountStore.selectedAccount.userId,
-      accountStore.selectedAccount.contactUserId
+      contactStore.selectedContact.userId,
+      contactStore.selectedContact.contactUserId
     );
 
     // Cập nhật tin nhắn vào MessageService
     await MessageService.handleCreateMessage(
-      accountStore.selectedAccount.userId,
-      accountStore.selectedAccount.contactUserId,
+      contactStore.selectedContact.userId,
+      contactStore.selectedContact.contactUserId,
       content
     );
 
     // Thêm tin nhắn vào messageStore
     messageStore.addMessage({
       content: content,
-      senderId: accountStore.selectedAccount.userId,
+      senderId: contactStore.selectedContact.userId,
       messageId: Date.now(),
       sentAt: new Date()
     });
@@ -215,7 +215,7 @@ const sendMessage = async () => {
 
 // Handle call
 function openCallPopUp() {
-  const url = `http://localhost:5173/call?from=${accountStore.selectedAccount.userId}&to=${accountStore.selectedAccount.contactUserId}`;
+  const url = `http://localhost:5173/call?from=${contactStore.selectedContact.userId}&to=${contactStore.selectedContact.contactUserId}`;
   const features = 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=800,height=600';
   window.open(url, '_blank', features);
 }
@@ -228,7 +228,7 @@ function openReceivePopUp(callId, fromNumber, toNumber) {
 
 async function fetchTokenAndConnect() {
   try {
-    const response = await axios.post('http://localhost:8080/api/token', { from: accountStore.selectedAccount.userId });
+    const response = await axios.post('http://localhost:8080/api/token', { from: contactStore.selectedContact.userId });
     token.value = response.data.access_token;
     client.connect(token.value);
 
@@ -311,7 +311,7 @@ const rejectCall = () => {
         <Avatar :label="accountInitial" class="mr-2" size="large" shape="circle"
           :style="{ backgroundColor: isDark ? '#4B5563' : '#dfe1e3' }" />
         <div class="user-data text-darkMode dark:text-lightMode">
-          <h1>{{ accountStore.selectedAccount.nickname }}</h1>
+          <h1>{{ contactStore.selectedContact.nickname }}</h1>
         </div>
       </div>
 
@@ -336,14 +336,14 @@ const rejectCall = () => {
 
       <div v-else>
         <!-- Hiển thị tin nhắn -->
-        <div v-for="msg in messageStore.messages" :key="msg.messageId" class="flex mb-4 items-center" :class="msg.senderId === accountStore.selectedAccount.userId
+        <div v-for="msg in messageStore.messages" :key="msg.messageId" class="flex mb-4 items-center" :class="msg.senderId === contactStore.selectedContact.userId
           ? 'justify-end'
           : 'flex-row-reverse justify-end'
           ">
           <Button type="button" icon="pi pi-ellipsis-v" @click="toggleMenu($event, msg.messageId)" aria-haspopup="true"
             aria-controls="overlay_menu" size="small" variant="outlined" rounded
             :style="{ border: 'none', backgroundColor: 'transparent', color: isDark ? 'white' : 'black' }" />
-          <div class="flex flex-col max-w-full overflow-hidden rounded-2xl" :class="msg.senderId === accountStore.selectedAccount.userId
+          <div class="flex flex-col max-w-full overflow-hidden rounded-2xl" :class="msg.senderId === contactStore.selectedContact.userId
             ? 'bg-lightModeHover dark:bg-darkModeHover'
             : 'bg-lightModeHover dark:bg-darkModeHover text-darkMode dark:text-lightMode'
             ">
@@ -362,7 +362,7 @@ const rejectCall = () => {
           </div>
           <!-- Hien thi tin nhan -->
           <div class="w-9 h-9 rounded-full flex items-center justify-center ml-2 mr-2">
-            <Avatar v-if="msg.senderId === accountStore.selectedAccount.userId" :label="userInitial" size="small"
+            <Avatar v-if="msg.senderId === contactStore.selectedContact.userId" :label="userInitial" size="small"
               shape="circle" :style="{ backgroundColor: isDark ? '#4B5563' : '#dfe1e3' }" />
             <Avatar v-else :label="accountInitial" size="small" shape="circle"
               :style="{ backgroundColor: isDark ? '#4B5563' : '#dfe1e3' }" />

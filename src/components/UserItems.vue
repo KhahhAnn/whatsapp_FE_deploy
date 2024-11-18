@@ -5,14 +5,12 @@ import Menu from 'primevue/menu';
 import Button from 'primevue/button';
 import { useDark } from '@vueuse/core'
 import { useToast } from 'primevue/usetoast'
-import { useAccountStore } from '../stores/AccountStore'
-import { useGroupStore } from '../stores/GroupStore'
+import { useContactStore } from '../stores/ContactStore'
 import Toast from 'primevue/toast';
 
 const toast = useToast();
 const menu = ref();
-const accountStore = useAccountStore();
-const groupStore = useGroupStore()
+const contactStore = useContactStore();
 const items = ref([
   {
     items: [
@@ -21,7 +19,7 @@ const items = ref([
         icon: 'pi pi-trash',
         command: async () => {
           try {
-            await accountStore.deleteContact(props.account.contactId);
+            await contactStore.deleteContact(props.account.contactId);
             toast.add({
               severity: 'success',
               summary: 'Thành công',

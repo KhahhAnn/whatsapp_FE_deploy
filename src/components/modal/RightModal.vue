@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 
-import { useAccountStore } from '../../stores/AccountStore'
+import { useContactStore } from '../../stores/ContactStore'
 import { useMessageStore } from '../../stores/MessageStore'
 
 import CustomButton from '../custom/CustomButton.vue'
@@ -24,11 +24,11 @@ const isDark = useDark()
 
 const mediaMessages = ref([])
 const messageStore = useMessageStore()
-const accountStore = useAccountStore()
-const selectedContactId = ref(accountStore.selectedAccount.contactUserId)
+const contactStore = useContactStore()
+const selectedContactId = ref(contactStore.selectedContact.contactUserId)
 
 const fetchMedia = async () => {
-  const senderId = accountStore.selectedAccount.userId;
+  const senderId = contactStore.selectedContact.userId;
   const receiverId = selectedContactId.value;
   if (receiverId) {
     isLoading.value = true; // Start loading
@@ -41,14 +41,14 @@ const fetchMedia = async () => {
 onMounted(fetchMedia);
 
 // Watch for changes in the selected contact and fetch media messages accordingly
-watch(() => accountStore.selectedAccount.contactUserId, (newContactId) => {
+watch(() => contactStore.selectedContact.contactUserId, (newContactId) => {
   selectedContactId.value = newContactId;
   fetchMedia();
 });
 
 // Compute the first letter of the username
 const accountInitial = computed(() => {
-  return accountStore.selectedAccount?.nickname?.charAt(0).toUpperCase() || ''
+  return contactStore.selectedContact?.nickname?.charAt(0).toUpperCase() || ''
 })
 
 function toggleThemeModal() {
@@ -75,7 +75,7 @@ function toggleNicknameModal() {
         <Avatar :label="accountInitial" class="mr-2" size="xlarge" shape="circle" :style="{
           backgroundColor: isDark ? '#4B5563' : '#dfe1e3'
         }" />
-        <p>{{ accountStore.selectedAccount.nickname }}</p>
+        <p>{{ contactStore.selectedContact.nickname }}</p>
       </template>
 
       <div class="flex gap-6">
@@ -108,6 +108,6 @@ function toggleNicknameModal() {
   <Teleport to="#app">
     <ThemeModal :isOpen="isThemeModalOpen" @update:isOpen="isThemeModalOpen = $event" />
     <NicknameModal :isOpen="isNicknameModalOpen" @update:isOpen="isNicknameModalOpen = $event"
-      :contactId="accountStore.selectedAccount?.contactId" :currentNickname="accountStore.selectedAccount?.nickname" />
+      :contactId="contactStore.selectedContact?.contactId" :currentNickname="contactStore.selectedContact?.nickname" />
   </Teleport>
 </template>

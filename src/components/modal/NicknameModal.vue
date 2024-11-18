@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import ContactService from '../../services/ContactService'
-import { useAccountStore } from '../../stores/AccountStore'
+import { useContactStore } from '../../stores/ContactStore'
 import Toast from 'primevue/toast';
 import { useToast } from 'primevue/usetoast';
 import Button from 'primevue/button';
@@ -16,7 +16,7 @@ const emit = defineEmits(['update:isOpen'])
 const toast = useToast();
 
 const newNickname = ref(props.currentNickname)
-const accountStore = useAccountStore()
+const contactStore = useContactStore()
 // Theo dõi sự thay đổi của currentNickname
 watch(() => props.currentNickname, (newValue) => {
   newNickname.value = newValue
@@ -27,16 +27,16 @@ async function updateNickname() {
     // Gọi API để cập nhật nickname trong cơ sở dữ liệu
     await ContactService.handleUpdateContact(props.contactId, newNickname.value);
 
-    // Cập nhật nickname trong selectedAccount
-    accountStore.selectAccount({ ...accountStore.selectedAccount, nickname: newNickname.value });
+    // Cập nhật nickname trong selectedContact
+    contactStore.selectContact({ ...contactStore.selectedContact, nickname: newNickname.value });
 
     // Cập nhật nickname trong danh sách contacts
-    const contact = accountStore.accounts.find(account => account.contactId === props.contactId);
+    const contact = contactStore.contacts.find(contact => contact.contactId === props.contactId);
     if (contact) {
       contact.nickname = newNickname.value; // Cập nhật nickname trong danh sách
     }
 
-    console.log('Cập nhật biệt danh thành công', accountStore.selectedAccount.nickname);
+    console.log('Cập nhật biệt danh thành công', contactStore.selectedContact.nickname);
     toast.add({ severity: 'success', summary: 'Thành công', detail: 'Cập nhật biệt danh thành công', life: 3000 });
 
     // Đóng modal

@@ -4,18 +4,18 @@ import { ref, onBeforeMount, computed } from 'vue'
 import CustomIcon from './custom/CustomIcon.vue'
 import UserItems from './UserItems.vue'
 import LeftModal from './modal/LeftModal.vue'
-import { useAccountStore } from '../stores/AccountStore'
+import { useContactStore } from '../stores/ContactStore'
 import { useGroupStore } from '../stores/GroupStore'
 
-const accountStore = useAccountStore()
+const contactStore = useContactStore()
 const groupStore = useGroupStore()
 const isSidebarOpen = ref(false)
 
-const selectedNickname = computed(() => accountStore.selectedAccount?.nickname)
+const selectedNickname = computed(() => contactStore.selectedContact?.nickname)
 
 const selectAccount = (account) => {
-  accountStore.selectAccount(account)
-  accountStore.selectedAccount.contactUserId = account.contactUserId // Cập nhật contactUserId
+  contactStore.selectContact(account)
+  contactStore.selectedContact.contactUserId = account.contactUserId // Cập nhật contactUserId
   console.log(account.contactUserId)
 }
 
@@ -27,14 +27,14 @@ const toggleSidebar = () => {
 onBeforeMount(async () => {
   const userId = localStorage.getItem('userId')
   if (userId) {
-    await accountStore.getContactByUser(userId)
-    accountStore.selectAccount(accountStore.accounts[0])
+    await contactStore.getContactByUser(userId)
+    contactStore.selectContact(contactStore.contacts[0])
   }
   await groupStore.getAllGroups()
 })
 
 const filteredAccounts = computed(() => {
-  return accountStore.accounts.filter(account => account) // Filter out any falsy accounts
+  return contactStore.contacts.filter(account => account) // Filter out any falsy accounts
 })
 
 const filteredGroups = computed(() => {
@@ -53,7 +53,7 @@ const filteredGroups = computed(() => {
     </div>
 
     <!-- Skeleton loader for user items -->
-    <div :class="[isSidebarOpen ? 'hidden' : '']" v-if="accountStore.accounts.length === 0"
+    <div :class="[isSidebarOpen ? 'hidden' : '']" v-if="contactStore.contacts.length === 0"
       class="grow overflow-auto scroll-smooth">
       <div v-for="i in 7" :key="i"
         class="flex items-center gap-4 p-4 border-darkModeHover dark:border-lightModeHover animate-pulse">
@@ -67,16 +67,9 @@ const filteredGroups = computed(() => {
 
     <LeftModal :is-open="isSidebarOpen" @close="toggleSidebar" />
     <div :class="[isSidebarOpen ? 'hidden' : '']" class="grow overflow-auto scroll-smooth">
-      <UserItems 
-        v-for="account in filteredAccounts" 
-        :key="account?.id"
-        :account="account"
+      <UserItems v-for="account in filteredAccounts" :key="account?.id" :account="account"
         @click="selectAccount(account)" />
-        <UserItems 
-        v-for="group in filteredGroups" 
-        :key="group?.id"
-        :account="group"
-        @click="selectAccount(group)" />
+      <UserItems v-for="group in filteredGroups" :key="group?.id" :account="group" @click="selectAccount(group)" />
     </div>
   </div>
 </template>

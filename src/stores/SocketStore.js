@@ -3,13 +3,13 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import socket from '../plugins/webSocket'
 import { useMessageStore } from './MessageStore'
-import { useAccountStore } from './AccountStore'
+import { useContactStore } from './ContactStore'
 
 export const useSocketStore = defineStore('socket', () => {
   const isLoggedIn = ref(false)
   const messages = ref([]) // Danh sách tin nhắn
   const messageStore = useMessageStore()
-  const accountStore = useAccountStore()
+  const contactStore = useContactStore()
   const connect = () => {
     if (!isLoggedIn.value && !socket.connected) {
       //Truyền userid từ localstorage vào socket để xác thực
@@ -55,7 +55,7 @@ export const useSocketStore = defineStore('socket', () => {
 
   const listenForMessages = () => {
     socket.on('privateMessageToReceiver', ({ message, from }) => {
-      const currentContactId = accountStore.selectedAccount.contactUserId;
+      const currentContactId = contactStore.selectedContact.contactUserId;
       if (currentContactId === from) {
         messages.value.push({ content: message, from });
         messageStore.addMessage({ content: message, from });

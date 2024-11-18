@@ -1,7 +1,7 @@
 <script setup>
 import { defineProps, defineEmits, ref, computed, watch } from 'vue'
 import { useUserStore } from '../../stores/UserStore.js'
-import { useAccountStore } from '../../stores/AccountStore.js'
+import { useContactStore } from '../../stores/ContactStore.js'
 import Avatar from 'primevue/avatar'
 import { useDark } from '@vueuse/core'
 // import ContactService from '../../services/ContactService'
@@ -17,7 +17,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:isOpen'])
 const userStore = useUserStore()
-const accountStore = useAccountStore()
+const contactStore = useContactStore()
 const searchQuery = ref('')
 
 // Theo dõi sự thay đổi của props.isOpen
@@ -49,8 +49,8 @@ function closeModal() {
 async function addContact(user) {
   try {
     const userId = localStorage.getItem('userId');
-    await accountStore.addContact(userId, user.userId, user.username, 'friend');
-    await accountStore.getContactByUser(userId);
+    await contactStore.addContact(userId, user.userId, user.username, 'friend');
+    await contactStore.getContactByUser(userId);
     toast.add({
       severity: 'success',
       summary: 'Thành công',

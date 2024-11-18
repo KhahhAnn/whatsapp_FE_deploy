@@ -4,9 +4,9 @@ import { onMounted, onBeforeUnmount } from 'vue'
 import ListContact from '@/components/ListContact.vue'
 import DetailMessage from '@/components/DetailMessage.vue'
 import { useSocketStore } from '../stores/SocketStore'
-import { useAccountStore } from '../stores/AccountStore'
+import { useContactStore } from '../stores/ContactStore'
 
-const accountStore = useAccountStore()
+const contactStore = useContactStore()
 const socketStore = useSocketStore()
 
 let socket
@@ -25,6 +25,6 @@ onBeforeUnmount(() => {
 <template>
   <div class="flex gap-5 w-full min-h-screen p-4 bg-[#DBDDDC] dark:bg-slate-950">
     <ListContact />
-    <DetailMessage v-if="accountStore.selectedAccount" />
+    <DetailMessage v-if="contactStore.selectedContact" />
   </div>
 </template>

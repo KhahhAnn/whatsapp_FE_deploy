@@ -51,61 +51,61 @@ async function connectClient() {
 }
 
 
-const joinIncomingCall = () => {
-  callStore.incomingCall.value.on('addremotestream', (stream) => {
-    if (remoteVideo.value) {
-      remoteVideo.value.srcObject = stream;
-    }
-  });
-
-  callStore.incomingCall.value.on('addlocalstream', (stream) => {
-    if (localVideo.value) {
-      localVideo.value.srcObject = stream;
-    }
-  });
-
-  callStore.incomingCall.value.on('signalingstate', (state) => {
-    console.log("Signaling state:", state);
-  });
-
-  callStore.incomingCall.value.answer((res) => {
-    console.log("res: ", callStore.incomingCall.value);
-    console.log("answer call callback: " + JSON.stringify(res));
-    hasIncomingCall.value = false;
-    isCalling.value = true;
-    loading.value = false;
-  });
-
-};
-
-// function joinIncomingCall() {
-//   // Khởi tạo đối tượng StringeeCall để trả lời cuộc gọi đến
-//   call.value = new StringeeCall(client,  callFrom,callTo, false);
-//   call.value.callId = callId
-//   call.value.isIncomingCall = true
-//   console.log('join incoming call', callId, callFrom, callTo)
-
-//   call.value.on('addremotestream', (stream) => {
+// const joinIncomingCall = () => {
+//   callStore.incomingCall.value.on('addremotestream', (stream) => {
 //     if (remoteVideo.value) {
 //       remoteVideo.value.srcObject = stream;
 //     }
 //   });
 
-//   call.value.on('addlocalstream', (stream) => {
+//   callStore.incomingCall.value.on('addlocalstream', (stream) => {
 //     if (localVideo.value) {
 //       localVideo.value.srcObject = stream;
 //     }
 //   });
 
-//   call.value.on('signalingstate', (state) => {
+//   callStore.incomingCall.value.on('signalingstate', (state) => {
 //     console.log("Signaling state:", state);
 //   });
 
-// // Trả lời cuộc gọi đến
-// call.value.answer((r)=>{
-//   console.log('answer response:', r)
-// });
-// }
+//   callStore.incomingCall.value.answer((res) => {
+//     console.log("res: ", callStore.incomingCall.value);
+//     console.log("answer call callback: " + JSON.stringify(res));
+//     hasIncomingCall.value = false;
+//     isCalling.value = true;
+//     loading.value = false;
+//   });
+
+// };
+
+function joinIncomingCall() {
+  // Khởi tạo đối tượng StringeeCall để trả lời cuộc gọi đến
+  call.value = new StringeeCall(client,  callFrom,callTo, false);
+  call.value.callId = callId
+  call.value.isIncomingCall = true
+  console.log('join incoming call', callId, callFrom, callTo)
+
+  call.value.on('addremotestream', (stream) => {
+    if (remoteVideo.value) {
+      remoteVideo.value.srcObject = stream;
+    }
+  });
+
+  call.value.on('addlocalstream', (stream) => {
+    if (localVideo.value) {
+      localVideo.value.srcObject = stream;
+    }
+  });
+
+  call.value.on('signalingstate', (state) => {
+    console.log("Signaling state:", state);
+  });
+
+// Trả lời cuộc gọi đến
+call.value.answer((r)=>{
+  console.log('answer response:', r)
+});
+}
 </script>
 
 

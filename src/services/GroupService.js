@@ -34,6 +34,12 @@ const handleUpdateGroupChatStatus = async (groupId, status) => {
    return response.data;
 }
 
+
+
+
+
+
+
 // Lấy ra tất cả các group
 const handleGetAllGroup = async () => {
    try {
@@ -45,6 +51,16 @@ const handleGetAllGroup = async () => {
    }
 }
 
+// Lấy ra các group với userId là thành viên
+const handleGetGroupByUserId = async (userId) => {
+   try {
+      const response = await apiClient.get(`/group-chat/group-user/${userId}`);
+      return response.data;
+   } catch (error) {
+      console.error('Error during group retrieval:', error.response ? error.response.data : error.message);
+      throw error;
+   }
+}
 
 export default {
    handleCreateGroup,
@@ -52,5 +68,6 @@ export default {
    handleDeleteGroupChat,
    handleGetGroupChatsByGroupId,
    handleUpdateGroupChatStatus,
-   handleGetAllGroup
+   handleGetAllGroup,
+   handleGetGroupByUserId
 }
