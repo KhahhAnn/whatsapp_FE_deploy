@@ -13,15 +13,17 @@ const isSidebarOpen = ref(false)
 
 const selectedNickname = computed(() => contactStore.selectedContact?.nickname)
 
-const selectAccount = (account) => {
-  contactStore.selectContact(account)
-  contactStore.selectedContact.contactUserId = account.contactUserId // Cập nhật contactUserId
-  console.log(account.contactUserId)
+// Chọn contact
+const selectContact = (contact) => {
+  contactStore.selectContact(contact)
+  contactStore.selectedContact.contactUserId = contact.contactUserId // Cập nhật contactUserId
+  console.log(contact.contactUserId)
 }
 
+// Chọn group
 const selectGroup = (group) => {
   groupStore.selectGroup(group)
-  groupStore.selectedGroup.groupId = group.groupId
+  groupStore.getGroupMessagesByGroupId(group.groupId) // Lấy tin nhắn cho nhóm đã chọn
   console.log(group.groupId)
 }
 
@@ -40,8 +42,9 @@ onBeforeMount(async () => {
   }
 })
 
-const filteredAccounts = computed(() => {
-  return contactStore.contacts.filter(account => account) // Filter out any falsy accounts
+// Có thể lọc contact và group 
+const filteredContacts = computed(() => {
+  return contactStore.contacts.filter(contact => contact) // Filter out any falsy contacts
 })
 
 const filteredGroups = computed(() => {
@@ -74,8 +77,8 @@ const filteredGroups = computed(() => {
 
     <LeftModal :is-open="isSidebarOpen" @close="toggleSidebar" />
     <div :class="[isSidebarOpen ? 'hidden' : '']" class="grow overflow-auto scroll-smooth">
-      <UserItems v-for="account in filteredAccounts" :key="account?.id" :account="account"
-        @click="selectAccount(account)" />
+      <UserItems v-for="contact in filteredContacts" :key="contact?.id" :contact="contact"
+        @click="selectContact(contact)" />
       <UserItems v-for="group in filteredGroups" :key="group?.id" :group="group" @click="selectGroup(group)" />
     </div>
   </div>

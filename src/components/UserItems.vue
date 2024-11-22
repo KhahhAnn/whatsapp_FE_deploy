@@ -13,40 +13,48 @@ const toast = useToast();
 const menu = ref();
 const contactStore = useContactStore();
 const groupStore = useGroupStore();
+
+
+const isDark = useDark()
+
+const props = defineProps({
+  contact: {
+    type: Object,
+    required: false
+  },
+  group: {
+    type: Object,
+    required: false
+  }
+})
+
 const items = ref([
   {
     items: [
       {
-        label: 'Xoá liên hệ',
+        label: props.contact ? 'Xoá liên hệ' : 'Xoá nhóm',
         icon: 'pi pi-trash',
         command: async () => {
           try {
-            await contactStore.deleteContact(props.account.contactId);
-            toast.add({
-              severity: 'success',
-              summary: 'Thành công',
-              detail: 'Liên hệ đã xóa thành công',
-              life: 3000
-            });
+            if (props.contact) {
+              await contactStore.deleteContact(props.contact.contactId);
+              toast.add({
+                severity: 'success',
+                summary: 'Thành công',
+                detail: 'Liên hệ đã xóa thành công',
+                life: 3000
+              });
+            } else if (props.group) {
+              await groupStore.deleteGroup(props.group.groupId);
+              toast.add({
+                severity: 'success',
+                summary: 'Thành công',
+                detail: 'Nhóm đã xóa thành công',
+                life: 3000
+              });
+            }
           } catch (error) {
-            console.error('Error deleting contact:', error);
-          }
-        }
-      },
-      {
-        label: 'Xoá nhóm',
-        icon: 'pi pi-trash',
-        command: async () => {
-          try {
-            await groupStore.deleteGroup(props.group.groupId);
-            toast.add({
-              severity: 'success',
-              summary: 'Thành công',
-              detail: 'Nhóm đã xóa thành công',
-              life: 3000
-            });
-          } catch (error) {
-            console.error('Error deleting group:', error);
+            console.error('Error deleting:', error);
           }
         }
       }
@@ -58,25 +66,14 @@ const toggle = (event) => {
   menu.value.toggle(event);
 };
 
-const isDark = useDark()
 
-const props = defineProps({
-  account: {
-    type: Object,
-    required: false
-  },
-  group: {
-    type: Object,
-    required: false
-  }
-})
 
 const displayName = computed(() => {
-  return props.account?.nickname || props.group?.groupName || '';
+  return props.contact?.nickname || props.group?.groupName || '';
 });
 
 const initial = computed(() => {
-  return props.account?.nickname?.charAt(0).toUpperCase() || props.group?.groupName?.charAt(0).toUpperCase() || '';
+  return props.contact?.nickname?.charAt(0).toUpperCase() || props.group?.groupName?.charAt(0).toUpperCase() || '';
 });
 </script>
 
@@ -89,7 +86,7 @@ const initial = computed(() => {
       }" />
 
       <h1>{{ displayName }}</h1>
-      <p v-if="account" class="truncate max-w-[200px]">{{ account?.message }}</p>
+      <!-- <p v-if="contact" class="truncate max-w-[200px]">{{ contact?.message }}</p> -->
     </div>
     <Button type="button" icon="pi pi-ellipsis-v" @click="toggle" aria-haspopup="true" aria-controls="overlay_menu"
       size="small" variant="outlined" rounded />
