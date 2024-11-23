@@ -63,7 +63,15 @@ export const useAccountStore = defineStore('account', () => {
     window.location.assign('/login')
   }
 
-  
+  // Cập nhật avatar người dùng
+  const updateUserAvatar = async (userId, phoneNumber, profilePicture) => {
+    try {
+      const response = await AccountService.handleUpdateUser(userId, phoneNumber, profilePicture)
+      return response.data
+    } catch (error) {
+      console.error('Update user avatar failed:', error)
+    }
+  }
 
   return {
     selectedAccount,
@@ -72,5 +80,6 @@ export const useAccountStore = defineStore('account', () => {
     loginAccount,
     registerAccount,
     logoutUser,
+    updateUserAvatar
   }
 })

@@ -121,15 +121,6 @@ watch(
     }
   },
 )
-
-const accountInitial = computed(() => {
-  return contactStore.selectedContact?.nickname?.charAt(0).toUpperCase() || ''
-})
-
-const userInitial = computed(() => {
-  return userStore.selectedUser?.username?.charAt(0).toUpperCase() || ''
-})
-
 //Handle
 const toggleMenu = (event, messageId) => {
   menu.value.toggle(event);
@@ -180,7 +171,7 @@ const sendMessage = async () => {
     if (message.value.trim() === '' && !imageUrl.value && !videoUrl.value) {
       return;
     }
-    const content = videoUrl.value ??  imageUrl.value ?? message.value;
+    const content = videoUrl.value ?? imageUrl.value ?? message.value;
 
     // Gửi tin nhắn qua socket
     await socketStore.sendMessage(
@@ -308,8 +299,7 @@ const rejectCall = () => {
       </div>
 
       <div v-else class="flex items-center gap-4 select-none">
-        <Avatar :label="accountInitial" class="mr-2" size="large" shape="circle"
-          :style="{ backgroundColor: isDark ? '#4B5563' : '#dfe1e3' }" />
+        <Avatar :image="contactStore.selectedContact.status" class="mr-2" size="large" shape="circle" />
         <div class="user-data text-darkMode dark:text-lightMode">
           <h1>{{ contactStore.selectedContact.nickname }}</h1>
         </div>
@@ -362,10 +352,9 @@ const rejectCall = () => {
           </div>
           <!-- Hien thi tin nhan -->
           <div class="w-9 h-9 rounded-full flex items-center justify-center ml-2 mr-2">
-            <Avatar v-if="msg.senderId === contactStore.selectedContact.userId" :label="userInitial" size="small"
-              shape="circle" :style="{ backgroundColor: isDark ? '#4B5563' : '#dfe1e3' }" />
-            <Avatar v-else :label="accountInitial" size="small" shape="circle"
-              :style="{ backgroundColor: isDark ? '#4B5563' : '#dfe1e3' }" />
+            <Avatar v-if="msg.senderId === contactStore.selectedContact.userId" :image="userStore.selectedUser.profilePicture" size="small"
+              shape="circle" />
+            <Avatar v-else :image="contactStore.selectedContact.status" size="small" shape="circle" />
           </div>
         </div>
         <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />

@@ -3,7 +3,6 @@ import { computed, ref } from 'vue'
 import Avatar from 'primevue/avatar'
 import Menu from 'primevue/menu';
 import Button from 'primevue/button';
-import { useDark } from '@vueuse/core'
 import { useToast } from 'primevue/usetoast'
 import { useContactStore } from '../stores/ContactStore'
 import { useGroupStore } from '../stores/GroupStore'
@@ -13,9 +12,6 @@ const toast = useToast();
 const menu = ref();
 const contactStore = useContactStore();
 const groupStore = useGroupStore();
-
-
-const isDark = useDark()
 
 const props = defineProps({
   contact: {
@@ -66,25 +62,17 @@ const toggle = (event) => {
   menu.value.toggle(event);
 };
 
-
-
 const displayName = computed(() => {
   return props.contact?.nickname || props.group?.groupName || '';
 });
 
-const initial = computed(() => {
-  return props.contact?.nickname?.charAt(0).toUpperCase() || props.group?.groupName?.charAt(0).toUpperCase() || '';
-});
 </script>
 
 <template>
   <div
     class="flex justify-between items-center p-3 text-darkMode dark:text-lightMode hover:bg-lightModeHover dark:hover:bg-darkModeHover">
     <div class="flex items-center gap-4">
-      <Avatar :label="initial" class="mr-2" size="xlarge" shape="circle" :style="{
-        backgroundColor: isDark ? '#4B5563' : '#dfe1e3'
-      }" />
-
+      <Avatar :image="props.contact.status" class="mr-2" size="xlarge" shape="circle" />
       <h1>{{ displayName }}</h1>
       <!-- <p v-if="contact" class="truncate max-w-[200px]">{{ contact?.message }}</p> -->
     </div>

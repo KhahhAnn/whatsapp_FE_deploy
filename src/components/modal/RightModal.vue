@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 
 import { useContactStore } from '../../stores/ContactStore'
 import { useMessageStore } from '../../stores/MessageStore'
@@ -12,7 +12,6 @@ import NicknameModal from '../modal/NicknameModal.vue'
 import Avatar from 'primevue/avatar'
 import Image from 'primevue/image'
 import ProgressSpinner from 'primevue/progressspinner';
-import { useDark } from '@vueuse/core'
 
 defineProps({
   isOpen: Boolean
@@ -20,7 +19,6 @@ defineProps({
 const isLoading = ref(true); // Initialize as true to show loading initially
 const isThemeModalOpen = ref(false)
 const isNicknameModalOpen = ref(false)
-const isDark = useDark()
 
 const mediaMessages = ref([])
 const messageStore = useMessageStore()
@@ -46,11 +44,6 @@ watch(() => contactStore.selectedContact.contactUserId, (newContactId) => {
   fetchMedia();
 });
 
-// Compute the first letter of the username
-const accountInitial = computed(() => {
-  return contactStore.selectedContact?.nickname?.charAt(0).toUpperCase() || ''
-})
-
 function toggleThemeModal() {
   isThemeModalOpen.value = !isThemeModalOpen.value
 }
@@ -72,9 +65,7 @@ function toggleNicknameModal() {
 
       <!-- User information -->
       <template v-else>
-        <Avatar :label="accountInitial" class="mr-2" size="xlarge" shape="circle" :style="{
-          backgroundColor: isDark ? '#4B5563' : '#dfe1e3'
-        }" />
+        <Avatar :image="contactStore.selectedContact.status" class="mr-2" size="xlarge" shape="circle" />
         <p>{{ contactStore.selectedContact.nickname }}</p>
       </template>
 
@@ -94,7 +85,8 @@ function toggleNicknameModal() {
           <ProgressSpinner />
         </div>
         <div v-else class="flex items-start gap-2 flex-wrap h-72 w-full overflow-scroll">
-          <div v-for="msg in mediaMessages" :key="msg.messageId" class="bg-slate-300 w-[96px] h-[96px] overflow-hidden shadow-xl">
+          <div v-for="msg in mediaMessages" :key="msg.messageId"
+            class="bg-slate-300 w-[96px] h-[96px] overflow-hidden shadow-xl">
             <Image v-if="msg.content.startsWith('data:image/')" :src="msg.content" alt="Image" preview
               image-class="object-cover" class="w-full h-full" />
             <video v-else-if="msg.content.startsWith('data:video/')" controls class="w-full h-full object-cover">

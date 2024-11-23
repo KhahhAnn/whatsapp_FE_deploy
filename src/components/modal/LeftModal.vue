@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, ref, computed, onMounted } from 'vue'
+import { defineProps, ref, onMounted } from 'vue'
 import { useDark, useToggle } from '@vueuse/core'
 
 import CustomButton from '../custom/CustomButton.vue'
@@ -10,7 +10,10 @@ import { useUserStore } from '../../stores/UserStore'
 import { useAccountStore } from '../../stores/AccountStore'
 import { useSocketStore } from '../../stores/SocketStore'
 
+
 import Avatar from 'primevue/avatar'
+import OverlayBadge from 'primevue/overlaybadge'
+import { useToast } from 'primevue/usetoast'
 
 import { defineEmits } from 'vue'
 
@@ -19,8 +22,10 @@ defineEmits(['close'])
 const userStore = useUserStore()
 const accountStore = useAccountStore()
 const isDark = useDark()
+const toast = useToast()
 const toggle = useToggle(isDark)
 const socketStore = useSocketStore()
+const fileInput = ref(null);
 const isContactModalOpen = ref(false)
 const isCustomGroupModalOpen = ref(false)
 const isCustomJoinGroupModalOpen = ref(false)
@@ -55,9 +60,34 @@ onMounted(() => {
   }
 })
 
-const userInitial = computed(() => {
-  return userStore.selectedUser?.username?.charAt(0).toUpperCase() || ''
-})
+const handleUpdateUserAvatar = async () => {
+  const inputElement = fileInput.value;
+  if (inputElement.files.length > 0) {
+    const file = inputElement.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = async () => {
+      const base64String = reader.result;
+      try {
+        await accountStore.updateUserAvatar(userStore.selectedUser.userId, userStore.selectedUser.phoneNumber, base64String);
+        console.log('Avatar updated successfully');
+
+        userStore.selectedUser.profilePicture = base64String;
+
+        toast.add({
+          severity: 'success',
+          summary: 'Thành công',
+          detail: 'Ảnh đại diện đã cập nhật thành công',
+          life: 3000
+        })
+      } catch (error) {
+        console.error('Error updating avatar:', error);
+      }
+    };
+
+    reader.readAsDataURL(file);
+  }
+};
 </script>
 
 <template>
@@ -65,12 +95,17 @@ const userInitial = computed(() => {
     <div v-if="isOpen"
       class="w-full h-[100%] rounded-3xl text-darkMode dark:text-lightMode bg-lightMode dark:bg-darkMode shadow-lg">
       <div v-if="userStore.selectedUser" class="flex flex-col justify-center items-center gap-4 px-4 py-8">
-        <Avatar :label="userInitial" class="mr-2" size="xlarge" shape="circle" :style="{
-          backgroundColor: isDark ? '#4B5563' : '#dfe1e3'
-        }" />
-
+        <!-- Avatar -->
+        <OverlayBadge severity="success" value="edit" icon="pencil" @click="$refs.fileInput.click()"
+          class="cursor-pointer">
+          <Avatar :image="userStore.selectedUser.profilePicture" class="mr-2 cursor-default" size="xlarge" shape="circle" @click.stop />
+          <input type="file" ref="fileInput" @change="handleUpdateUserAvatar" hidden accept="image/*,video/*"
+            multiple />
+        </OverlayBadge>
+        <!-- Username -->
         <h1 class="text-xl font-semibold">{{ userStore.selectedUser.username }}</h1>
 
+        <!-- Button -->
         <CustomButton icon="user-plus" text="Thêm liên hệ" @click="toggleContactModal" />
         <CustomButton icon="user-group" text="Tạo nhóm" @click="toggleGroupModal" />
         <CustomButton icon="plus" text="Tham gia nhóm" @click="toggleJoinGroupModal" />
