@@ -46,7 +46,8 @@ function closeModal() {
 async function addContact(user) {
   try {
     const userId = localStorage.getItem('userId');
-    await contactStore.addContact(userId, user.userId, user.username, user.profilePicture);
+    const username = localStorage.getItem('username')
+    await contactStore.addContact(userId, user.userId, user.username, username);
     await contactStore.getContactByUser(userId);
     toast.add({
       severity: 'success',

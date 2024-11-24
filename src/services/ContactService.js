@@ -1,31 +1,17 @@
 import apiClient from '../api/api'
 
-const handleCreateContact = async (userId, contactUserId, nickname, status) => {
+const handleCreateContact = async (userId, contactUserId, nickname, senderNickname, status) => {
   try {
-    console.log("Creating contact with data:", { userId, contactUserId, nickname, status });
-    return await apiClient.post('/contact/accept', {
+    return await apiClient.post('/contact', {
       userId,
       contactUserId,
       nickname,
+      senderNickname,
       status
     });
   } catch (error) {
     console.error('Error during adding contact:', error.response ? error.response.data : error.message);
     throw new Error('Failed to create contact: ' + (error.response ? error.response.data.message : error.message));
-  }
-};
-
-const handleAcceptContactRequest = async (userId, contactUserId, nickname, status) => {
-  try {
-    return await apiClient.post('/contact/accept', {
-      userId,
-      contactUserId,
-      nickname,
-      status
-    });
-  } catch (error) {
-    console.error('Error accepting contact request:', error);
-    throw error;
   }
 };
 
@@ -41,6 +27,45 @@ const handleGetContactByUser = async (userId) => {
     throw error
   }
 }
+
+const handleGetPendingContacts = async (contactUserId) => {
+  try {
+    const response = await apiClient.get(`/contact/pending-contacts/${contactUserId}`)
+    return response.data
+  } catch (error) {
+    console.error(
+      'Error during pending contact retrieval:',
+      error.response ? error.response.data : error.message
+    )
+    throw error
+  }
+}
+
+const handleAcceptContactRequest = async (userId, contactUserId, senderNickname, status) => {
+  try {
+    return await apiClient.post('/contact/accept', {
+      userId,
+      contactUserId,
+      senderNickname,
+      status
+    });
+  } catch (error) {
+    console.error('Error accepting contact request:', error);
+    throw error;
+  }
+};
+
+const handleRejectContactRequest = async (userId, contactUserId) => {
+  try {
+    return await apiClient.post('/contact/reject', {
+      userId,
+      contactUserId,
+    });
+  } catch (error) {
+    console.error('Error rejecting contact request:', error);
+    throw error;
+  }
+};
 
 const handleUpdateContact = async (contactId, nickname) => {
   try {
@@ -76,5 +101,7 @@ export default {
   handleUpdateContact,
   handleGetContactByUser,
   handleDeleteContact,
-  handleAcceptContactRequest
+  handleAcceptContactRequest,
+  handleGetPendingContacts,
+  handleRejectContactRequest
 }

@@ -2,9 +2,11 @@
 import { defineProps, defineEmits } from 'vue'
 
 import Button from 'primevue/button';
+import ContactService from '../../services/ContactService';
 
 defineProps({
-  isOpen: Boolean
+  isOpen: Boolean,
+  pendingContacts: Array
 })
 
 const emit = defineEmits(['update:isOpen'])
@@ -12,6 +14,27 @@ const emit = defineEmits(['update:isOpen'])
 function closeModal() {
   emit('update:isOpen', false)
 }
+
+const acceptRequest = async (contact) => {
+  try {
+    await ContactService.handleAcceptContactRequest(contact.contactUserId, contact.userId, contact.senderNickname, 'accepted');
+    console.log('Contact request accepted', contact.userId, contact.contactUserId, contact.senderNickname);
+    // Handle success (e.g., refresh pending contacts)
+  } catch (error) {
+    console.error('Error accepting contact request:', error);
+  }
+};
+
+const declineRequest = async (contact) => {
+  try {
+    await ContactService.handleRejectContactRequest(contact.contactUserId, contact.userId);
+    console.log('Contact request rejected', contact.contactUserId, contact.userId);
+    // Handle success (e.g., refresh pending contacts)
+    
+  } catch (error) {
+    console.error('Error rejecting contact request:', error);
+  }
+};
 </script>
 
 <template>
@@ -30,11 +53,11 @@ function closeModal() {
             </div>
             <!-- List lời mời kết bạn -->
             <div class="overflow-y-auto h-96 border-b border-darkMode dark:border-lightMode">
-              <div v-for="contact in pendingRequests" :key="contact.from"
+              <div v-for="contact in pendingContacts" :key="contact.from"
                 class="py-2 px-4 cursor-pointer hover:bg-lightModeHover dark:hover:bg-darkModeHover">
                 <div class="flex items-center justify-between">
                   <div class="flex item-center">
-                    <p>User {{ contact }} wants to add you as a contact!</p>
+                    <p>User {{ contact.senderNickname }} wants to add you as a contact!</p>
                     <Button @click="acceptRequest(contact)" label="Chấp nhận" severity="success" />
                     <Button @click="declineRequest(contact)" label="Từ chối" severity="danger" />
                   </div>

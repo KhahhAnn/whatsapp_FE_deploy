@@ -9,7 +9,7 @@ import ContactModal from './ContactModal.vue'
 import { useUserStore } from '../../stores/UserStore'
 import { useAccountStore } from '../../stores/AccountStore'
 import { useSocketStore } from '../../stores/SocketStore'
-
+import { useContactStore } from '../../stores/ContactStore'
 
 import Avatar from 'primevue/avatar'
 import OverlayBadge from 'primevue/overlaybadge'
@@ -88,6 +88,15 @@ const handleUpdateUserAvatar = async () => {
     reader.readAsDataURL(file);
   }
 };
+
+const contactStore = useContactStore()
+
+onMounted(async () => {
+  const userId = localStorage.getItem('userId')
+  if (userId) {
+    await contactStore.getPendingContacts(userId)
+  }
+})
 </script>
 
 <template>
@@ -122,6 +131,10 @@ const handleUpdateUserAvatar = async () => {
       @update:isOpen="isCustomGroupModalOpen = $event" />
     <CustomModal title="Tham gia nhóm" placeholder="Tham gia nhóm" label="Tham gia nhóm"
       :isOpen="isCustomJoinGroupModalOpen" @update:isOpen="isCustomJoinGroupModalOpen = $event" />
-    <ContactRequestModal :isOpen="isContactRequestModalOpen" @update:isOpen="isContactRequestModalOpen = $event" />
+    <ContactRequestModal 
+      :isOpen="isContactRequestModalOpen" 
+      @update:isOpen="isContactRequestModalOpen = $event" 
+      :pendingContacts="contactStore.pendingContacts" 
+    />
   </Teleport>
 </template>

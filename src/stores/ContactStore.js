@@ -5,6 +5,7 @@ import ContactService from '../services/ContactService.js'
 export const useContactStore = defineStore('contact', () => {
   const contacts = ref([])
   const selectedContact = ref(null)
+  const pendingContacts = ref([])
 
   function selectContact(contact) {
     selectedContact.value = contact
@@ -20,9 +21,18 @@ export const useContactStore = defineStore('contact', () => {
     }
   }
 
-  const addContact = async (userId, contactUserId, nickname, status) => {
+  const getPendingContacts = async (contactUserId) => {
     try {
-      const response = await ContactService.handleCreateContact(userId, contactUserId, nickname, status);
+      pendingContacts.value = await ContactService.handleGetPendingContacts(contactUserId)
+    } catch (error) {
+      console.error('Failed to fetch pending contacts:', error)
+      pendingContacts.value = [] // Reset nếu fetch fails
+    }
+  }
+
+  const addContact = async (userId, contactUserId, nickname, senderNickname, status) => {
+    try {
+      const response = await ContactService.handleCreateContact(userId, contactUserId, nickname, senderNickname, status);
       if (response && response.data) {
         contacts.value.push(response.data.account);
         return response.data;
@@ -44,12 +54,36 @@ export const useContactStore = defineStore('contact', () => {
     }
   }
 
+  const acceptContactRequest = async (userId, contactUserId, senderNickname) => {
+    try {
+      await ContactService.handleAcceptContactRequest(userId, contactUserId, senderNickname, 'accepted');
+      // Cập nhật danh sách pendingContacts sau khi chấp nhận
+      pendingContacts.value = pendingContacts.value.filter(contact => contact.contactUserId !== contactUserId);
+    } catch (error) {
+      console.error('Error accepting contact request:', error);
+    }
+  };
+
+  const declineContactRequest = async (userId, contactUserId) => {
+    try {
+      await ContactService.handleRejectContactRequest(userId, contactUserId);
+      // Cập nhật danh sách pendingContacts sau khi từ chối
+      pendingContacts.value = pendingContacts.value.filter(contact => contact.contactUserId !== contactUserId);
+    } catch (error) {
+      console.error('Error rejecting contact request:', error);
+    }
+  };
+
   return {
     contacts,
     selectedContact,
+    pendingContacts,
     getContactByUser,
     selectContact,
     addContact,
-    deleteContact
+    deleteContact,
+    getPendingContacts,
+    acceptContactRequest,
+    declineContactRequest
   }
 })
