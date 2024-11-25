@@ -299,7 +299,7 @@ const rejectCall = () => {
       </div>
 
       <div v-else class="flex items-center gap-4 select-none">
-        <Avatar :image="contactStore.selectedContact.status" class="mr-2" size="large" shape="circle" />
+        <Avatar :image="contactStore.selectedContact.avatar" class="mr-2" size="large" shape="circle" />
         <div class="user-data text-darkMode dark:text-lightMode">
           <h1>{{ contactStore.selectedContact.nickname }}</h1>
         </div>
@@ -354,7 +354,7 @@ const rejectCall = () => {
           <div class="w-9 h-9 rounded-full flex items-center justify-center ml-2 mr-2">
             <Avatar v-if="msg.senderId === contactStore.selectedContact.userId" :image="userStore.selectedUser.profilePicture" size="small"
               shape="circle" />
-            <Avatar v-else :image="contactStore.selectedContact.status" size="small" shape="circle" />
+            <Avatar v-else :image="contactStore.selectedContact.avatar" size="small" shape="circle" />
           </div>
         </div>
         <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />

@@ -2,6 +2,8 @@
 import { defineProps, defineEmits } from 'vue'
 
 import Button from 'primevue/button';
+import Avatar from 'primevue/avatar';
+import { useToast } from 'primevue/usetoast';
 import ContactService from '../../services/ContactService';
 
 defineProps({
@@ -10,6 +12,7 @@ defineProps({
 })
 
 const emit = defineEmits(['update:isOpen'])
+const toast = useToast();
 
 function closeModal() {
   emit('update:isOpen', false)
@@ -17,9 +20,16 @@ function closeModal() {
 
 const acceptRequest = async (contact) => {
   try {
-    await ContactService.handleAcceptContactRequest(contact.contactUserId, contact.userId, contact.senderNickname, 'accepted');
-    console.log('Contact request accepted', contact.userId, contact.contactUserId, contact.senderNickname);
+    await ContactService.handleAcceptContactRequest(contact.contactUserId, contact.userId, contact.senderNickname, contact.senderAvatar, 'accepted');
+    console.log('Contact request accepted');
     // Handle success (e.g., refresh pending contacts)
+    toast.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: 'Contact request accepted',
+      life: 3000
+    });
+    closeModal();
   } catch (error) {
     console.error('Error accepting contact request:', error);
   }
@@ -30,7 +40,13 @@ const declineRequest = async (contact) => {
     await ContactService.handleRejectContactRequest(contact.contactUserId, contact.userId);
     console.log('Contact request rejected', contact.contactUserId, contact.userId);
     // Handle success (e.g., refresh pending contacts)
-    
+    toast.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: 'Contact request rejected',
+      life: 3000
+    });
+    closeModal();
   } catch (error) {
     console.error('Error rejecting contact request:', error);
   }
@@ -44,7 +60,7 @@ const declineRequest = async (contact) => {
     <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
       <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
         <div
-          class="relative transform overflow-hidden rounded-2xl shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg bg-lightMode dark:bg-darkMode">
+          class="relative transform overflow-hidden rounded-2xl shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl bg-lightMode dark:bg-darkMode">
           <!-- Modal -->
           <div class="bg-lightMode dark:bg-darkMode w-full rounded-lg shadow-lg">
             <!-- Title -->
@@ -55,12 +71,11 @@ const declineRequest = async (contact) => {
             <div class="overflow-y-auto h-96 border-b border-darkMode dark:border-lightMode">
               <div v-for="contact in pendingContacts" :key="contact.from"
                 class="py-2 px-4 cursor-pointer hover:bg-lightModeHover dark:hover:bg-darkModeHover">
-                <div class="flex items-center justify-between">
-                  <div class="flex item-center">
-                    <p>User {{ contact.senderNickname }} wants to add you as a contact!</p>
-                    <Button @click="acceptRequest(contact)" label="Chấp nhận" severity="success" />
-                    <Button @click="declineRequest(contact)" label="Từ chối" severity="danger" />
-                  </div>
+                <div class="flex items-center justify-around gap-2">
+                  <Avatar :image="contact.senderAvatar" class="" size="large" shape="circle" />
+                  <p>{{ contact.senderNickname }} gửi lời mời kết bạn</p>
+                  <Button @click="acceptRequest(contact)" label="Chấp nhận" severity="success" />
+                  <Button @click="declineRequest(contact)" label="Từ chối" severity="danger" />
                 </div>
               </div>
             </div>

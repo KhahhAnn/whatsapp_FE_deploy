@@ -1,20 +1,5 @@
 import apiClient from '../api/api'
 
-const handleCreateContact = async (userId, contactUserId, nickname, senderNickname, status) => {
-  try {
-    return await apiClient.post('/contact', {
-      userId,
-      contactUserId,
-      nickname,
-      senderNickname,
-      status
-    });
-  } catch (error) {
-    console.error('Error during adding contact:', error.response ? error.response.data : error.message);
-    throw new Error('Failed to create contact: ' + (error.response ? error.response.data.message : error.message));
-  }
-};
-
 const handleGetContactByUser = async (userId) => {
   try {
     const response = await apiClient.get(`/contact/contacts-user/${userId}`)
@@ -41,12 +26,30 @@ const handleGetPendingContacts = async (contactUserId) => {
   }
 }
 
-const handleAcceptContactRequest = async (userId, contactUserId, senderNickname, status) => {
+const handleCreateContact = async (userId, contactUserId, nickname, senderNickname, avatar, senderAvatar, status) => {
+  try {
+    return await apiClient.post('/contact', {
+      userId,
+      contactUserId,
+      nickname,
+      senderNickname,
+      avatar,
+      senderAvatar,
+      status
+    });
+  } catch (error) {
+    console.error('Error during adding contact:', error.response ? error.response.data : error.message);
+    throw new Error('Failed to create contact: ' + (error.response ? error.response.data.message : error.message));
+  }
+};
+
+const handleAcceptContactRequest = async (userId, contactUserId, senderNickname, senderAvatar, status) => {
   try {
     return await apiClient.post('/contact/accept', {
       userId,
       contactUserId,
       senderNickname,
+      senderAvatar,
       status
     });
   } catch (error) {

@@ -30,9 +30,9 @@ export const useContactStore = defineStore('contact', () => {
     }
   }
 
-  const addContact = async (userId, contactUserId, nickname, senderNickname, status) => {
+  const addContact = async (userId, contactUserId, nickname, senderNickname, avatar, senderAvatar, status) => {
     try {
-      const response = await ContactService.handleCreateContact(userId, contactUserId, nickname, senderNickname, status);
+      const response = await ContactService.handleCreateContact(userId, contactUserId, nickname, senderNickname, avatar, senderAvatar, status);
       if (response && response.data) {
         contacts.value.push(response.data.account);
         return response.data;
@@ -54,9 +54,9 @@ export const useContactStore = defineStore('contact', () => {
     }
   }
 
-  const acceptContactRequest = async (userId, contactUserId, senderNickname) => {
+  const acceptContactRequest = async (userId, contactUserId, senderNickname, senderAvatar) => {
     try {
-      await ContactService.handleAcceptContactRequest(userId, contactUserId, senderNickname, 'accepted');
+      await ContactService.handleAcceptContactRequest(userId, contactUserId, senderNickname, senderAvatar, 'accepted');
       // Cập nhật danh sách pendingContacts sau khi chấp nhận
       pendingContacts.value = pendingContacts.value.filter(contact => contact.contactUserId !== contactUserId);
     } catch (error) {

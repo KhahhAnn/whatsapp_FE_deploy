@@ -107,7 +107,8 @@ onMounted(async () => {
         <!-- Avatar -->
         <OverlayBadge severity="success" value="edit" icon="pencil" @click="$refs.fileInput.click()"
           class="cursor-pointer">
-          <Avatar :image="userStore.selectedUser.profilePicture" class="mr-2 cursor-default" size="xlarge" shape="circle" @click.stop />
+          <Avatar :image="userStore.selectedUser.profilePicture" class="mr-2 cursor-default" size="xlarge"
+            shape="circle" @click.stop />
           <input type="file" ref="fileInput" @change="handleUpdateUserAvatar" hidden accept="image/*,video/*"
             multiple />
         </OverlayBadge>
@@ -115,12 +116,17 @@ onMounted(async () => {
         <h1 class="text-xl font-semibold">{{ userStore.selectedUser.username }}</h1>
 
         <!-- Button -->
-        <CustomButton icon="user-plus" text="Thêm liên hệ" @click="toggleContactModal" />
-        <CustomButton icon="user-group" text="Tạo nhóm" @click="toggleGroupModal" />
-        <CustomButton icon="plus" text="Tham gia nhóm" @click="toggleJoinGroupModal" />
-        <CustomButton icon="clock-rotate-left" text="Lời mời kết bạn" @click="toggleContactRequestModal" />
-        <CustomButton @click="toggle()" :icon="isDark ? 'sun' : 'moon'" :text="isDark ? 'Chế độ sáng' : 'Chế độ tối'" />
-        <CustomButton icon="right-from-bracket" text="Đăng xuất" @click="handleLogout" />
+        <div class="flex flex-col justify-center items-start gap-4 py-8 w-full">
+          <CustomButton icon="user-plus" text="Thêm liên hệ" @click="toggleContactModal" />
+          <CustomButton icon="user-group" text="Tạo nhóm" @click="toggleGroupModal" />
+          <CustomButton icon="plus" text="Tham gia nhóm" @click="toggleJoinGroupModal" />
+          <OverlayBadge :value="contactStore.pendingContacts.length" severity="danger" class="">
+            <CustomButton icon="clock-rotate-left" text="Lời mời kết bạn" @click="toggleContactRequestModal" />
+          </OverlayBadge>
+          <CustomButton @click="toggle()" :icon="isDark ? 'sun' : 'moon'"
+            :text="isDark ? 'Chế độ sáng' : 'Chế độ tối'" />
+          <CustomButton icon="right-from-bracket" text="Đăng xuất" @click="handleLogout" />
+        </div>
         <!-- Gọi handleLogout -->
       </div>
     </div>
@@ -131,10 +137,7 @@ onMounted(async () => {
       @update:isOpen="isCustomGroupModalOpen = $event" />
     <CustomModal title="Tham gia nhóm" placeholder="Tham gia nhóm" label="Tham gia nhóm"
       :isOpen="isCustomJoinGroupModalOpen" @update:isOpen="isCustomJoinGroupModalOpen = $event" />
-    <ContactRequestModal 
-      :isOpen="isContactRequestModalOpen" 
-      @update:isOpen="isContactRequestModalOpen = $event" 
-      :pendingContacts="contactStore.pendingContacts" 
-    />
+    <ContactRequestModal :isOpen="isContactRequestModalOpen" @update:isOpen="isContactRequestModalOpen = $event"
+      :pendingContacts="contactStore.pendingContacts" />
   </Teleport>
 </template>

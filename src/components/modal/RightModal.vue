@@ -65,7 +65,7 @@ function toggleNicknameModal() {
 
       <!-- User information -->
       <template v-else>
-        <Avatar :image="contactStore.selectedContact.status" class="mr-2" size="xlarge" shape="circle" />
+        <Avatar :image="contactStore.selectedContact.avatar" class="mr-2" size="xlarge" shape="circle" />
         <p>{{ contactStore.selectedContact.nickname }}</p>
       </template>
 
