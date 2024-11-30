@@ -29,9 +29,9 @@ const routes = [
   {
     path: '/receive',
     name: 'receive',
-    component: () => import('../components/ReceivePopUp.vue')
+    component: () => import('../components/CallPopUp.vue')
   },
-  
+
   {
     path: '/:pathMatch(.*)*',
     name: 'error',

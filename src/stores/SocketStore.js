@@ -4,12 +4,15 @@ import { defineStore } from 'pinia'
 import socket from '../plugins/webSocket'
 import { useMessageStore } from './MessageStore'
 import { useContactStore } from './ContactStore'
+import { useCallStore } from './CallStore'
 
 export const useSocketStore = defineStore('socket', () => {
   const isLoggedIn = ref(false)
   const messages = ref([]) // Danh sách tin nhắn
   const messageStore = useMessageStore()
   const contactStore = useContactStore()
+  const callStore = useCallStore()
+
   const connect = () => {
     if (!isLoggedIn.value && !socket.connected) {
       //Truyền userid từ localstorage vào socket để xác thực
@@ -36,13 +39,22 @@ export const useSocketStore = defineStore('socket', () => {
 
   // Lắng nghe sự kiện contactRequest
   socket.on('contactRequest', (data) => {
-    alert(`User ${data.from} wants to add you as a contact!`);
+    alert(`User ${data.from} wants to add you as a contact!`)
     // Bạn có thể thêm logic để xử lý yêu cầu thêm liên hệ ở đây
     // socket.emit('contactRequestResponse', {
     //   from: data.from,
     //   response: 'accept'
     // })
   })
+
+  const sendCall = ({ from, to, callId }) => {
+    console.log('🚀 calling', { from, to, callId })
+    socket.emit('privateCall', {
+      from,
+      to,
+      callId
+    })
+  }
 
   const sendMessage = (message, from, to) => {
     socket.emit('privateMessage', {
@@ -55,14 +67,19 @@ export const useSocketStore = defineStore('socket', () => {
 
   const listenForMessages = () => {
     socket.on('privateMessageToReceiver', ({ message, from }) => {
-      const currentContactId = contactStore.selectedContact.contactUserId;
+      const currentContactId = contactStore.selectedContact.contactUserId
       if (currentContactId === from) {
-        messages.value.push({ content: message, from });
-        messageStore.addMessage({ content: message, from });
-        console.log('Received message: ', message, from);
+        messages.value.push({ content: message, from })
+        messageStore.addMessage({ content: message, from })
+        console.log('Received message: ', message, from)
       }
-    });
-  };
+    })
+
+    socket.on('privateCallToReceiver', ({ from, callId }) => {
+      console.log('Received call: ', { from, callId })
+      callStore.setIncomingCall({ from, callId })
+    })
+  }
 
   // Gọi phương thức này khi khởi tạo store
   listenForMessages()
@@ -70,21 +87,21 @@ export const useSocketStore = defineStore('socket', () => {
   const sendGroupMessage = (groupId, message) => {
     socket.emit('groupMessage', {
       groupId,
-      message,
-    });
-    console.log('Send group message: ', message, groupId);
-  };
+      message
+    })
+    console.log('Send group message: ', message, groupId)
+  }
 
   const listenForGroupMessages = () => {
     socket.on('groupMessageToMembers', ({ message, from }) => {
       // Xử lý tin nhắn nhóm nhận được
-      console.log('Received group message: ', message, from);
+      console.log('Received group message: ', message, from)
       // Bạn có thể thêm logic để cập nhật danh sách tin nhắn nhóm ở đây
-    });
-  };
+    })
+  }
 
   // Gọi phương thức này khi khởi tạo store
-  listenForGroupMessages();
+  listenForGroupMessages()
 
   socket.on('disconnect', () => {
     isLoggedIn.value = false
@@ -96,7 +113,9 @@ export const useSocketStore = defineStore('socket', () => {
     connect,
     sendMessage,
     sendGroupMessage,
+    sendCall,
     disconnect: () => socket.disconnect(),
     messages // Thêm danh sách tin nhắn vào return
   }
 })
+

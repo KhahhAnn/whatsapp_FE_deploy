@@ -1,10 +1,12 @@
 <script setup>
+import { uniqueId } from 'lodash-es'
 import { ref, computed, onMounted, watch } from 'vue'
 // Components
 import CustomIcon from './custom/CustomIcon.vue'
 import RightModal from './modal/RightModal.vue'
 
 // Stores
+import { useCallStore } from '../stores/CallStore'
 import { useContactStore } from '../stores/ContactStore'
 import { useUserStore } from '../stores/UserStore'
 import { useSocketStore } from '../stores/SocketStore'
@@ -20,6 +22,7 @@ import Toast from 'primevue/toast'
 import { useToast } from 'primevue/usetoast'
 
 // Stores
+const callStore = useCallStore()
 const contactStore = useContactStore()
 const userStore = useUserStore()
 const socketStore = useSocketStore()
@@ -27,7 +30,6 @@ const messageStore = useMessageStore()
 // Refs handle component
 const isModalOpen = ref(false)
 const isLoading = ref(false)
-const showPopup = ref(false)
 const callerName = ref('')
 
 const selectedMessageId = ref(null)
@@ -191,6 +193,27 @@ const sendMessage = async () => {
   } catch (error) {
     console.error('Error sending message:', error)
   }
+}
+
+const openCallPopUp = () => {
+  const callId = uniqueId('call-')
+  socketStore.sendCall({
+    from: userStore.selectedUser.userId,
+    to: contactStore.selectedContact.contactUserId,
+    callId
+  })
+
+  const url = `/call?user_id=${userStore.selectedUser.userId}&call_id=${callId}`
+  const features =
+    'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=800,height=600'
+  window.open(url, '_blank', features)
+}
+
+const acceptCall = () => {
+  const url = `/receive?user_id=${userStore.selectedUser.userId}&call_id=${callStore.incomingCall.callId}`
+  const features =
+    'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=800,height=600'
+  window.open(url, '_blank', features)
 }
 </script>
 
@@ -374,7 +397,7 @@ const sendMessage = async () => {
 
   <Teleport to="#app">
     <div
-      v-if="showPopup"
+      v-if="callStore.incomingCall"
       class="popup fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center"
     >
       <div class="bg-white p-6 rounded-lg shadow-lg text-center">
