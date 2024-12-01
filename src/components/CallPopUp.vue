@@ -2,6 +2,8 @@
 import { StreamVideoClient } from '@stream-io/video-client'
 import { nextTick, onMounted, ref, watch, computed } from 'vue'
 import CallService from '../services/CallService'
+import Button from 'primevue/button';
+import CustomIcon from './custom/CustomIcon.vue';
 
 const isCalling = window.location.pathname === '/call'
 const isReceiving = window.location.pathname === '/receive'
@@ -44,6 +46,9 @@ const subscribeCallParticipants = () => {
   })
 }
 
+const audioElement = ref(null);
+
+
 const joinCall = async () => {
   await call.join(isCalling ? { create: true } : undefined)
   await call.camera.enable()
@@ -51,6 +56,7 @@ const joinCall = async () => {
 }
 
 const containerElement = ref()
+
 
 const setupCallContainer = () => {
   const parentContainer = containerElement.value
@@ -63,6 +69,7 @@ onMounted(async () => {
   subscribeCallParticipants()
   await joinCall()
   setupCallContainer()
+  call.bindAudioElement(audioElement.value, user.sessionId, 'audioTrack');
 })
 
 // User who has big video on the screen
@@ -97,26 +104,30 @@ watch(secondaryUser, (user) => {
     }
   })
 })
+
+// const toggleMicrophone = async () => {
+//   if (call.microphone.isEnabled) {
+//     await call.microphone.disable(); // Tắt microphone
+//   } else {
+//     await call.microphone.enable(); // Bật microphone
+//   }
+// }
 </script>
 
 <template>
-  <div
-    ref="containerElement"
-    class="relative flex items-center justify-center bg-gray-800 h-full w-full p-4"
-  >
-    <video
-      v-if="secondaryUser"
-      ref="secondaryVideo"
-      :id="`video-${secondaryUser.sessionId}`"
+  <div ref="containerElement" class="relative flex items-center justify-center bg-gray-800 h-full w-full p-4">
+    <video v-if="secondaryUser" ref="secondaryVideo" :id="`video-${secondaryUser.sessionId}`"
       :data-session-id="secondaryUser.sessionId"
-      class="absolute bottom-7 end-7 w-[350px] aspect-video shadow-2xl rounded-2xl"
-    ></video>
-    <video
-      v-if="primaryUser"
-      ref="primaryVideo"
-      :id="`video-${primaryUser.sessionId}`"
-      :data-session-id="primaryUser.sessionId"
-      class="w-full aspect-video rounded-lg"
-    ></video>
+      class="absolute bottom-7 end-7 w-[350px] aspect-video shadow-2xl rounded-2xl" />
+
+    <Button @click="toggleMicrophone" class="fixed top-64 left-12" severity="danger">
+      <CustomIcon icon="microphone" size="lg" />
+    </Button>
+
+    <video v-if="primaryUser" ref="primaryVideo" :id="`video-${primaryUser.sessionId}`"
+      :data-session-id="primaryUser.sessionId" class="w-full aspect-video rounded-lg" />
+
+    <audio ref="audioElement" hidden></audio>
+
   </div>
 </template>

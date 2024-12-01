@@ -29,5 +29,7 @@ library.add(
   Icons.faFaceSmile,
   Icons.faClockRotateLeft,
   Icons.faChevronDown,
-  Icons.faChevronRight
+  Icons.faChevronRight,
+  Icons.faMicrophone,
+  Icons.faCamera
 )

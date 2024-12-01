@@ -1,5 +1,6 @@
 <script setup>
 import { uniqueId } from 'lodash-es'
+
 import { ref, computed, onMounted, watch } from 'vue'
 // Components
 import CustomIcon from './custom/CustomIcon.vue'
@@ -194,7 +195,7 @@ const sendMessage = async () => {
     console.error('Error sending message:', error)
   }
 }
-
+// change to uuid format
 const openCallPopUp = () => {
   const callId = uniqueId('call-')
   socketStore.sendCall({
@@ -214,19 +215,21 @@ const acceptCall = () => {
   const features =
     'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=800,height=600'
   window.open(url, '_blank', features)
+
 }
+
+const rejectCall = () => {
+  callStore.incomingCall = null;
+}
+
 </script>
 
 <template>
-  <div
-    :class="[
-      'flex flex-col justify-between h-[calc(100vh-32px)] rounded-3xl shadow-2xl bg-lightMode dark:text-lightMode dark:bg-darkMode ',
-      isModalOpen ? 'w-1/2' : 'w-3/4'
-    ]"
-  >
-    <div
-      class="flex justify-between items-center p-4 border-b border-darkModeHover dark:border-lightModeHover"
-    >
+  <div :class="[
+    'flex flex-col justify-between h-[calc(100vh-32px)] rounded-3xl shadow-2xl bg-lightMode dark:text-lightMode dark:bg-darkMode ',
+    isModalOpen ? 'w-1/2' : 'w-3/4'
+  ]">
+    <div class="flex justify-between items-center p-4 border-b border-darkModeHover dark:border-lightModeHover">
       <div v-if="isLoading" class="flex items-center gap-4">
         <div class="w-14 h-14 rounded-full bg-gray-300 dark:bg-gray-700 animate-pulse"></div>
         <div class="space-y-2">
@@ -236,12 +239,7 @@ const acceptCall = () => {
       </div>
 
       <div v-else class="flex items-center gap-4 select-none">
-        <Avatar
-          :image="contactStore.selectedContact.avatar"
-          class="mr-2"
-          size="large"
-          shape="circle"
-        />
+        <Avatar :image="contactStore.selectedContact.avatar" class="mr-2" size="large" shape="circle" />
         <div class="user-data text-darkMode dark:text-lightMode">
           <h1>{{ contactStore.selectedContact.nickname }}</h1>
         </div>
@@ -268,87 +266,45 @@ const acceptCall = () => {
 
       <div v-else>
         <!-- Hiển thị tin nhắn -->
-        <div
-          v-for="msg in messageStore.messages"
-          :key="msg.messageId"
-          class="flex mb-4 items-center"
-          :class="
-            msg.senderId === contactStore.selectedContact.userId
-              ? 'justify-end'
-              : 'flex-row-reverse justify-end'
-          "
-        >
-          <Button
-            type="button"
-            icon="pi pi-ellipsis-v"
-            @click="toggleMenu($event, msg.messageId)"
-            aria-haspopup="true"
-            aria-controls="overlay_menu"
-            size="small"
-            variant="outlined"
-            rounded
-            :style="{
+        <div v-for="msg in messageStore.messages" :key="msg.messageId" class="flex mb-4 items-center" :class="msg.senderId === contactStore.selectedContact.userId
+            ? 'justify-end'
+            : 'flex-row-reverse justify-end'
+          ">
+          <Button type="button" icon="pi pi-ellipsis-v" @click="toggleMenu($event, msg.messageId)" aria-haspopup="true"
+            aria-controls="overlay_menu" size="small" variant="outlined" rounded :style="{
               border: 'none',
               backgroundColor: 'transparent',
               color: isDark ? 'white' : 'black'
-            }"
-          />
-          <div
-            class="flex flex-col max-w-full overflow-hidden rounded-2xl"
-            :class="
-              msg.senderId === contactStore.selectedContact.userId
-                ? 'bg-lightModeHover dark:bg-darkModeHover'
-                : 'bg-lightModeHover dark:bg-darkModeHover text-darkMode dark:text-lightMode'
-            "
-          >
-            <p
-              v-if="msg.content.startsWith('data:image/') && msg.content.includes(';base64,')"
-              class="text-darkMode dark:text-lightMode min-w-0 w-full"
-            >
-              <Image
-                :src="msg.content"
-                alt="Image"
-                image-class="lg:max-w-[512px] sm:max-w-[352px] rounded-lg"
-              />
+            }" />
+          <div class="flex flex-col max-w-full overflow-hidden rounded-2xl" :class="msg.senderId === contactStore.selectedContact.userId
+              ? 'bg-lightModeHover dark:bg-darkModeHover'
+              : 'bg-lightModeHover dark:bg-darkModeHover text-darkMode dark:text-lightMode'
+            ">
+            <p v-if="msg.content.startsWith('data:image/') && msg.content.includes(';base64,')"
+              class="text-darkMode dark:text-lightMode min-w-0 w-full">
+              <Image :src="msg.content" alt="Image" image-class="lg:max-w-[512px] sm:max-w-[352px] rounded-lg" />
             </p>
-            <video
-              v-else-if="msg.content.startsWith('data:video/')"
-              controls
-              class="lg:max-w-[512px] sm:max-w-[352px] rounded-lg"
-            >
+            <video v-else-if="msg.content.startsWith('data:video/')" controls
+              class="lg:max-w-[512px] sm:max-w-[352px] rounded-lg">
               <source :src="msg.content" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
-            <p
-              v-else
-              class="text-darkMode dark:text-lightMode break-words min-w-0 w-full px-3 py-1"
-            >
+            <p v-else class="text-darkMode dark:text-lightMode break-words min-w-0 w-full px-3 py-1">
               {{ msg.content }}
             </p>
           </div>
           <!-- Hien thi tin nhan -->
           <div class="w-9 h-9 rounded-full flex items-center justify-center ml-2 mr-2">
-            <Avatar
-              v-if="msg.senderId === contactStore.selectedContact.userId"
-              :image="userStore.selectedUser.profilePicture"
-              size="small"
-              shape="circle"
-            />
-            <Avatar
-              v-else
-              :image="contactStore.selectedContact.avatar"
-              size="small"
-              shape="circle"
-            />
+            <Avatar v-if="msg.senderId === contactStore.selectedContact.userId"
+              :image="userStore.selectedUser.profilePicture" size="small" shape="circle" />
+            <Avatar v-else :image="contactStore.selectedContact.avatar" size="small" shape="circle" />
           </div>
         </div>
         <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />
       </div>
     </div>
 
-    <div
-      class="flex flex-col justify-center border-t border-darkModeHover dark:border-lightModeHover"
-    >
+    <div class="flex flex-col justify-center border-t border-darkModeHover dark:border-lightModeHover">
       <!-- Image preview -->
       <div v-if="imageUrl || videoUrl" class="flex items-center justify-start p-4 gap-2">
         <Image v-if="imageUrl" :src="imageUrl" alt="Image" image-class="max-w-[128px] rounded-lg" />
@@ -356,37 +312,20 @@ const acceptCall = () => {
           <source :src="videoUrl" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-        <Button
-          @click="removeImage"
-          icon="pi pi-trash"
-          size="small"
-          severity="danger"
-          aria-label="Delete"
-          class="py-2 px-4 rounded-full mt-2"
-        />
+        <Button @click="removeImage" icon="pi pi-trash" size="small" severity="danger" aria-label="Delete"
+          class="py-2 px-4 rounded-full mt-2" />
       </div>
       <!-- Input message -->
       <div class="flex justify-center items-end gap-2 px-4 py-2">
         <CustomIcon icon="face-smile" size="lg" />
         <div>
           <CustomIcon icon="image" size="lg" @click="$refs.fileInput.click()" />
-          <input
-            type="file"
-            ref="fileInput"
-            @change="handleFileChange"
-            hidden
-            accept="image/*,video/*"
-            multiple
-          />
+          <input type="file" ref="fileInput" @change="handleFileChange" hidden accept="image/*,video/*" multiple />
         </div>
         <CustomIcon icon="note-sticky" size="lg" />
-        <input
-          type="text"
-          v-model="message"
-          @keyup.enter="sendMessage"
+        <input type="text" v-model="message" @keyup.enter="sendMessage"
           class="w-full py-2 px-4 rounded-full bg-lightModeHover dark:bg-darkModeHover text-darkMode dark:text-lightMode placeholder-darkModeHover dark:placeholder-lightModeHover"
-          placeholder="Aa"
-        />
+          placeholder="Aa" />
         <button @click="sendMessage">
           <CustomIcon icon="paper-plane" size="lg" />
         </button>
@@ -396,10 +335,8 @@ const acceptCall = () => {
   <RightModal :isOpen="isModalOpen" @update:isOpen="isModalOpen = $event" />
 
   <Teleport to="#app">
-    <div
-      v-if="callStore.incomingCall"
-      class="popup fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center"
-    >
+    <div v-if="callStore.incomingCall"
+      class="popup fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center">
       <div class="bg-white p-6 rounded-lg shadow-lg text-center">
         <p class="text-lg font-semibold text-black">Bạn có một cuộc gọi đến từ {{ callerName }}</p>
         <div class="flex justify-center mt-4 space-x-4">
