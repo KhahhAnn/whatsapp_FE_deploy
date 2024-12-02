@@ -4,6 +4,8 @@ import { nextTick, onMounted, ref, watch, computed } from 'vue'
 import CallService from '../services/CallService'
 import Button from 'primevue/button';
 import CustomIcon from './custom/CustomIcon.vue';
+// import ProgressSpinner from 'primevue/progressspinner';
+
 
 const isCalling = window.location.pathname === '/call'
 const isReceiving = window.location.pathname === '/receive'
@@ -23,6 +25,9 @@ const createCall = async () => {
 
 const callerUser = ref()
 const receiverUser = ref()
+
+const isCameraEnabled = ref(true)
+const isMicrophoneEnabled = ref(true)
 
 const subscribeCallParticipants = () => {
   // Whenever the participants change, we update the UI
@@ -105,13 +110,26 @@ watch(secondaryUser, (user) => {
   })
 })
 
-// const toggleMicrophone = async () => {
-//   if (call.microphone.isEnabled) {
-//     await call.microphone.disable(); // Tắt microphone
-//   } else {
-//     await call.microphone.enable(); // Bật microphone
-//   }
-// }
+const toggleMicrophone = async () => {
+  if (isMicrophoneEnabled.value) {
+    await call.camera.disable(); // Tắt camera
+    isMicrophoneEnabled.value = false; // Cập nhật trạng thái
+  } else {
+    await call.camera.enable(); // Bật camera
+    isMicrophoneEnabled.value = true; // Cập nhật trạng thái
+  }
+}
+
+const toggleCamera = async () => {
+  if (isCameraEnabled.value) {
+    await call.camera.disable(); // Tắt camera
+    isCameraEnabled.value = false; // Cập nhật trạng thái
+  } else {
+    await call.camera.enable(); // Bật camera
+    isCameraEnabled.value = true; // Cập nhật trạng thái
+  }
+}
+
 </script>
 
 <template>
@@ -119,9 +137,11 @@ watch(secondaryUser, (user) => {
     <video v-if="secondaryUser" ref="secondaryVideo" :id="`video-${secondaryUser.sessionId}`"
       :data-session-id="secondaryUser.sessionId"
       class="absolute bottom-7 end-7 w-[350px] aspect-video shadow-2xl rounded-2xl" />
-
     <Button @click="toggleMicrophone" class="fixed top-64 left-12" severity="danger">
       <CustomIcon icon="microphone" size="lg" />
+    </Button>
+    <Button @click="toggleCamera" class="fixed top-64 left-12" severity="danger">
+      <CustomIcon icon="camera" size="lg" />
     </Button>
 
     <video v-if="primaryUser" ref="primaryVideo" :id="`video-${primaryUser.sessionId}`"

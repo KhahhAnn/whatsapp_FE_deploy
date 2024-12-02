@@ -1,5 +1,5 @@
 <script setup>
-import { uniqueId } from 'lodash-es'
+import { v4 as uuidv4 } from 'uuid'
 
 import { ref, computed, onMounted, watch } from 'vue'
 // Components
@@ -197,12 +197,15 @@ const sendMessage = async () => {
 }
 // change to uuid format
 const openCallPopUp = () => {
-  const callId = uniqueId('call-')
+
+  const callId = uuidv4()
   socketStore.sendCall({
     from: userStore.selectedUser.userId,
     to: contactStore.selectedContact.contactUserId,
     callId
   })
+
+  console.log(callId)
 
   const url = `/call?user_id=${userStore.selectedUser.userId}&call_id=${callId}`
   const features =
@@ -215,7 +218,7 @@ const acceptCall = () => {
   const features =
     'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=800,height=600'
   window.open(url, '_blank', features)
-
+  callStore.incomingCall = null; // Đóng popup cuộc gọi
 }
 
 const rejectCall = () => {
@@ -267,8 +270,8 @@ const rejectCall = () => {
       <div v-else>
         <!-- Hiển thị tin nhắn -->
         <div v-for="msg in messageStore.messages" :key="msg.messageId" class="flex mb-4 items-center" :class="msg.senderId === contactStore.selectedContact.userId
-            ? 'justify-end'
-            : 'flex-row-reverse justify-end'
+          ? 'justify-end'
+          : 'flex-row-reverse justify-end'
           ">
           <Button type="button" icon="pi pi-ellipsis-v" @click="toggleMenu($event, msg.messageId)" aria-haspopup="true"
             aria-controls="overlay_menu" size="small" variant="outlined" rounded :style="{
@@ -277,8 +280,8 @@ const rejectCall = () => {
               color: isDark ? 'white' : 'black'
             }" />
           <div class="flex flex-col max-w-full overflow-hidden rounded-2xl" :class="msg.senderId === contactStore.selectedContact.userId
-              ? 'bg-lightModeHover dark:bg-darkModeHover'
-              : 'bg-lightModeHover dark:bg-darkModeHover text-darkMode dark:text-lightMode'
+            ? 'bg-lightModeHover dark:bg-darkModeHover'
+            : 'bg-lightModeHover dark:bg-darkModeHover text-darkMode dark:text-lightMode'
             ">
             <p v-if="msg.content.startsWith('data:image/') && msg.content.includes(';base64,')"
               class="text-darkMode dark:text-lightMode min-w-0 w-full">
