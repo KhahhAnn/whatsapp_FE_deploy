@@ -6,6 +6,8 @@ import CustomButton from '../custom/CustomButton.vue'
 import CustomModal from '../custom/CustomModal.vue'
 import ContactRequestModal from './ContactRequestModal.vue'
 import ContactModal from './ContactModal.vue'
+import HistoryCallModal from './HistoryCallModal.vue'
+
 import { useUserStore } from '../../stores/UserStore'
 import { useAccountStore } from '../../stores/AccountStore'
 import { useSocketStore } from '../../stores/SocketStore'
@@ -25,11 +27,12 @@ const isDark = useDark()
 const toast = useToast()
 const toggle = useToggle(isDark)
 const socketStore = useSocketStore()
-const fileInput = ref(null);
+const fileInput = ref(null)
 const isContactModalOpen = ref(false)
 const isCustomGroupModalOpen = ref(false)
 const isCustomJoinGroupModalOpen = ref(false)
 const isContactRequestModalOpen = ref(false)
+const isHistoryCallModalOpen = ref(false)
 defineProps({
   isOpen: Boolean
 })
@@ -48,6 +51,10 @@ function toggleContactRequestModal() {
   isContactRequestModalOpen.value = !isContactRequestModalOpen.value
 }
 
+function toggleHistoryCallModal() {
+  isHistoryCallModalOpen.value = !isHistoryCallModalOpen.value
+}
+
 function handleLogout() {
   accountStore.logoutUser()
   socketStore.disconnect()
@@ -61,18 +68,22 @@ onMounted(() => {
 })
 
 const handleUpdateUserAvatar = async () => {
-  const inputElement = fileInput.value;
+  const inputElement = fileInput.value
   if (inputElement.files.length > 0) {
-    const file = inputElement.files[0];
-    const reader = new FileReader();
+    const file = inputElement.files[0]
+    const reader = new FileReader()
 
     reader.onloadend = async () => {
-      const base64String = reader.result;
+      const base64String = reader.result
       try {
-        await accountStore.updateUserAvatar(userStore.selectedUser.userId, userStore.selectedUser.phoneNumber, base64String);
-        console.log('Avatar updated successfully');
+        await accountStore.updateUserAvatar(
+          userStore.selectedUser.userId,
+          userStore.selectedUser.phoneNumber,
+          base64String
+        )
+        console.log('Avatar updated successfully')
 
-        userStore.selectedUser.profilePicture = base64String;
+        userStore.selectedUser.profilePicture = base64String
 
         toast.add({
           severity: 'success',
@@ -81,13 +92,13 @@ const handleUpdateUserAvatar = async () => {
           life: 3000
         })
       } catch (error) {
-        console.error('Error updating avatar:', error);
+        console.error('Error updating avatar:', error)
       }
-    };
+    }
 
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(file)
   }
-};
+}
 
 const contactStore = useContactStore()
 
@@ -101,16 +112,37 @@ onMounted(async () => {
 
 <template>
   <Transition name="slide">
-    <div v-if="isOpen"
-      class="w-full h-[100%] rounded-3xl text-darkMode dark:text-lightMode bg-lightMode dark:bg-darkMode shadow-lg">
-      <div v-if="userStore.selectedUser" class="flex flex-col justify-center items-center gap-4 px-4 py-8">
+    <div
+      v-if="isOpen"
+      class="w-full h-[100%] rounded-3xl text-darkMode dark:text-lightMode bg-lightMode dark:bg-darkMode shadow-lg"
+    >
+      <div
+        v-if="userStore.selectedUser"
+        class="flex flex-col justify-center items-center gap-4 px-4 pt-9"
+      >
         <!-- Avatar -->
-        <OverlayBadge severity="success" value="edit" icon="pencil" @click="$refs.fileInput.click()"
-          class="cursor-pointer">
-          <Avatar :image="userStore.selectedUser.profilePicture" class="mr-2 cursor-default" size="xlarge"
-            shape="circle" @click.stop />
-          <input type="file" ref="fileInput" @change="handleUpdateUserAvatar" hidden accept="image/*,video/*"
-            multiple />
+        <OverlayBadge
+          severity="success"
+          value="edit"
+          icon="pencil"
+          @click="$refs.fileInput.click()"
+          class="cursor-pointer"
+        >
+          <Avatar
+            :image="userStore.selectedUser.profilePicture"
+            class="mr-2 cursor-default"
+            size="xlarge"
+            shape="circle"
+            @click.stop
+          />
+          <input
+            type="file"
+            ref="fileInput"
+            @change="handleUpdateUserAvatar"
+            hidden
+            accept="image/*,video/*"
+            multiple
+          />
         </OverlayBadge>
         <!-- Username -->
         <h1 class="text-xl font-semibold">{{ userStore.selectedUser.username }}</h1>
@@ -121,10 +153,22 @@ onMounted(async () => {
           <CustomButton icon="user-group" text="Tạo nhóm" @click="toggleGroupModal" />
           <CustomButton icon="plus" text="Tham gia nhóm" @click="toggleJoinGroupModal" />
           <OverlayBadge :value="contactStore.pendingContacts.length" severity="danger" class="">
-            <CustomButton icon="clock-rotate-left" text="Lời mời kết bạn" @click="toggleContactRequestModal" />
+            <CustomButton
+              icon="clock-rotate-left"
+              text="Lời mời kết bạn"
+              @click="toggleContactRequestModal"
+            />
           </OverlayBadge>
-          <CustomButton @click="toggle()" :icon="isDark ? 'sun' : 'moon'"
-            :text="isDark ? 'Chế độ sáng' : 'Chế độ tối'" />
+          <CustomButton
+            icon="box-archive"
+            text="Lịch sử cuộc gọi"
+            @click="toggleHistoryCallModal"
+          />
+          <CustomButton
+            @click="toggle()"
+            :icon="isDark ? 'sun' : 'moon'"
+            :text="isDark ? 'Chế độ sáng' : 'Chế độ tối'"
+          />
           <CustomButton icon="right-from-bracket" text="Đăng xuất" @click="handleLogout" />
         </div>
         <!-- Gọi handleLogout -->
@@ -132,12 +176,33 @@ onMounted(async () => {
     </div>
   </Transition>
   <Teleport to="#app">
+    <!-- Thêm liên hệ -->
     <ContactModal :isOpen="isContactModalOpen" @update:isOpen="isContactModalOpen = $event" />
-    <CustomModal title="Tạo nhóm" placeholder="Tạo nhóm" label="Tạo nhóm" :isOpen="isCustomGroupModalOpen"
-      @update:isOpen="isCustomGroupModalOpen = $event" />
-    <CustomModal title="Tham gia nhóm" placeholder="Tham gia nhóm" label="Tham gia nhóm"
-      :isOpen="isCustomJoinGroupModalOpen" @update:isOpen="isCustomJoinGroupModalOpen = $event" />
-    <ContactRequestModal :isOpen="isContactRequestModalOpen" @update:isOpen="isContactRequestModalOpen = $event"
-      :pendingContacts="contactStore.pendingContacts" />
+    <!-- Tạo nhóm -->
+    <CustomModal
+      title="Tạo nhóm"
+      placeholder="Tạo nhóm"
+      label="Tạo nhóm"
+      :isOpen="isCustomGroupModalOpen"
+      @update:isOpen="isCustomGroupModalOpen = $event"
+    />
+    <!-- Tham gia nhóm -->
+    <CustomModal
+      title="Tham gia nhóm"
+      placeholder="Tham gia nhóm"
+      label="Tham gia nhóm"
+      :isOpen="isCustomJoinGroupModalOpen"
+      @update:isOpen="isCustomJoinGroupModalOpen = $event"
+    />
+    <!-- Lời mời kết bạn -->
+    <ContactRequestModal
+      :isOpen="isContactRequestModalOpen"
+      @update:isOpen="isContactRequestModalOpen = $event"
+      :pendingContacts="contactStore.pendingContacts"
+    />
+    <HistoryCallModal
+      :isOpen="isHistoryCallModalOpen"
+      @update:isOpen="isHistoryCallModalOpen = $event"
+    />
   </Teleport>
 </template>

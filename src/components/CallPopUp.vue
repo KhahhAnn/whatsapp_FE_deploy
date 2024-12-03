@@ -2,10 +2,7 @@
 import { StreamVideoClient } from '@stream-io/video-client'
 import { nextTick, onMounted, ref, watch, computed } from 'vue'
 import CallService from '../services/CallService'
-import Button from 'primevue/button';
-import CustomIcon from './custom/CustomIcon.vue';
-// import ProgressSpinner from 'primevue/progressspinner';
-
+import Button from 'primevue/button'
 
 const isCalling = window.location.pathname === '/call'
 const isReceiving = window.location.pathname === '/receive'
@@ -51,9 +48,6 @@ const subscribeCallParticipants = () => {
   })
 }
 
-const audioElement = ref(null);
-
-
 const joinCall = async () => {
   await call.join(isCalling ? { create: true } : undefined)
   await call.camera.enable()
@@ -61,7 +55,6 @@ const joinCall = async () => {
 }
 
 const containerElement = ref()
-
 
 const setupCallContainer = () => {
   const parentContainer = containerElement.value
@@ -74,7 +67,6 @@ onMounted(async () => {
   subscribeCallParticipants()
   await joinCall()
   setupCallContainer()
-  call.bindAudioElement(audioElement.value, user.sessionId, 'audioTrack');
 })
 
 // User who has big video on the screen
@@ -89,6 +81,8 @@ const secondaryUser = computed(() => {
 
 const primaryVideo = ref()
 const secondaryVideo = ref()
+const primaryAudio = ref()
+const secondaryAudio = ref()
 const hasRenderedPrimaryVideo = ref(false)
 const hasRenderedSecondaryVideo = ref(false)
 
@@ -96,6 +90,7 @@ watch(primaryUser, (user) => {
   nextTick(() => {
     if (!hasRenderedPrimaryVideo.value) {
       call.bindVideoElement(primaryVideo.value, user.sessionId, 'videoTrack')
+      call.bindAudioElement(primaryAudio.value, user.sessionId, 'audioTrack')
       hasRenderedPrimaryVideo.value = true
     }
   })
@@ -105,6 +100,7 @@ watch(secondaryUser, (user) => {
   nextTick(() => {
     if (!hasRenderedSecondaryVideo.value) {
       call.bindVideoElement(secondaryVideo.value, user.sessionId, 'videoTrack')
+      call.bindAudioElement(secondaryAudio.value, user.sessionId, 'audioTrack')
       hasRenderedSecondaryVideo.value = true
     }
   })
@@ -112,42 +108,80 @@ watch(secondaryUser, (user) => {
 
 const toggleMicrophone = async () => {
   if (isMicrophoneEnabled.value) {
-    await call.camera.disable(); // Tắt camera
-    isMicrophoneEnabled.value = false; // Cập nhật trạng thái
+    await call.microphone.disable() // Tắt camera
+    isMicrophoneEnabled.value = false // Cập nhật trạng thái
   } else {
-    await call.camera.enable(); // Bật camera
-    isMicrophoneEnabled.value = true; // Cập nhật trạng thái
+    await call.microphone.enable() // Bật camera
+    isMicrophoneEnabled.value = true // Cập nhật trạng thái
   }
 }
 
 const toggleCamera = async () => {
   if (isCameraEnabled.value) {
-    await call.camera.disable(); // Tắt camera
-    isCameraEnabled.value = false; // Cập nhật trạng thái
+    await call.camera.disable() // Tắt camera
+    isCameraEnabled.value = false // Cập nhật trạng thái
   } else {
-    await call.camera.enable(); // Bật camera
-    isCameraEnabled.value = true; // Cập nhật trạng thái
+    await call.camera.enable() // Bật camera
+    isCameraEnabled.value = true // Cập nhật trạng thái
   }
 }
 
+const toggleEndCall = async () => {
+  await call.leave() // Ngắt kết nối cuộc gọi
+  // Cập nhật trạng thái người dùng nếu cần
+  callerUser.value = null
+  receiverUser.value = null
+  //Closed call windows
+  window.close()
+}
 </script>
 
 <template>
-  <div ref="containerElement" class="relative flex items-center justify-center bg-gray-800 h-full w-full p-4">
-    <video v-if="secondaryUser" ref="secondaryVideo" :id="`video-${secondaryUser.sessionId}`"
+  <div
+    ref="containerElement"
+    class="relative flex items-center justify-center bg-gray-800 h-full w-full p-4"
+  >
+    <video
+      v-if="secondaryUser"
+      ref="secondaryVideo"
+      autoplay
+      :id="`video-${secondaryUser.sessionId}`"
       :data-session-id="secondaryUser.sessionId"
-      class="absolute bottom-7 end-7 w-[350px] aspect-video shadow-2xl rounded-2xl" />
-    <Button @click="toggleMicrophone" class="fixed top-64 left-12" severity="danger">
-      <CustomIcon icon="microphone" size="lg" />
-    </Button>
-    <Button @click="toggleCamera" class="fixed top-64 left-12" severity="danger">
-      <CustomIcon icon="camera" size="lg" />
-    </Button>
+      class="absolute bottom-7 end-7 w-[350px] aspect-video shadow-2xl rounded-2xl"
+    />
 
-    <video v-if="primaryUser" ref="primaryVideo" :id="`video-${primaryUser.sessionId}`"
-      :data-session-id="primaryUser.sessionId" class="w-full aspect-video rounded-lg" />
+    <div class="absolute bottom-7 start-7 flex gap-4">
+      <Button
+        @click="toggleMicrophone"
+        class=""
+        :severity="isMicrophoneEnabled ? 'success' : 'danger'"
+        icon="pi pi-microphone"
+        size="large"
+      />
 
-    <audio ref="audioElement" hidden></audio>
+      <Button
+        @click="toggleCamera"
+        class=""
+        :severity="isCameraEnabled ? 'success' : 'danger'"
+        icon="pi pi-camera"
+        size="large"
+      />
 
+      <Button @click="toggleEndCall" severity="danger" size="large">
+        <font-awesome-icon icon="phone-slash" />
+      </Button>
+    </div>
+
+    <video
+      v-if="primaryUser"
+      ref="primaryVideo"
+      autoplay
+      :id="`video-${primaryUser.sessionId}`"
+      :data-session-id="primaryUser.sessionId"
+      class="w-full aspect-video rounded-lg"
+    />
+
+    <audio ref="secondaryAudio" hidden></audio>
+    <audio ref="primaryAudio" hidden></audio>
   </div>
 </template>
