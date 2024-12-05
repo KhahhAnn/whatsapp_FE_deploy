@@ -15,6 +15,20 @@ const handleCreateCallToken = async (userId, callId) => {
   }
 }
 
+const handleGetCallbyUser = async ( userId ) => {
+  try {
+    const response = await apiClient.get(`/call/calls-user/${userId}`)
+    return response.data
+  } catch (error) {
+    console.error(
+      'Error during contact retrieval:',
+      error.response ? error.response.data : error.message
+    )
+    throw error
+  }
+}
+
 export default {
-  handleCreateCallToken
+  handleCreateCallToken,
+  handleGetCallbyUser
 }

@@ -5,6 +5,7 @@ import socket from '../plugins/webSocket'
 import { useMessageStore } from './MessageStore'
 import { useContactStore } from './ContactStore'
 import { useCallStore } from './CallStore'
+import { useToast } from 'primevue/usetoast'
 
 export const useSocketStore = defineStore('socket', () => {
   const isLoggedIn = ref(false)
@@ -12,6 +13,7 @@ export const useSocketStore = defineStore('socket', () => {
   const messageStore = useMessageStore()
   const contactStore = useContactStore()
   const callStore = useCallStore()
+  const toast = useToast()
 
   const connect = () => {
     if (!isLoggedIn.value && !socket.connected) {
@@ -38,13 +40,13 @@ export const useSocketStore = defineStore('socket', () => {
   })
 
   // Lắng nghe sự kiện contactRequest
-  socket.on('contactRequest', (data) => {
-    alert(`User ${data.from} wants to add you as a contact!`)
-    // Bạn có thể thêm logic để xử lý yêu cầu thêm liên hệ ở đây
-    // socket.emit('contactRequestResponse', {
-    //   from: data.from,
-    //   response: 'accept'
-    // })
+  socket.on('contactRequest', () => {
+    toast.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: 'Bạn có một lời mời kết bạn',
+      life: 3000
+    })
   })
 
   const sendCall = ({ from, to, callId }) => {

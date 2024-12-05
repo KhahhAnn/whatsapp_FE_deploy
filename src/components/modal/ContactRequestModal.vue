@@ -5,6 +5,7 @@ import Button from 'primevue/button';
 import Avatar from 'primevue/avatar';
 import { useToast } from 'primevue/usetoast';
 import ContactService from '../../services/ContactService';
+import { useContactStore } from '../../stores/ContactStore';
 
 defineProps({
   isOpen: Boolean,
@@ -13,6 +14,7 @@ defineProps({
 
 const emit = defineEmits(['update:isOpen'])
 const toast = useToast();
+const contactStore = useContactStore();
 
 function closeModal() {
   emit('update:isOpen', false)
@@ -22,7 +24,9 @@ const acceptRequest = async (contact) => {
   try {
     await ContactService.handleAcceptContactRequest(contact.contactUserId, contact.userId, contact.senderNickname, contact.senderAvatar, 'accepted');
     console.log('Contact request accepted');
-    // Handle success (e.g., refresh pending contacts)
+    
+    await contactStore.getContactByUser(localStorage.getItem('userId'));
+
     toast.add({
       severity: 'success',
       summary: 'Success',
