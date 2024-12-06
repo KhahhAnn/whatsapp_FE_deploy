@@ -42,8 +42,7 @@ export const useSocketStore = defineStore('socket', () => {
   // Lắng nghe sự kiện contactRequest
   socket.on('contactRequest', () => {
     toast.add({
-      severity: 'success',
-      summary: 'Success',
+      severity: 'info',
       detail: 'Bạn có một lời mời kết bạn',
       life: 3000
     })

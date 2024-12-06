@@ -3,6 +3,7 @@ import { StreamVideoClient } from '@stream-io/video-client'
 import { nextTick, onMounted, ref, watch, computed } from 'vue'
 import CallService from '../services/CallService'
 import Button from 'primevue/button'
+import Avatar from 'primevue/avatar'
 
 const isCalling = window.location.pathname === '/call'
 const isReceiving = window.location.pathname === '/receive'
@@ -48,9 +49,15 @@ const subscribeCallParticipants = () => {
   })
 }
 
+const isVideoCall = searchQuery.get('isVideoCall') === 'true'
+
 const joinCall = async () => {
   await call.join(isCalling ? { create: true } : undefined)
-  await call.camera.enable()
+  if (isVideoCall) {
+    await call.camera.enable()
+  } else {
+    await call.camera.disable()
+  }
   await call.microphone.enable()
 }
 
@@ -134,54 +141,59 @@ const toggleEndCall = async () => {
   //Closed call windows
   window.close()
 }
+
+const username = ref(''); // Khai báo biến để lưu username
+const usernameAvatar = ref(''); // Khai báo biến để lưu avatar của người gọi
+const recipientNickname = ref(''); // Khai báo biến để lưu nickname của người nhận
+const recipientNicknameAvatar = ref(''); // Khai báo biến để lưu avatar của người nhận
+
+// Thêm listener để nhận dữ liệu từ postMessage
+window.addEventListener('message', (event) => {
+  console.log('Origin:', event.origin); // In ra origin để kiểm tra
+  if (event.origin === window.location.origin) { // Kiểm tra origin
+    if (event.data.username) {
+      username.value = event.data.username; // Lưu username vào biến
+      console.log('Username received:', username.value); // Kiểm tra username
+    }
+    if (event.data.recipientNickname) {
+      recipientNickname.value = event.data.recipientNickname; // Lưu nickname của người nhận vào biến
+      console.log('Recipient Nickname received:', recipientNickname.value); // Kiểm tra nickname
+    }
+    if (event.data.usernameAvatar) {
+      usernameAvatar.value = event.data.usernameAvatar; // Lưu avatar của người gọi
+    }
+    if (event.data.recipientNicknameAvatar) {
+      recipientNicknameAvatar.value = event.data.recipientNicknameAvatar; // Lưu avatar của người nhận
+    }
+  }
+});
 </script>
 
 <template>
-  <div
-    ref="containerElement"
-    class="relative flex items-center justify-center bg-gray-800 h-full w-full p-4"
-  >
-    <video
-      v-if="secondaryUser"
-      ref="secondaryVideo"
-      autoplay
-      :id="`video-${secondaryUser.sessionId}`"
+  <div ref="containerElement" class="relative flex items-center justify-center bg-gray-800 h-full w-full p-4">
+    <Avatar :image="usernameAvatar" class="absolute top-4 left-4" size="large" shape="circle" />
+    <Avatar :image="recipientNicknameAvatar" class="absolute top-4 right-4" size="large" shape="circle" />
+    <video v-if="secondaryUser" ref="secondaryVideo" autoplay :id="`video-${secondaryUser.sessionId}`"
       :data-session-id="secondaryUser.sessionId"
-      class="absolute bottom-7 end-7 w-[350px] aspect-video shadow-2xl rounded-2xl"
-    />
-
+      class="absolute bottom-7 end-7 w-[350px] aspect-video shadow-2xl rounded-2xl border border-white" />
+    <p class="font-bold text-lg absolute top-14 start-7 text-lightMode dark:text-darkMode">{{ recipientNickname }}</p>
     <div class="absolute bottom-7 start-7 flex gap-4">
-      <Button
-        @click="toggleMicrophone"
-        class=""
-        :severity="isMicrophoneEnabled ? 'success' : 'danger'"
-        icon="pi pi-microphone"
-        size="large"
-      />
+      <Button @click="toggleMicrophone" class="" :severity="isMicrophoneEnabled ? 'success' : 'danger'"
+        icon="pi pi-microphone" size="large" />
 
-      <Button
-        @click="toggleCamera"
-        class=""
-        :severity="isCameraEnabled ? 'success' : 'danger'"
-        icon="pi pi-camera"
-        size="large"
-      />
+      <Button @click="toggleCamera" class="" :severity="isCameraEnabled ? 'success' : 'danger'" icon="pi pi-camera"
+        size="large" />
 
       <Button @click="toggleEndCall" severity="danger" size="large">
         <font-awesome-icon icon="phone-slash" />
       </Button>
     </div>
-
-    <video
-      v-if="primaryUser"
-      ref="primaryVideo"
-      autoplay
-      :id="`video-${primaryUser.sessionId}`"
-      :data-session-id="primaryUser.sessionId"
-      class="w-full aspect-video rounded-lg"
-    />
-
-    <audio ref="secondaryAudio" hidden></audio>
-    <audio ref="primaryAudio" hidden></audio>
+    <video v-if="primaryUser" ref="primaryVideo" autoplay :id="`video-${primaryUser.sessionId}`"
+      :data-session-id="primaryUser.sessionId" class="w-full aspect-video rounded-lg border border-white" />
+    <p class="font-bold text-lg absolute bottom-48 end-10 text-lightMode dark:text-darkMode">{{ username }}</p>
+    <div hidden>
+      <audio ref="secondaryAudio" hidden></audio>
+      <audio ref="primaryAudio" hidden></audio>
+    </div>
   </div>
 </template>
