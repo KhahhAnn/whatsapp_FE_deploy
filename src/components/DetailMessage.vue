@@ -200,7 +200,6 @@ const openCallPopUp = (isVideoCall) => {
   const username = userStore.selectedUser.username; // Lấy username của người thực hiện cuộc gọi
   const usernameAvatar = userStore.selectedUser.profilePicture
 
-
   const recipientNickname = contactStore.selectedContact.nickname; // Lấy nickname của người nhận cuộc gọi
   const recipientNicknameAvatar = contactStore.selectedContact.avatar;
   socketStore.sendCall({

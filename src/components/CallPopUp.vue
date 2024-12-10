@@ -142,55 +142,81 @@ const toggleEndCall = async () => {
   window.close()
 }
 
-const username = ref(''); // Khai báo biến để lưu username
-const usernameAvatar = ref(''); // Khai báo biến để lưu avatar của người gọi
-const recipientNickname = ref(''); // Khai báo biến để lưu nickname của người nhận
-const recipientNicknameAvatar = ref(''); // Khai báo biến để lưu avatar của người nhận
+const username = ref('') // Khai báo biến để lưu username
+const usernameAvatar = ref('') // Khai báo biến để lưu avatar của người gọi
+const recipientNickname = ref('') // Khai báo biến để lưu nickname của người nhận
+const recipientNicknameAvatar = ref('') // Khai báo biến để lưu avatar của người nhận
 
 // Thêm listener để nhận dữ liệu từ postMessage
 window.addEventListener('message', (event) => {
-  console.log('Origin:', event.origin); // In ra origin để kiểm tra
-  if (event.origin === window.location.origin) { // Kiểm tra origin
+  console.log('Origin:', event.origin) // In ra origin để kiểm tra
+  if (event.origin === window.location.origin) {
+    // Kiểm tra origin
     if (event.data.username) {
-      username.value = event.data.username; // Lưu username vào biến
-      console.log('Username received:', username.value); // Kiểm tra username
+      username.value = event.data.username // Lưu username vào biến
+      console.log('Username received:', username.value) // Kiểm tra username
     }
     if (event.data.recipientNickname) {
-      recipientNickname.value = event.data.recipientNickname; // Lưu nickname của người nhận vào biến
-      console.log('Recipient Nickname received:', recipientNickname.value); // Kiểm tra nickname
+      recipientNickname.value = event.data.recipientNickname // Lưu nickname của người nhận vào biến
+      console.log('Recipient Nickname received:', recipientNickname.value) // Kiểm tra nickname
     }
     if (event.data.usernameAvatar) {
-      usernameAvatar.value = event.data.usernameAvatar; // Lưu avatar của người gọi
+      usernameAvatar.value = event.data.usernameAvatar // Lưu avatar của người gọi
     }
     if (event.data.recipientNicknameAvatar) {
-      recipientNicknameAvatar.value = event.data.recipientNicknameAvatar; // Lưu avatar của người nhận
+      recipientNicknameAvatar.value = event.data.recipientNicknameAvatar // Lưu avatar của người nhận
     }
   }
-});
+})
 </script>
 
 <template>
-  <div ref="containerElement" class="relative flex items-center justify-center bg-gray-800 h-full w-full p-4">
-    <Avatar :image="usernameAvatar" class="absolute top-4 left-4" size="large" shape="circle" />
-    <Avatar :image="recipientNicknameAvatar" class="absolute top-4 right-4" size="large" shape="circle" />
-    <video v-if="secondaryUser" ref="secondaryVideo" autoplay :id="`video-${secondaryUser.sessionId}`"
-      :data-session-id="secondaryUser.sessionId"
-      class="absolute bottom-7 end-7 w-[350px] aspect-video shadow-2xl rounded-2xl border border-white" />
-    <p class="font-bold text-lg absolute top-14 start-7 text-lightMode dark:text-darkMode">{{ recipientNickname }}</p>
-    <div class="absolute bottom-7 start-7 flex gap-4">
+  <div ref="containerElement" class="relative flex flex-col items-center justify-center bg-gray-800 h-full w-full p-4">
+    <div class="w-full h-4/5 flex">
+      <!-- Thực hiện cuộc gọi, trái -->
+      <div class="w-1/2 h-full p-4 flex justify-center items-center">
+        <div class="w-full relative">
+          <div v-if="!isCameraEnabled"
+            class="  w-full h-full flex flex-col justify-center items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]">
+            <Avatar :image="usernameAvatar" class="" size="large" shape="circle" />
+
+          </div>
+          <p class="font-bold text-lg text-lightMode dark:text-darkMode">
+            {{ username }}
+          </p>
+          <video v-if="secondaryUser" ref="secondaryVideo" autoplay :id="`video-${secondaryUser.sessionId}`"
+            :data-session-id="secondaryUser.sessionId"
+            class="w-full aspect-video shadow-2xl rounded-2xl border border-white" />
+        </div>
+      </div>
+
+      <!-- Nhận cuộc gọi - phải -->
+      <div class="w-1/2 h-full p-4 flex justify-center items-center">
+        <div class="w-full ">
+          <!-- <div
+            class=" w-full h-full flex flex-col justify-center items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]">
+            <Avatar :image="recipientNicknameAvatar" class="" size="large" shape="circle" />
+            <p class="font-bold text-lg text-lightMode dark:text-darkMode">
+              {{ recipientNickname }}
+            </p>
+          </div> -->
+          <video v-if="primaryUser" ref="primaryVideo" autoplay :id="`video-${primaryUser.sessionId}`"
+            :data-session-id="primaryUser.sessionId"
+            class="w-full aspect-video shadow-2xl rounded-2xl border border-white" />
+        </div>
+      </div>
+    </div>
+    <!-- SenderCall-->
+    <div class="w-full h-1/4 flex justify-center items-center gap-6">
       <Button @click="toggleMicrophone" class="" :severity="isMicrophoneEnabled ? 'success' : 'danger'"
         icon="pi pi-microphone" size="large" />
-
       <Button @click="toggleCamera" class="" :severity="isCameraEnabled ? 'success' : 'danger'" icon="pi pi-camera"
         size="large" />
-
       <Button @click="toggleEndCall" severity="danger" size="large">
         <font-awesome-icon icon="phone-slash" />
       </Button>
     </div>
-    <video v-if="primaryUser" ref="primaryVideo" autoplay :id="`video-${primaryUser.sessionId}`"
-      :data-session-id="primaryUser.sessionId" class="w-full aspect-video rounded-lg border border-white" />
-    <p class="font-bold text-lg absolute bottom-48 end-10 text-lightMode dark:text-darkMode">{{ username }}</p>
+
     <div hidden>
       <audio ref="secondaryAudio" hidden></audio>
       <audio ref="primaryAudio" hidden></audio>
