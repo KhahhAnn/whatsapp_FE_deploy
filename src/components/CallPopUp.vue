@@ -49,7 +49,7 @@ const subscribeCallParticipants = () => {
   })
 }
 
-const isVideoCall = searchQuery.get('isVideoCall') === 'true'
+const isVideoCall = searchQuery.get('isVideoCall')
 
 const joinCall = async () => {
   await call.join(isCalling ? { create: true } : undefined)
@@ -142,10 +142,10 @@ const toggleEndCall = async () => {
   window.close()
 }
 
-const username = ref('') // Khai báo biến để lưu username
-const usernameAvatar = ref('') // Khai báo biến để lưu avatar của người gọi
-const recipientNickname = ref('') // Khai báo biến để lưu nickname của người nhận
-const recipientNicknameAvatar = ref('') // Khai báo biến để lưu avatar của người nhận
+const username = ref('') 
+const usernameAvatar = ref('') 
+const recipientNickname = ref('') 
+const recipientNicknameAvatar = ref('') 
 
 // Thêm listener để nhận dữ liệu từ postMessage
 window.addEventListener('message', (event) => {
@@ -154,11 +154,9 @@ window.addEventListener('message', (event) => {
     // Kiểm tra origin
     if (event.data.username) {
       username.value = event.data.username // Lưu username vào biến
-      console.log('Username received:', username.value) // Kiểm tra username
     }
     if (event.data.recipientNickname) {
       recipientNickname.value = event.data.recipientNickname // Lưu nickname của người nhận vào biến
-      console.log('Recipient Nickname received:', recipientNickname.value) // Kiểm tra nickname
     }
     if (event.data.usernameAvatar) {
       usernameAvatar.value = event.data.usernameAvatar // Lưu avatar của người gọi
@@ -174,7 +172,7 @@ window.addEventListener('message', (event) => {
   <div ref="containerElement" class="relative flex flex-col items-center justify-center bg-gray-800 h-full w-full p-4">
     <div class="w-full h-4/5 flex">
       <!-- Thực hiện cuộc gọi, trái -->
-      <div class="w-1/2 h-full p-4 flex justify-center items-center">
+      <div class="w-1/4 h-full p-4 flex justify-center items-center">
         <div class="w-full relative">
           <div v-if="!isCameraEnabled"
             class="  w-full h-full flex flex-col justify-center items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]">
@@ -191,7 +189,7 @@ window.addEventListener('message', (event) => {
       </div>
 
       <!-- Nhận cuộc gọi - phải -->
-      <div class="w-1/2 h-full p-4 flex justify-center items-center">
+      <div class="w-3/4 h-full p-4 flex justify-center items-center">
         <div class="w-full ">
           <!-- <div
             class=" w-full h-full flex flex-col justify-center items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]">

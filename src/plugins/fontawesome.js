@@ -31,6 +31,7 @@ library.add(
   Icons.faChevronDown,
   Icons.faChevronRight,
   Icons.faMicrophone,
+  Icons.faPhoneVolume,
   Icons.faMicrophoneSlash,
   Icons.faPhoneSlash,
   Icons.faArchive,
