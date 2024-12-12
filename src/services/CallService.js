@@ -15,7 +15,7 @@ const handleCreateCallToken = async (userId, callId) => {
   }
 }
 
-const handleGetCallbyUser = async ( userId ) => {
+const GetCallbyUser = async ( userId ) => {
   try {
     const response = await apiClient.get(`/call/calls-user/${userId}`)
     return response.data
@@ -30,5 +30,5 @@ const handleGetCallbyUser = async ( userId ) => {
 
 export default {
   handleCreateCallToken,
-  handleGetCallbyUser
+  GetCallbyUser
 }

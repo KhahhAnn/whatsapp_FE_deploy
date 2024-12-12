@@ -1,5 +1,5 @@
 // src/stores/callStore.js
-import CallService from '@/services/CallService'
+import CallService from '../services/CallService.js'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
@@ -19,10 +19,11 @@ export const useCallStore = defineStore('call', () => {
 
   const handleGetCallbyUser = async (userId) => {
     try {
-      const CallData = await CallService.handleGetCallbyUser(userId)
-      calls.value = CallData // Cập nhật danh sách người dùng
+      const response = await CallService.GetCallbyUser(userId)
+      calls.value = response // Cập nhật danh sách người dùng
     } catch (error) {
       console.error('Failed to fetch user detail:', error)
+      throw new Error('Failed to fetch user detail')
     }
   }
 
@@ -35,5 +36,5 @@ export const useCallStore = defineStore('call', () => {
     incomingCall.value = null
   }
 
-  return { incomingCall, setIncomingCall, clearIncomingCall, getIncomingCall, handleGetCallbyUser }
+  return { incomingCall, calls , setIncomingCall, clearIncomingCall, getIncomingCall, handleGetCallbyUser }
 })
