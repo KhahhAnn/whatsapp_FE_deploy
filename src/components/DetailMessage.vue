@@ -196,13 +196,29 @@ const sendMessage = async () => {
 }
 
 // change to uuid format
-const openCallPopUp = (isVideoCall) => {
+const openCallPopUp = async (isVideoCall) => {
   const callId = uuidv4()
+  //CallerName
   const username = userStore.selectedUser.username // Lấy username của người thực hiện cuộc gọi
   const usernameAvatar = userStore.selectedUser.profilePicture
-
+  //ReceiverName
   const recipientNickname = contactStore.selectedContact.nickname // Lấy nickname của người nhận cuộc gọi
   const recipientNicknameAvatar = contactStore.selectedContact.avatar
+  
+  //CallType : if true = video call else if false = voice call
+  const callType = isVideoCall ? "video call" : "voice call"; 
+  //Thiếu CallerId = userId
+  const callerId = contactStore.selectedContact.userId
+  //Thieesu ReceiverId = contactUserId
+  const receiverId = contactStore.selectedContact.contactUserId
+
+  try {
+    await callStore.handleCreateCall(callerId, username, receiverId, recipientNickname, callType)
+    console.log('Success')
+  } catch (error) {
+    console.error('Error:', error)
+    throw error
+  }
 
   socketStore.sendCall({
     from: userStore.selectedUser.userId,
@@ -455,7 +471,7 @@ const rejectCall = () => {
             <CustomIcon icon="camera" />
           </button>
           <button @click="rejectCall" class="bg-red-500 text-white py-2 px-4 rounded-full">
-            <CustomIcon icon="phone-slash"/>
+            <CustomIcon icon="phone-slash" />
           </button>
         </div>
       </div>

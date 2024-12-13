@@ -45,62 +45,95 @@ function closeModal() {
 
 async function addContact(user) {
   try {
-    const userId = localStorage.getItem('userId');
-    // const username = localStorage.getItem('username')
+    const userId = localStorage.getItem('userId')
     const senderNickname = userStore.selectedUser.username
     const senderAvatar = userStore.selectedUser.profilePicture
-    await contactStore.addContact(userId, user.userId, user.username, senderNickname, user.profilePicture, senderAvatar);
-    await contactStore.getContactByUser(userId);
+    await contactStore.addContact(
+      userId,
+      user.userId,
+      user.username,
+      senderNickname,
+      user.profilePicture,
+      senderAvatar
+    )
+    await contactStore.getContactByUser(userId)
     toast.add({
       severity: 'success',
       summary: 'Thành công',
       detail: 'Liên hệ đã thêm thành công',
       life: 3000
-    });
-    closeModal();
+    })
+    closeModal()
   } catch (error) {
-    console.error('Error adding contact in ContactModal:', error);
+    console.error('Error adding contact in ContactModal:', error)
     toast.add({
       severity: 'error',
       summary: 'Lỗi',
       detail: 'User đã có liên hệ này rồi',
       life: 3000
-    });
+    })
   }
 }
 </script>
 
 <template>
-  <div v-if="props.isOpen" class="relative z-10 text-darkMode dark:text-lightMode" aria-labelledby="modal-title"
-    role="dialog" aria-modal="true">
-    <div class="fixed inset-0 bg-opacity-75 transition-opacity bg-gray-900" aria-hidden="true"></div>
+  <div
+    v-if="props.isOpen"
+    class="relative z-10 text-darkMode dark:text-lightMode"
+    aria-labelledby="modal-title"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div
+      class="fixed inset-0 bg-opacity-75 transition-opacity bg-gray-900"
+      aria-hidden="true"
+    ></div>
 
     <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
       <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
         <div
-          class="relative transform rounded-2xl shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm bg-lightMode dark:bg-darkMode">
+          class="relative transform rounded-2xl shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm bg-lightMode dark:bg-darkMode"
+        >
           <div class="bg-lightMode dark:bg-darkMode w-full rounded-lg shadow-lg">
-            <div class="flex justify-center items-center p-4 border-b border-darkMode dark:border-lightMode">
+            <div
+              class="flex justify-center items-center p-4 border-b border-darkMode dark:border-lightMode"
+            >
               <h2 class="text-lg font-semibold">Thêm liên hệ</h2>
             </div>
             <div class="p-4">
-              <input type="text" v-model="searchQuery" @keyup.enter="searchUser" placeholder="Tìm kiếm"
-                class="w-full p-2 border border-darkMode dark:border-lightMode rounded-lg bg-lightMode dark:bg-darkMode" />
+              <input
+                type="text"
+                v-model="searchQuery"
+                @keyup.enter="searchUser"
+                placeholder="Tìm kiếm"
+                class="w-full p-2 border border-darkMode dark:border-lightMode rounded-lg bg-lightMode dark:bg-darkMode"
+              />
             </div>
             <div class="min-h-80">
               <div class="overflow-y-auto border-darkMode dark:border-lightMode" v-if="searchQuery">
-                <div v-for="user in filteredUsers" :key="user.userId"
-                  class="flex justify-between items-center py-2 px-4 cursor-pointer">
+                <div
+                  v-for="user in filteredUsers"
+                  :key="user.userId"
+                  class="flex justify-between items-center py-2 px-4 cursor-pointer"
+                >
                   <div class="flex items-center justify-start">
                     <Avatar :image="user.profilePicture" class="mr-2" size="large" shape="circle" />
                     <div class="flex flex-col justify-center items-start ml-4">
                       <div class="text-sm font-semibold">{{ user.username }}</div>
-                      <div class="text-xs" :class="{ 'text-green-500': user.isOnline, 'text-red-500': !user.isOnline }">
+                      <div
+                        class="text-xs"
+                        :class="{ 'text-green-500': user.isOnline, 'text-red-500': !user.isOnline }"
+                      >
                         {{ user.isOnline ? 'Đang hoạt động' : 'Không hoạt động' }}
                       </div>
                     </div>
                   </div>
-                  <Button @click="addContact(user)" label="Thêm liên hệ" size="small" severity="primary" />
+                  <Button
+                    @click="addContact(user)"
+                    label="Thêm liên hệ"
+                    size="small"
+                    severity="primary"
+                  />
                   <Toast />
                 </div>
               </div>

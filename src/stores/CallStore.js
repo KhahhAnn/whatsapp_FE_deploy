@@ -17,6 +17,15 @@ export const useCallStore = defineStore('call', () => {
     return incomingCall.value
   }
 
+  //Lấy thông tin cuộc gọi từ store
+  function getIncomingCall() {
+    return incomingCall.value
+  }
+
+  function clearIncomingCall() {
+    incomingCall.value = null
+  }
+
   const handleGetCallbyUser = async (userId) => {
     try {
       const response = await CallService.GetCallbyUser(userId)
@@ -27,14 +36,20 @@ export const useCallStore = defineStore('call', () => {
     }
   }
 
-  //Lấy thông tin cuộc gọi từ store
-  function getIncomingCall() {
-    return incomingCall.value
+  const handleCreateCall = async (callerId, callerName, receiverId, receiverName, callType) => {
+    try {
+      const response = await CallService.createCall(callerId, callerName, receiverId, receiverName, callType)
+      if(response && response.data){
+        calls.value.push(response.data.call)
+        return response.data
+      } else {
+        console.error('No call data received')
+      }
+    } catch (error) {
+      console.error('Error during registration:', error)
+      throw new Error('Error during registration')
+    }
   }
 
-  function clearIncomingCall() {
-    incomingCall.value = null
-  }
-
-  return { incomingCall, calls , setIncomingCall, clearIncomingCall, getIncomingCall, handleGetCallbyUser }
+  return { incomingCall, calls , setIncomingCall, clearIncomingCall, getIncomingCall, handleGetCallbyUser, handleCreateCall }
 })

@@ -15,7 +15,7 @@ const handleCreateCallToken = async (userId, callId) => {
   }
 }
 
-const GetCallbyUser = async ( userId ) => {
+const GetCallbyUser = async (userId) => {
   try {
     const response = await apiClient.get(`/call/calls-user/${userId}`)
     return response.data
@@ -28,7 +28,38 @@ const GetCallbyUser = async ( userId ) => {
   }
 }
 
+const createCall = async (callerId, callerName, receiverId, receiverName, callType) => {
+  try {
+    return await apiClient.post(`/call/call-start`, {
+      callerId,
+      callerName,
+      receiverId,
+      receiverName,
+      callType
+    })
+  } catch (error) {
+    console.error(
+      'Error during registration:',
+      error.response ? error.response.data : error.message
+    )
+    throw error // Ném lại lỗi để xử lý ở nơi gọi
+  }
+}
+
+const endCall = async (callId) => {
+  try {
+    return await apiClient.put(`/call/call-end/${callId}`, {
+      callId: callId
+    })
+  } catch (error) {
+    console.error('Error during user update:', error.response ? error.response.data : error.message)
+    throw error // Ném lại lỗi để xử lý ở nơi gọi
+  }
+}
+
 export default {
   handleCreateCallToken,
-  GetCallbyUser
+  GetCallbyUser,
+  createCall,
+  endCall
 }
