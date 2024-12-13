@@ -49,7 +49,7 @@ const subscribeCallParticipants = () => {
   })
 }
 
-const isVideoCall = searchQuery.get('isVideoCall')
+const isVideoCall = searchQuery.get('isVideoCall') === 'true'
 
 const joinCall = async () => {
   await call.join(isCalling ? { create: true } : undefined)

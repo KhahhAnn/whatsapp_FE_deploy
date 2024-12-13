@@ -214,6 +214,7 @@ const openCallPopUp = async (isVideoCall) => {
 
   try {
     await callStore.handleCreateCall(callerId, username, receiverId, recipientNickname, callType)
+    
     console.log('Success')
   } catch (error) {
     console.error('Error:', error)

@@ -6,6 +6,7 @@ import { ref } from 'vue'
 export const useCallStore = defineStore('call', () => {
   const incomingCall = ref(null)
   const calls = ref([])
+  const callDetail = ref(null)
 
   function setIncomingCall(call) {
     //Lưu thông tin cuộc gọi vào store
@@ -36,10 +37,26 @@ export const useCallStore = defineStore('call', () => {
     }
   }
 
+  const handleGetCallDetail = async (callId) => {
+    try {
+      const response = await CallService.getCallDetail(callId)
+      callDetail.value = response
+    } catch (error) {
+      console.error('Error during registration:', error);
+      throw error;
+    }
+  }
+
   const handleCreateCall = async (callerId, callerName, receiverId, receiverName, callType) => {
     try {
-      const response = await CallService.createCall(callerId, callerName, receiverId, receiverName, callType)
-      if(response && response.data){
+      const response = await CallService.createCall(
+        callerId,
+        callerName,
+        receiverId,
+        receiverName,
+        callType
+      )
+      if (response && response.data) {
         calls.value.push(response.data.call)
         return response.data
       } else {
@@ -51,5 +68,28 @@ export const useCallStore = defineStore('call', () => {
     }
   }
 
-  return { incomingCall, calls , setIncomingCall, clearIncomingCall, getIncomingCall, handleGetCallbyUser, handleCreateCall }
+  const handleEndCall = async (callId) => {
+    try {
+      const response = await CallService.endCall(callId)
+      return response.data
+    } catch (error) {
+      console.error('Error during registration:', error)
+      throw new Error('Error during registration')
+    }
+  }
+
+  
+
+  return {
+    incomingCall,
+    calls,
+    callDetail,
+    setIncomingCall,
+    clearIncomingCall,
+    getIncomingCall,
+    handleGetCallbyUser,
+    handleCreateCall,
+    handleEndCall,
+    handleGetCallDetail
+  }
 })

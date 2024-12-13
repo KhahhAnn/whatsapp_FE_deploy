@@ -57,9 +57,21 @@ const endCall = async (callId) => {
   }
 }
 
+const getCallDetail = async (callId) => {
+  try {
+    return await apiClient.get(`/call/call-detail/${callId}`,{
+      callId: callId
+    })
+  } catch (error) {
+    console.error('Error during user update:', error.response ? error.response.data : error.message)
+    throw error // Ném lại lỗi để xử lý ở nơi gọi
+  }
+}
+
 export default {
   handleCreateCallToken,
   GetCallbyUser,
   createCall,
-  endCall
+  endCall,
+  getCallDetail
 }
