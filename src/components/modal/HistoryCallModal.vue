@@ -1,8 +1,15 @@
 <script setup>
 import { defineProps, defineEmits, onMounted } from 'vue'
 import { useCallStore } from '../../stores/CallStore'
+import { v4 as uuidv4 } from 'uuid'
+import { useUserStore } from '../../stores/UserStore'
+import { useSocketStore } from '../../stores/SocketStore'
+import { useContactStore } from '../../stores/ContactStore'
 
 const callStore = useCallStore()
+const userStore = useUserStore()
+const contactStore = useContactStore()
+const socketStore = useSocketStore()
 
 onMounted(async () => {
   const userId = localStorage.getItem('userId')
@@ -33,17 +40,64 @@ const formatDate = (dateStr) => {
   return new Date(dateStr).toLocaleDateString('en-US', options)
 }
 
-function calculateDuration(startTime, endTime) {
-  const start = new Date(startTime);
-  const end = new Date(endTime);
-  const durationMs = end - start;
-  const seconds = Math.floor((durationMs / 1000) % 60);
-  const minutes = Math.floor((durationMs / 1000 / 60) % 60);
-  const hours = Math.floor((durationMs / 1000 / 60 / 60) % 24);
+// function calculateDuration(startTime, endTime) {
+//   const start = new Date(startTime);
+//   const end = new Date(endTime);
+//   const durationMs = end - start;
+//   const seconds = Math.floor((durationMs / 1000) % 60);
+//   const minutes = Math.floor((durationMs / 1000 / 60) % 60);
+//   const hours = Math.floor((durationMs / 1000 / 60 / 60) % 24);
 
-  return `${hours}h ${minutes}m ${seconds}s`;
+//   return `${hours}h ${minutes}m ${seconds}s`;
+// }
+
+const startCall = async (call) => {
+  const callId = uuidv4()
+  callStore.selectCall(call)
+  //CallerName
+  const username = userStore.selectedUser.username // Lấy username của người thực hiện cuộc gọi
+  const usernameAvatar = userStore.selectedUser.profilePicture
+  //ReceiverName
+  const recipientNickname = contactStore.selectedContact.nickname // Lấy nickname của người nhận cuộc gọi
+  const recipientNicknameAvatar = contactStore.selectedContact.avatar
+
+  //CallType : if true = video call else if false = voice call
+  const callType = 'gọi video'
+  //Thiếu CallerId = userId
+  const callerId = contactStore.selectedContact.userId
+  //Thieesu ReceiverId = contactUserId
+  const receiverId = contactStore.selectedContact.contactUserId
+
+  try {
+    await callStore.handleCreateCall(callerId, username, receiverId, recipientNickname, callType)
+
+    console.log('Success')
+  } catch (error) {
+    console.error('Error:', error)
+    throw error
+  }
+
+  socketStore.sendCall({
+    from: userStore.selectedUser.userId,
+    to: callStore.selectedCall.receiverId,
+    callId,
+  })
+
+  const url = `/call?user_id=${userStore.selectedUser.userId}&call_id=${callId}`
+  const features =
+    'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=800,height=600'
+
+  // Gửi username và nickname qua postMessage
+  const newWindow = window.open(url, '_blank', features)
+  newWindow.onload = () => {
+    setTimeout(() => {
+      newWindow.postMessage(
+        { username, recipientNickname, usernameAvatar, recipientNicknameAvatar },
+        '*'
+      )
+    }, 100) // Trì hoãn 100ms
+  }
 }
-
 </script>
 
 <template>
@@ -66,33 +120,43 @@ function calculateDuration(startTime, endTime) {
         >
           <h2 class="my-5 text-lg font-medium" id="modal-title">Lịch sử cuộc gọi</h2>
           <div class="overflow-x-auto">
-            <table class="min-w-full border border-gray-200">
-              <thead>
+            <table class="min-w-full">
+              <thead class="bg-gray-500">
                 <tr class="border-b">
                   <th class="p-4 text-left">Người gọi</th>
                   <th class="p-4 text-left">Người nhận</th>
-                  <th class="p-4 text-left">Call Type</th>
-                  <th class="p-4 text-left">Duration</th>
-                  <th class="p-4 text-left">Date and Time</th>
+                  <th class="p-4 text-left">Loại cuộc gọi</th>
+                  <th class="p-4 text-left">Thời gian</th>
+                  <th class="p-4 text-left">Thời gian</th>
+
                 </tr>
               </thead>
-              <tbody>
-                <tr v-for="call in callStore.calls" :key="call.id" class="border-b">
-                  <td class="p-4 text-left">{{ call.callerName }}</td>
-                  <td class="p-4 text-left">{{ call.receiverName }}</td>
-                  <td class="p-4 text-left text-green-500">
-                    {{ call.callType }}
-                  </td>
-                  <td class="p-4 text-left">{{ calculateDuration(call.startTime, call.endTime) }}</td>
-                  <td class="p-4 text-left">{{ formatDate(call.startTime) }}</td>
-                </tr>
-              </tbody>
             </table>
+            <div class="overflow-y-auto max-h-96">
+              <table class="min-w-full border border-gray-200">
+                <tbody>
+                  <tr v-for="call in callStore.calls" :key="call.id" class="border-b">
+                    <td class="p-4 text-left">{{ call.callerName }}</td>
+                    <td class="p-4 text-left">{{ call.receiverName }}</td>
+                    <td class="p-4 text-left text-green-500">{{ call.callType }}</td>
+                    <td class="p-4 text-left">{{ formatDate(call.startTime) }}</td>
+                    <td class="p-4 flex justify-start items-start">
+                      <button
+                        @click="startCall(call)"
+                        class="px-4 py-2 rounded hover:bg-lightModeHover dark:hover:bg-darkModeHover"
+                      >
+                        Gọi lại
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
           <button
             @click="closeModal"
             type="button"
-            class="m-8 border px-4 py-2 rounded border-gray-600 hover:bg-lightModeHover dark:text-lightMode dark:hover:bg-darkModeHover"
+            class="mt-4 border px-4 py-2 rounded border-gray-600 hover:bg-lightModeHover dark:text-lightMode dark:hover:bg-darkModeHover"
           >
             Close
           </button>

@@ -206,7 +206,7 @@ const openCallPopUp = async (isVideoCall) => {
   const recipientNicknameAvatar = contactStore.selectedContact.avatar
   
   //CallType : if true = video call else if false = voice call
-  const callType = isVideoCall ? "video call" : "voice call"; 
+  const callType = isVideoCall ? "gọi video" : "gọi thoại"; 
   //Thiếu CallerId = userId
   const callerId = contactStore.selectedContact.userId
   //Thieesu ReceiverId = contactUserId

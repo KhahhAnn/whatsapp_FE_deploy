@@ -142,10 +142,10 @@ const toggleEndCall = async () => {
   window.close()
 }
 
-const username = ref('') 
-const usernameAvatar = ref('') 
-const recipientNickname = ref('') 
-const recipientNicknameAvatar = ref('') 
+const username = ref('')
+const usernameAvatar = ref('')
+const recipientNickname = ref('')
+const recipientNicknameAvatar = ref('')
 
 // Thêm listener để nhận dữ liệu từ postMessage
 window.addEventListener('message', (event) => {
@@ -169,47 +169,67 @@ window.addEventListener('message', (event) => {
 </script>
 
 <template>
-  <div ref="containerElement" class="relative flex flex-col items-center justify-center bg-gray-800 h-full w-full p-4">
+  <div
+    ref="containerElement"
+    class="relative flex flex-col items-center justify-center bg-gray-800 h-full w-full p-4"
+  >
     <div class="w-full h-4/5 flex">
       <!-- Thực hiện cuộc gọi, trái -->
-      <div class="w-1/4 h-full p-4 flex justify-center items-center">
-        <div class="w-full relative">
-          <div v-if="!isCameraEnabled"
-            class="  w-full h-full flex flex-col justify-center items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]">
+      <div class="w-1/3 h-full p-4 flex justify-center items-center">
+        <div class=" w-full relative flex flex-col items-center">
+          <div
+            v-if="!isCameraEnabled"
+            class="w-full h-full flex flex-col justify-center items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
+          >
             <Avatar :image="usernameAvatar" class="" size="large" shape="circle" />
-
           </div>
-          <p class="font-bold text-lg text-lightMode dark:text-darkMode">
+          <p class=" py-2 font-bold text-lg text-lightMode dark:text-darkMode">
             {{ username }}
           </p>
-          <video v-if="secondaryUser" ref="secondaryVideo" autoplay :id="`video-${secondaryUser.sessionId}`"
+          <video
+            v-if="secondaryUser"
+            ref="secondaryVideo"
+            autoplay
+            :id="`video-${secondaryUser.sessionId}`"
             :data-session-id="secondaryUser.sessionId"
-            class="w-full aspect-video shadow-2xl rounded-2xl border border-white" />
+            class="w-full aspect-video shadow-2xl rounded-2xl border border-white"
+          />
         </div>
       </div>
 
       <!-- Nhận cuộc gọi - phải -->
-      <div class="w-3/4 h-full p-4 flex justify-center items-center">
-        <div class="w-full ">
-          <!-- <div
-            class=" w-full h-full flex flex-col justify-center items-center absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]">
-            <Avatar :image="recipientNicknameAvatar" class="" size="large" shape="circle" />
-            <p class="font-bold text-lg text-lightMode dark:text-darkMode">
-              {{ recipientNickname }}
-            </p>
-          </div> -->
-          <video v-if="primaryUser" ref="primaryVideo" autoplay :id="`video-${primaryUser.sessionId}`"
+      <div class="w-2/3 h-full p-4 flex justify-center items-center">
+        <div class="w-full flex flex-col items-center">
+          <p class="py-2 font-bold text-lg text-lightMode dark:text-darkMode">
+            {{ recipientNickname }}
+          </p>
+          <video
+            v-if="primaryUser"
+            ref="primaryVideo"
+            autoplay
+            :id="`video-${primaryUser.sessionId}`"
             :data-session-id="primaryUser.sessionId"
-            class="w-full aspect-video shadow-2xl rounded-2xl border border-white" />
+            class="w-full aspect-video shadow-2xl rounded-2xl border border-white"
+          />
         </div>
       </div>
     </div>
     <!-- SenderCall-->
     <div class="w-full h-1/4 flex justify-center items-center gap-6">
-      <Button @click="toggleMicrophone" class="" :severity="isMicrophoneEnabled ? 'success' : 'danger'"
-        icon="pi pi-microphone" size="large" />
-      <Button @click="toggleCamera" class="" :severity="isCameraEnabled ? 'success' : 'danger'" icon="pi pi-camera"
-        size="large" />
+      <Button
+        @click="toggleMicrophone"
+        class=""
+        :severity="isMicrophoneEnabled ? 'success' : 'danger'"
+        icon="pi pi-microphone"
+        size="large"
+      />
+      <Button
+        @click="toggleCamera"
+        class=""
+        :severity="isCameraEnabled ? 'success' : 'danger'"
+        icon="pi pi-camera"
+        size="large"
+      />
       <Button @click="toggleEndCall" severity="danger" size="large">
         <font-awesome-icon icon="phone-slash" />
       </Button>

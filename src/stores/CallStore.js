@@ -7,6 +7,11 @@ export const useCallStore = defineStore('call', () => {
   const incomingCall = ref(null)
   const calls = ref([])
   const callDetail = ref(null)
+  const selectedCall = ref(null)
+
+  function selectCall(call) {
+    selectedCall.value = call
+  }
 
   function setIncomingCall(call) {
     //Lưu thông tin cuộc gọi vào store
@@ -84,6 +89,8 @@ export const useCallStore = defineStore('call', () => {
     incomingCall,
     calls,
     callDetail,
+    selectedCall,
+    selectCall,
     setIncomingCall,
     clearIncomingCall,
     getIncomingCall,
