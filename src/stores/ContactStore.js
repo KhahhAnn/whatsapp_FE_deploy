@@ -24,31 +24,48 @@ export const useContactStore = defineStore('contact', () => {
   const getPendingContacts = async (contactUserId) => {
     try {
       pendingContacts.value = await ContactService.handleGetPendingContacts(contactUserId)
+      return pendingContacts.value.length
     } catch (error) {
       console.error('Failed to fetch pending contacts:', error)
       pendingContacts.value = [] // Reset nếu fetch fails
     }
   }
 
-  const addContact = async (userId, contactUserId, nickname, senderNickname, avatar, senderAvatar, status) => {
+  const addContact = async (
+    userId,
+    contactUserId,
+    nickname,
+    senderNickname,
+    avatar,
+    senderAvatar,
+    status
+  ) => {
     try {
-      const response = await ContactService.handleCreateContact(userId, contactUserId, nickname, senderNickname, avatar, senderAvatar, status);
+      const response = await ContactService.handleCreateContact(
+        userId,
+        contactUserId,
+        nickname,
+        senderNickname,
+        avatar,
+        senderAvatar,
+        status
+      )
       if (response && response.data) {
-        contacts.value.push(response.data.account);
-        return response.data;
+        contacts.value.push(response.data.account)
+        return response.data
       } else {
-        console.error('No contact data received');
+        console.error('No contact data received')
       }
     } catch (error) {
-      console.error('Error adding contact in ContactStore:', error);
-      throw error; // Ném lại lỗi để Component có thể xử lý
+      console.error('Error adding contact in ContactStore:', error)
+      throw error // Ném lại lỗi để Component có thể xử lý
     }
-  };
+  }
 
   const deleteContact = async (contactId) => {
     try {
       await ContactService.handleDeleteContact(contactId)
-      contacts.value = contacts.value.filter(contact => contact.contactId !== contactId)
+      contacts.value = contacts.value.filter((contact) => contact.contactId !== contactId)
     } catch (error) {
       console.error('Error deleting contact:', error)
     }
@@ -56,23 +73,33 @@ export const useContactStore = defineStore('contact', () => {
 
   const acceptContactRequest = async (userId, contactUserId, senderNickname, senderAvatar) => {
     try {
-      await ContactService.handleAcceptContactRequest(userId, contactUserId, senderNickname, senderAvatar, 'accepted');
+      await ContactService.handleAcceptContactRequest(
+        userId,
+        contactUserId,
+        senderNickname,
+        senderAvatar,
+        'accepted'
+      )
       // Cập nhật danh sách pendingContacts sau khi chấp nhận
-      pendingContacts.value = pendingContacts.value.filter(contact => contact.contactUserId !== contactUserId);
+      pendingContacts.value = pendingContacts.value.filter(
+        (contact) => contact.contactUserId !== contactUserId
+      )
     } catch (error) {
-      console.error('Error accepting contact request:', error);
+      console.error('Error accepting contact request:', error)
     }
-  };
+  }
 
   const declineContactRequest = async (userId, contactUserId) => {
     try {
-      await ContactService.handleRejectContactRequest(userId, contactUserId);
+      await ContactService.handleRejectContactRequest(userId, contactUserId)
       // Cập nhật danh sách pendingContacts sau khi từ chối
-      pendingContacts.value = pendingContacts.value.filter(contact => contact.contactUserId !== contactUserId);
+      pendingContacts.value = pendingContacts.value.filter(
+        (contact) => contact.contactUserId !== contactUserId
+      )
     } catch (error) {
-      console.error('Error rejecting contact request:', error);
+      console.error('Error rejecting contact request:', error)
     }
-  };
+  }
 
   return {
     contacts,

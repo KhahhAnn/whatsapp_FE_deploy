@@ -11,21 +11,22 @@ const userStore = useUserStore()
 const contactStore = useContactStore()
 const socketStore = useSocketStore()
 
+defineProps({
+  isOpen: Boolean
+})
+const emit = defineEmits(['update:isOpen'])
+const userId = localStorage.getItem('userId')
+
+function closeModal() {
+  emit('update:isOpen', false)
+}
+
 onBeforeMount(async () => {
   const userId = localStorage.getItem('userId')
   if (userId) {
     await callStore.handleGetCallbyUser(userId)
   }
 })
-
-defineProps({
-  isOpen: Boolean
-})
-const emit = defineEmits(['update:isOpen'])
-
-function closeModal() {
-  emit('update:isOpen', false)
-}
 
 const formatDate = (dateStr) => {
   const options = {
@@ -50,8 +51,6 @@ const formatDate = (dateStr) => {
 
 //   return `${hours}h ${minutes}m ${seconds}s`;
 // }
-
-const userId = localStorage.getItem('userId')
 
 const startCall = async (call) => {
   const callId = uuidv4()

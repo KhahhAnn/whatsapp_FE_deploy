@@ -16,6 +16,11 @@ const emit = defineEmits(['update:isOpen'])
 const userStore = useUserStore()
 const contactStore = useContactStore()
 const searchQuery = ref('')
+const userId = localStorage.getItem('userId')
+
+function closeModal() {
+  emit('update:isOpen', false)
+}
 
 // Theo dõi sự thay đổi của props.isOpen
 watch(
@@ -39,13 +44,8 @@ const filteredUsers = computed(() => {
   )
 })
 
-function closeModal() {
-  emit('update:isOpen', false)
-}
-
 async function addContact(user) {
   try {
-    const userId = localStorage.getItem('userId')
     const senderNickname = userStore.selectedUser.username
     const senderAvatar = userStore.selectedUser.profilePicture
     await contactStore.addContact(
@@ -57,6 +57,7 @@ async function addContact(user) {
       senderAvatar
     )
     await contactStore.getContactByUser(userId)
+    await contactStore.getPendingContacts(userId)
     toast.add({
       severity: 'success',
       summary: 'Thành công',
@@ -74,6 +75,12 @@ async function addContact(user) {
     })
   }
 }
+
+// Theo dõi sự thay đổi của pendingContacts
+watch(() => contactStore.pendingContacts, (newValue) => {
+  // Có thể thực hiện các hành động khác nếu cần
+  console.log('Pending contacts updated:', newValue)
+})
 </script>
 
 <template>
