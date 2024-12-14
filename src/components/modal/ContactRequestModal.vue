@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import { defineProps, defineEmits, onBeforeMount } from 'vue'
 
 import Button from 'primevue/button'
 import Avatar from 'primevue/avatar'
@@ -10,6 +10,10 @@ import { useContactStore } from '../../stores/ContactStore'
 defineProps({
   isOpen: Boolean,
   pendingContacts: Array
+})
+
+onBeforeMount(async () => {
+  await contactStore.getPendingContacts()
 })
 
 const emit = defineEmits(['update:isOpen'])

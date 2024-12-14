@@ -60,7 +60,7 @@ async function addContact(user) {
     toast.add({
       severity: 'success',
       summary: 'Thành công',
-      detail: 'Liên hệ đã thêm thành công',
+      detail: 'Đã gửi lời mời kết bạn thành công',
       life: 3000
     })
     closeModal()
