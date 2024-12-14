@@ -54,22 +54,27 @@ const formatDate = (dateStr) => {
 const startCall = async (call) => {
   const callId = uuidv4()
   callStore.selectCall(call)
-  //CallerName
-  const username = userStore.selectedUser.username // Lấy username của người thực hiện cuộc gọi
   const usernameAvatar = userStore.selectedUser.profilePicture
-  //ReceiverName
-  const recipientNickname = contactStore.selectedContact.nickname // Lấy nickname của người nhận cuộc gọi
   const recipientNicknameAvatar = contactStore.selectedContact.avatar
 
-  //CallType : if true = video call else if false = voice call
+  //const callerId = contactStore.selectedContact.userId
+  const username = userStore.selectedUser.username
+  const receiverId = callStore.selectedCall.receiverId
+  const recipientNickname = callStore.selectedCall.receiverName
   const callType = 'gọi video'
-  //Thiếu CallerId = userId
-  const callerId = contactStore.selectedContact.userId
-  //Thieesu ReceiverId = contactUserId
-  const receiverId = contactStore.selectedContact.contactUserId
+
+  let toUserId
+  let toUserName
+  if (callStore.selectedCall.receiverId === userStore.selectedUser.userId) {
+    toUserId = callStore.selectedCall.callerId
+    toUserName = callStore.selectedCall.callerName
+  } else {
+    toUserId = callStore.selectedCall.receiverId
+    toUserName = callStore.selectedCall.receiverName
+  }
 
   try {
-    await callStore.handleCreateCall(callerId, username, receiverId, recipientNickname, callType)
+    await callStore.handleCreateCall(toUserId, username, receiverId, toUserName, callType)
 
     console.log('Success')
   } catch (error) {
@@ -77,10 +82,13 @@ const startCall = async (call) => {
     throw error
   }
 
+  
+
   socketStore.sendCall({
     from: userStore.selectedUser.userId,
-    to: callStore.selectedCall.receiverId,
-    callId,
+    to: toUserId,
+    //or  callStore.selectedCall.callerId
+    callId
   })
 
   const url = `/call?user_id=${userStore.selectedUser.userId}&call_id=${callId}`
@@ -128,7 +136,6 @@ const startCall = async (call) => {
                   <th class="p-4 text-left">Loại cuộc gọi</th>
                   <th class="p-4 text-left">Thời gian</th>
                   <th class="p-4 text-left">Thời gian</th>
-
                 </tr>
               </thead>
             </table>

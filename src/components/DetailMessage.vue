@@ -276,7 +276,7 @@ const rejectCall = () => {
 <template>
   <div
     :class="[
-      'flex flex-col justify-between h-[calc(100vh-32px)] rounded-3xl shadow-2xl bg-lightMode dark:text-lightMode dark:bg-darkMode ',
+      'flex flex-col justify-between h-[calc(100vh-32px)] min-w-96 rounded-3xl shadow-2xl bg-lightMode dark:text-lightMode dark:bg-darkMode ',
       isModalOpen ? 'w-1/2' : 'w-3/4'
     ]"
   >
@@ -303,7 +303,7 @@ const rejectCall = () => {
         </div>
       </div>
 
-      <div class="flex gap-4">
+      <div class=" hidden sm:inline-block">
         <button @click="openCallPopUp(false)">
           <CustomIcon icon="phone" size="lg" />
         </button>
@@ -462,7 +462,8 @@ const rejectCall = () => {
         <font-awesome-icon icon="phone-volume" shake size="2xl" class="mb-4" />
 
         <p class="text-lg font-semibold text-black">
-          Bạn có một cuộc gọi đến từ {{ contactStore.selectedContact.nickname }}
+          Bạn có một cuộc gọi đến
+           <!-- {{ contactStore.selectedContact.nickname }} -->
         </p>
         <div class="flex justify-center mt-4 space-x-4">
           <button @click="acceptCall(true)" class="bg-green-500 text-white py-2 px-4 rounded-full">

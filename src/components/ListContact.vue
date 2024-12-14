@@ -53,7 +53,7 @@ const filteredGroups = computed(() => {
 
 <template>
   <div
-    class="flex flex-col justify-between h-[calc(100vh-32px)] w-1/4 rounded-3xl shadow-2xl bg-lightMode dark:bg-darkMode dark:text-lightMode select-none"
+    class="flex flex-col justify-between h-[calc(100vh-32px)] min-w-24 w-1/4 rounded-3xl shadow-2xl bg-lightMode dark:bg-darkMode dark:text-lightMode select-none"
   >
     <div
       class="flex justify-between items-center gap-4 p-4 border-b border-darkModeHover dark:border-lightModeHover"

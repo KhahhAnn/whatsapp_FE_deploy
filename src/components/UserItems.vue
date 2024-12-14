@@ -73,7 +73,7 @@ const displayName = computed(() => {
     class="flex justify-between items-center p-3 text-darkMode dark:text-lightMode hover:bg-lightModeHover dark:hover:bg-darkModeHover">
     <div class="flex items-center gap-4">
       <Avatar :image="props.contact.avatar" class="mr-2" size="xlarge" shape="circle" />
-      <h1>{{ displayName }}</h1>
+      <h1 class="hidden sm:inline-block">{{ displayName }}</h1>
       <!-- <p v-if="contact" class="truncate max-w-[200px]">{{ contact?.message }}</p> -->
     </div>
     <Button type="button" icon="pi pi-ellipsis-v" @click="toggle" aria-haspopup="true" aria-controls="overlay_menu"

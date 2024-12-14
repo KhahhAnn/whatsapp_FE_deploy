@@ -114,7 +114,7 @@ onMounted(async () => {
   <Transition name="slide">
     <div
       v-if="isOpen"
-      class="w-full h-[100%] rounded-3xl text-darkMode dark:text-lightMode bg-lightMode dark:bg-darkMode shadow-lg"
+      class="min-w-24 h-[calc(100vh-32px)] overflow-auto rounded-3xl text-darkMode dark:text-lightMode bg-lightMode dark:bg-darkMode shadow-lg"
     >
       <div
         v-if="userStore.selectedUser"
@@ -145,10 +145,10 @@ onMounted(async () => {
           />
         </OverlayBadge>
         <!-- Username -->
-        <h1 class="text-xl font-semibold">{{ userStore.selectedUser.username }}</h1>
+        <h1 class="text-xl font-semibold hidden sm:inline-block">{{ userStore.selectedUser.username }}</h1>
 
         <!-- Button -->
-        <div class="flex flex-col justify-center items-start gap-4 py-8 w-full">
+        <div class="flex flex-col overflow-auto justify-center items-start gap-4 py-8 w-full">
           <CustomButton icon="user-plus" text="Thêm liên hệ" @click="toggleContactModal" />
           <CustomButton icon="user-group" text="Tạo nhóm" @click="toggleGroupModal" />
           <CustomButton icon="plus" text="Tham gia nhóm" @click="toggleJoinGroupModal" />
