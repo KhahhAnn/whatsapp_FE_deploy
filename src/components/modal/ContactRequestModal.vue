@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import { defineProps, defineEmits, onBeforeMount, watch } from 'vue'
 
 import Button from 'primevue/button'
 import Avatar from 'primevue/avatar'
@@ -7,18 +7,30 @@ import { useToast } from 'primevue/usetoast'
 import ContactService from '../../services/ContactService'
 import { useContactStore } from '../../stores/ContactStore'
 
+const contactStore = useContactStore()
+const toast = useToast()
+const userId = localStorage.getItem('userId')
+
 defineProps({
   isOpen: Boolean,
-  pendingContacts: Array
 })
 
 const emit = defineEmits(['update:isOpen'])
-const toast = useToast()
-const contactStore = useContactStore()
-
 function closeModal() {
   emit('update:isOpen', false)
 }
+
+onBeforeMount(async () => {
+  if (userId) {
+    await contactStore.getPendingContacts(userId)
+  }
+})
+
+// Theo dõi sự thay đổi của pendingContacts
+watch(() => contactStore.pendingContacts, (newValue) => {
+  // Có thể thực hiện các hành động khác nếu cần
+  return newValue
+})
 
 const acceptRequest = async (contact) => {
   try {
@@ -29,10 +41,8 @@ const acceptRequest = async (contact) => {
       contact.senderAvatar,
       'accepted'
     )
-    console.log('Contact request accepted')
-
-    await contactStore.getContactByUser(localStorage.getItem('userId'))
-
+    await contactStore.getContactByUser(userId)
+    await contactStore.getPendingContacts(userId)
     toast.add({
       severity: 'success',
       summary: 'Success',
@@ -50,6 +60,8 @@ const declineRequest = async (contact) => {
     await ContactService.handleRejectContactRequest(contact.contactUserId, contact.userId)
     console.log('Contact request rejected', contact.contactUserId, contact.userId)
     // Handle success (e.g., refresh pending contacts)
+    await contactStore.getPendingContacts(userId)
+
     toast.add({
       severity: 'success',
       summary: 'Success',
@@ -91,8 +103,8 @@ const declineRequest = async (contact) => {
             <!-- List lời mời kết bạn -->
             <div class="overflow-y-auto h-96 border-b border-darkMode dark:border-lightMode">
               <div
-                v-for="contact in pendingContacts"
-                :key="contact.from"
+                v-for="contact in contactStore.pendingContacts"
+                :key="contact.id"
                 class="py-2 px-4 cursor-pointer hover:bg-lightModeHover dark:hover:bg-darkModeHover"
               >
                 <div class="flex items-center justify-around gap-2">

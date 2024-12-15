@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, defineEmits, onMounted } from 'vue'
+import { defineProps, defineEmits, onBeforeMount } from 'vue'
 import { useCallStore } from '../../stores/CallStore'
 import { v4 as uuidv4 } from 'uuid'
 import { useUserStore } from '../../stores/UserStore'
@@ -11,21 +11,22 @@ const userStore = useUserStore()
 const contactStore = useContactStore()
 const socketStore = useSocketStore()
 
-onMounted(async () => {
+defineProps({
+  isOpen: Boolean
+})
+const emit = defineEmits(['update:isOpen'])
+const userId = localStorage.getItem('userId')
+
+function closeModal() {
+  emit('update:isOpen', false)
+}
+
+onBeforeMount(async () => {
   const userId = localStorage.getItem('userId')
   if (userId) {
     await callStore.handleGetCallbyUser(userId)
   }
 })
-
-defineProps({
-  isOpen: Boolean
-})
-const emit = defineEmits(['update:isOpen'])
-
-function closeModal() {
-  emit('update:isOpen', false)
-}
 
 const formatDate = (dateStr) => {
   const options = {
@@ -75,14 +76,12 @@ const startCall = async (call) => {
 
   try {
     await callStore.handleCreateCall(toUserId, username, receiverId, toUserName, callType)
-
     console.log('Success')
+    await callStore.handleGetCallbyUser(userId)
   } catch (error) {
     console.error('Error:', error)
     throw error
   }
-
-  
 
   socketStore.sendCall({
     from: userStore.selectedUser.userId,
@@ -129,13 +128,13 @@ const startCall = async (call) => {
           <h2 class="my-5 text-lg font-medium" id="modal-title">Lịch sử cuộc gọi</h2>
           <div class="overflow-x-auto">
             <table class="min-w-full">
-              <thead class="bg-gray-500">
-                <tr class="border-b">
-                  <th class="p-4 text-left">Người gọi</th>
-                  <th class="p-4 text-left">Người nhận</th>
+              <thead class="bg-lightMode dark:bg-darkMode">
+                <tr class="border">
+                  <th class="p-4 text-center">Người gọi</th>
+                  <th class="p-4 text-center">Người nhận</th>
                   <th class="p-4 text-left">Loại cuộc gọi</th>
                   <th class="p-4 text-left">Thời gian</th>
-                  <th class="p-4 text-left">Thời gian</th>
+                  <th class="p-4 text-left w-36"></th>
                 </tr>
               </thead>
             </table>
@@ -143,10 +142,10 @@ const startCall = async (call) => {
               <table class="min-w-full border border-gray-200">
                 <tbody>
                   <tr v-for="call in callStore.calls" :key="call.id" class="border-b">
-                    <td class="p-4 text-left">{{ call.callerName }}</td>
+                    <td class="p-4 text-center">{{ call.callerName }}</td>
                     <td class="p-4 text-left">{{ call.receiverName }}</td>
                     <td class="p-4 text-left text-green-500">{{ call.callType }}</td>
-                    <td class="p-4 text-left">{{ formatDate(call.startTime) }}</td>
+                    <td class="p-4 text-center">{{ formatDate(call.startTime) }}</td>
                     <td class="p-4 flex justify-start items-start">
                       <button
                         @click="startCall(call)"

@@ -67,6 +67,9 @@ onMounted(() => {
   }
 })
 
+//Theo dõi sự thay đổi của pendingContacts trong contactsStore để cập nhật số lượng pendingContacts bằng watch
+
+
 const handleUpdateUserAvatar = async () => {
   const inputElement = fileInput.value
   if (inputElement.files.length > 0) {
@@ -152,7 +155,7 @@ onMounted(async () => {
           <CustomButton icon="user-plus" text="Thêm liên hệ" @click="toggleContactModal" />
           <CustomButton icon="user-group" text="Tạo nhóm" @click="toggleGroupModal" />
           <CustomButton icon="plus" text="Tham gia nhóm" @click="toggleJoinGroupModal" />
-          <OverlayBadge :value="contactStore.pendingContacts.length" severity="danger" class="">
+          <OverlayBadge :value="contactStore.pendingContacts.length" severity="danger">
             <CustomButton
               icon="clock-rotate-left"
               text="Lời mời kết bạn"
@@ -198,7 +201,7 @@ onMounted(async () => {
     <ContactRequestModal
       :isOpen="isContactRequestModalOpen"
       @update:isOpen="isContactRequestModalOpen = $event"
-      :pendingContacts="contactStore.pendingContacts"
+      
     />
     <HistoryCallModal
       :isOpen="isHistoryCallModalOpen"

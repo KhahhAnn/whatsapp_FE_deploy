@@ -33,6 +33,7 @@ const isModalOpen = ref(false)
 const isLoading = ref(false)
 
 const selectedMessageId = ref(null)
+const userId = localStorage.getItem('userId')
 // Refs sdk
 const isDark = useDark()
 const toast = useToast()
@@ -198,24 +199,20 @@ const sendMessage = async () => {
 // change to uuid format
 const openCallPopUp = async (isVideoCall) => {
   const callId = uuidv4()
-  //CallerName
-  const username = userStore.selectedUser.username // Lấy username của người thực hiện cuộc gọi
   const usernameAvatar = userStore.selectedUser.profilePicture
-  //ReceiverName
-  const recipientNickname = contactStore.selectedContact.nickname // Lấy nickname của người nhận cuộc gọi
   const recipientNicknameAvatar = contactStore.selectedContact.avatar
   
-  //CallType : if true = video call else if false = voice call
-  const callType = isVideoCall ? "gọi video" : "gọi thoại"; 
-  //Thiếu CallerId = userId
+  
   const callerId = contactStore.selectedContact.userId
-  //Thieesu ReceiverId = contactUserId
+  const username = userStore.selectedUser.username 
   const receiverId = contactStore.selectedContact.contactUserId
+  const recipientNickname = contactStore.selectedContact.nickname 
+  const callType = isVideoCall ? "gọi video" : "gọi thoại"; 
 
   try {
     await callStore.handleCreateCall(callerId, username, receiverId, recipientNickname, callType)
-    
     console.log('Success')
+    await callStore.handleGetCallbyUser(userId)
   } catch (error) {
     console.error('Error:', error)
     throw error
@@ -244,7 +241,9 @@ const openCallPopUp = async (isVideoCall) => {
   }
 }
 
-const acceptCall = (isVideoCall) => {
+const acceptCall = async (isVideoCall) => {
+  await callStore.handleGetCallbyUser(userId)
+
   const url = `/receive?user_id=${userStore.selectedUser.userId}&call_id=${callStore.incomingCall.callId}&isVideoCall=${isVideoCall}`
   const features =
     'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=800,height=600'
@@ -267,8 +266,8 @@ const acceptCall = (isVideoCall) => {
   }
 }
 
-const rejectCall = () => {
-  console.log(callStore.incomingCall)
+const rejectCall = async () => {
+  await callStore.handleGetCallbyUser(userId)
   callStore.incomingCall = null
 }
 </script>
@@ -466,10 +465,10 @@ const rejectCall = () => {
            <!-- {{ contactStore.selectedContact.nickname }} -->
         </p>
         <div class="flex justify-center mt-4 space-x-4">
-          <button @click="acceptCall(true)" class="bg-green-500 text-white py-2 px-4 rounded-full">
+          <button @click="acceptCall(false)" class="bg-green-500 text-white py-2 px-4 rounded-full">
             <CustomIcon icon="microphone" class="no-hover" />
           </button>
-          <button @click="acceptCall(false)" class="bg-green-500 text-white py-2 px-4 rounded-full">
+          <button @click="acceptCall(true)" class="bg-green-500 text-white py-2 px-4 rounded-full">
             <CustomIcon icon="camera" />
           </button>
           <button @click="rejectCall" class="bg-red-500 text-white py-2 px-4 rounded-full">
