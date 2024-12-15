@@ -21,6 +21,8 @@ function closeModal() {
   emit('update:isOpen', false)
 }
 
+const features = 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=800,height=600'
+
 onBeforeMount(async () => {
   const userId = localStorage.getItem('userId')
   if (userId) {
@@ -58,24 +60,22 @@ const startCall = async (call) => {
   const usernameAvatar = userStore.selectedUser.profilePicture
   const recipientNicknameAvatar = contactStore.selectedContact.avatar
 
-  //const callerId = contactStore.selectedContact.userId
+  let callerId = contactStore.selectedContact.userId
   const username = userStore.selectedUser.username
   const receiverId = callStore.selectedCall.receiverId
-  const recipientNickname = callStore.selectedCall.receiverName
+  let recipientNickname = callStore.selectedCall.receiverName
   const callType = 'gọi video'
 
-  let toUserId
-  let toUserName
-  if (callStore.selectedCall.receiverId === userStore.selectedUser.userId) {
-    toUserId = callStore.selectedCall.callerId
-    toUserName = callStore.selectedCall.callerName
-  } else {
-    toUserId = callStore.selectedCall.receiverId
-    toUserName = callStore.selectedCall.receiverName
-  }
+  // if (callStore.selectedCall.receiverId === userStore.selectedUser.userId) {
+  //   callerId = callStore.selectedCall.callerId
+  //   recipientNickname = callStore.selectedCall.callerName
+  // } else {
+  //   callerId = callStore.selectedCall.receiverId
+  //   recipientNickname = callStore.selectedCall.receiverName
+  // }
 
   try {
-    await callStore.handleCreateCall(toUserId, username, receiverId, toUserName, callType)
+    await callStore.handleCreateCall(callerId, username, receiverId, recipientNickname, callType)
     console.log('Success')
     await callStore.handleGetCallbyUser(userId)
   } catch (error) {
@@ -85,17 +85,16 @@ const startCall = async (call) => {
 
   socketStore.sendCall({
     from: userStore.selectedUser.userId,
-    to: toUserId,
-    //or  callStore.selectedCall.callerId
+    //to: callerId,
+    to: callStore.selectedCall.callerId,
     callId
   })
 
   const url = `/call?user_id=${userStore.selectedUser.userId}&call_id=${callId}`
-  const features =
-    'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=800,height=600'
+  
 
   // Gửi username và nickname qua postMessage
-  const newWindow = window.open(url, '_blank', features)
+  const newWindow = window.open(url, '_blank', features )
   newWindow.onload = () => {
     setTimeout(() => {
       newWindow.postMessage(

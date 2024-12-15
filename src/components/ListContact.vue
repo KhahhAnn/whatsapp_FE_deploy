@@ -41,14 +41,18 @@ onBeforeMount(async () => {
     groupStore.selectGroup(groupStore.groups[0])
   }
 })
+const searchQuery = ref('')
 
-// Có thể lọc contact và group
 const filteredContacts = computed(() => {
-  return contactStore.contacts.filter((contact) => contact) // Filter out any falsy contacts
+  return contactStore.contacts.filter(contact => 
+    contact.nickname.toLowerCase().includes(searchQuery.value.toLowerCase())
+  )
 })
 
 const filteredGroups = computed(() => {
-  return groupStore.groups.filter((group) => group)
+  return groupStore.groups.filter(group => 
+    group.groupName.toLowerCase().includes(searchQuery.value.toLowerCase())
+  )
 })
 </script>
 
@@ -61,6 +65,7 @@ const filteredGroups = computed(() => {
     >
       <input
         type="text"
+        v-model="searchQuery"
         class="w-full py-2 px-4 rounded-full bg-lightModeHover dark:bg-darkModeHover text-darkMode dark:text-lightMode placeholder-darkModeHover dark:placeholder-lightModeHover"
         placeholder="Tìm kiếm"
       />

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import Avatar from 'primevue/avatar'
 import Menu from 'primevue/menu';
 import Button from 'primevue/button';
@@ -66,6 +66,11 @@ const displayName = computed(() => {
   return props.contact?.nickname || props.group?.groupName || '';
 });
 
+onMounted(async () => {
+  const userId = localStorage.getItem('userId'); // Lấy userId từ localStorage
+  await contactStore.getContactByUser(userId); // Gọi hàm để lấy danh sách liên hệ
+});
+
 </script>
 
 <template>
@@ -73,8 +78,15 @@ const displayName = computed(() => {
     class="flex justify-between items-center p-3 text-darkMode dark:text-lightMode hover:bg-lightModeHover dark:hover:bg-darkModeHover">
     <div class="flex items-center gap-4">
       <Avatar :image="props.contact.avatar" class="mr-2" size="xlarge" shape="circle" />
-      <h1 class="hidden sm:inline-block">{{ displayName }}</h1>
-      <p v-if="contact" class="truncate max-w-[200px]">{{ props?.contact?.message }}</p>
+      <div>
+        <h1 class="hidden sm:inline-block">{{ displayName }}</h1>
+      <div
+        class="text-xs"
+        :class="{ 'text-green-500': props.contact.isOnline, 'text-red-500': !props.contact.isOnline }"
+      >
+        {{ props.contact.isOnline ? 'Đang hoạt động' : 'Không hoạt động' }}
+      </div>
+      </div>
     </div>
     <Button type="button" icon="pi pi-ellipsis-v" @click="toggle" aria-haspopup="true" aria-controls="overlay_menu"
       size="small" variant="outlined" rounded />

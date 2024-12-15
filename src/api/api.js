@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:8080/api', // Địa chỉ backend của bạn
+  //baseURL: 'http://localhost:8080/api',
+  baseURL: 'https://whatsapp-server-7wow.onrender.com/api',
+  
   headers: {
     'Content-Type': 'application/json',
   },
