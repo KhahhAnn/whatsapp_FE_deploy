@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'whatsapp-server-lemon.vercel.app/api', // Địa chỉ backend của bạn
+  baseURL: 'https://whatsapp-server-lemon.vercel.app/api', // Địa chỉ backend của bạn
   headers: {
     'Content-Type': 'application/json',
   },
