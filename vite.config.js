@@ -25,7 +25,7 @@ export default defineConfig({
       },
       // Proxy WebSocket requests
       '/socket.io': {
-        target: 'https://whatsapp-server-lemon.vercel.app',
+        target: 'wss://https://whatsapp-server-lemon.vercel.app',
         ws: true, // Enable WebSocket proxying
         changeOrigin: true,
       },
