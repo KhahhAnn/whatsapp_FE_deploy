@@ -1,6 +1,5 @@
 <script setup>
 import { ref, onBeforeMount, computed } from 'vue'
-
 import CustomIcon from './custom/CustomIcon.vue'
 import UserItems from './UserItems.vue'
 import LeftModal from './modal/LeftModal.vue'
@@ -10,7 +9,7 @@ import { useGroupStore } from '../stores/GroupStore'
 const contactStore = useContactStore()
 const groupStore = useGroupStore()
 const isSidebarOpen = ref(false)
-
+const userId = localStorage.getItem('userId')
 const selectedNickname = computed(() => contactStore.selectedContact?.nickname)
 
 // Chọn contact
@@ -26,13 +25,15 @@ const selectGroup = (group) => {
   console.log(group.groupId)
 }
 
-const toggleSidebar = () => {
+const toggleSidebar = async () => {
+  if (userId) {
+    await contactStore.getContactByUser(userId) // Cập nhật danh sách liên hệ
+  }
   isSidebarOpen.value = !isSidebarOpen.value
   console.log(selectedNickname.value)
 }
 
 onBeforeMount(async () => {
-  const userId = localStorage.getItem('userId')
   if (userId) {
     await contactStore.getContactByUser(userId)
     contactStore.selectContact(contactStore.contacts[0])

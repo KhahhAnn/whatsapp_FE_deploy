@@ -70,7 +70,7 @@ async function addContact(user) {
     toast.add({
       severity: 'error',
       summary: 'Lỗi',
-      detail: 'User đã có liên hệ này rồi',
+      detail: `${error.message}`,
       life: 3000
     })
   }

@@ -25,7 +25,8 @@ export const useAccountStore = defineStore('account', () => {
         console.error('No user data received')
       }
     } catch (error) {
-      console.error('Login failed:', error)
+      console.error('Login failed:', error.message)
+      throw error
     }
   }
 
@@ -47,6 +48,7 @@ export const useAccountStore = defineStore('account', () => {
       }
     } catch (error) {
       console.error('Registration failed:', error)
+      throw error
     }
   }
 

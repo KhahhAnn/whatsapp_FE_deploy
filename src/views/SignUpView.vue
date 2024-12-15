@@ -5,14 +5,12 @@ import Toast from 'primevue/toast'
 import { useToast } from 'primevue/usetoast'
 import router from '../router/router'
 
-
 const accountStore = useAccountStore()
 const email = ref('')
 const password = ref('')
 const confirmPassword = ref('')
 const username = ref('')
 const phoneNumber = ref('')
-const errorMessage = ref('')
 const toast = useToast()
 
 const errorMessageUsername = ref('')
@@ -71,25 +69,20 @@ const handleRegister = async () => {
       password.value,
       phoneNumber.value
     )
-    if (accountData) {
-      console.log('register successful:', accountData)
-      toast.add({
-        severity: 'success',
-        summary: 'Đăng ký thành công !',
-        life: 2000
-      })
-      router.push('/login')
-    } else {
-      toast.add({
-        severity: 'error',
-        summary: 'Có lỗi xảy ra !',
-        detail: 'Lỗi đăng ký',
-        life: 2000
-      })
-    }
+    console.log('register successful:', accountData)
+    toast.add({
+      severity: 'success',
+      summary: 'Đăng ký thành công !',
+      life: 2000
+    })
+    router.push('/login')
   } catch (error) {
-    errorMessage.value = 'register failed. Please try again.'
-    console.log('error', error)
+    toast.add({
+      severity: 'error',
+      summary: 'Có lỗi xảy ra !',
+      detail: `${error.message}`,
+      life: 2000
+    })
   }
 }
 </script>

@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, defineEmits, onBeforeMount, watch } from 'vue'
+import { defineProps, defineEmits, onBeforeMount } from 'vue'
 
 import Button from 'primevue/button'
 import Avatar from 'primevue/avatar'
@@ -26,12 +26,6 @@ onBeforeMount(async () => {
   }
 })
 
-// Theo dõi sự thay đổi của pendingContacts
-watch(() => contactStore.pendingContacts, (newValue) => {
-  // Có thể thực hiện các hành động khác nếu cần
-  return newValue
-})
-
 const acceptRequest = async (contact) => {
   try {
     await ContactService.handleAcceptContactRequest(
@@ -46,7 +40,7 @@ const acceptRequest = async (contact) => {
     toast.add({
       severity: 'success',
       summary: 'Success',
-      detail: 'Contact request accepted',
+      detail: 'Bạn đã chấp nhận lời mời kết bạn',
       life: 3000
     })
     closeModal()
@@ -58,14 +52,12 @@ const acceptRequest = async (contact) => {
 const declineRequest = async (contact) => {
   try {
     await ContactService.handleRejectContactRequest(contact.contactUserId, contact.userId)
-    console.log('Contact request rejected', contact.contactUserId, contact.userId)
-    // Handle success (e.g., refresh pending contacts)
     await contactStore.getPendingContacts(userId)
 
     toast.add({
       severity: 'success',
       summary: 'Success',
-      detail: 'Contact request rejected',
+      detail: 'Bạn đã từ chối lời mời kết bạn',
       life: 3000
     })
     closeModal()

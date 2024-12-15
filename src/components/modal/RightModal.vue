@@ -84,7 +84,7 @@ function toggleNicknameModal() {
         <div v-if="isLoading">
           <ProgressSpinner />
         </div>
-        <div v-else class="flex items-start gap-2 flex-wrap h-72 w-full overflow-scroll">
+        <div v-else class="flex items-start gap-2 flex-wrap h-60 w-full overflow-scroll">
           <div v-for="msg in mediaMessages" :key="msg.messageId"
             class="bg-slate-300 w-[96px] h-[96px] overflow-hidden shadow-xl">
             <Image v-if="msg.content.startsWith('data:image/')" :src="msg.content" alt="Image" preview

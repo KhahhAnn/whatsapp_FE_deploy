@@ -9,11 +9,7 @@ const handleRegisterUser = async (username, email, password, phoneNumber) => {
       phoneNumber: phoneNumber
     })
   } catch (error) {
-    console.error(
-      'Error during registration:',
-      error.response ? error.response.data : error.message
-    )
-    throw error // Ném lại lỗi để xử lý ở nơi gọi
+    throw new Error((error.response ? error.response.data.message : error.message));
   }
 }
 
@@ -25,8 +21,7 @@ const handleLoginUser = async (email, password, rememberMe) => {
       rememberMe: rememberMe
     })
   } catch (error) {
-    console.error('Error during login:', error.response ? error.response.data : error.message)
-    throw error // Ném lại lỗi để xử lý ở nơi gọi
+    throw new Error((error.response ? error.response.data.message : error.message));
   }
 }
 
