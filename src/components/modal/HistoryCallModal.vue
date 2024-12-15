@@ -91,11 +91,11 @@ const startCall = async (call) => {
   })
 
   const url = `/call?user_id=${userStore.selectedUser.userId}&call_id=${callId}`
-  const features =
-    'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=800,height=600'
+  // const features =
+  //   'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=800,height=600'
 
   // Gửi username và nickname qua postMessage
-  const newWindow = window.open(url, '_blank', features)
+  const newWindow = window.open(url, '_blank')
   newWindow.onload = () => {
     setTimeout(() => {
       newWindow.postMessage(
