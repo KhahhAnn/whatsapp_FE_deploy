@@ -54,7 +54,7 @@ function toggleNicknameModal() {
 
 <template>
   <div v-if="isOpen"
-    class="flex flex-col justify-start h-[calc(100vh-32px)] w-1/4 rounded-3xl shadow-2xl bg-lightMode dark:bg-darkMode dark:text-lightMode">
+    class="flex flex-col overflow-auto justify-start h-[calc(100vh-32px)] w-1/4 rounded-3xl shadow-2xl bg-lightMode dark:bg-darkMode dark:text-lightMode">
     <div class="flex flex-col justify-center items-center gap-2 py-8">
       <!-- Skeleton loader for media messages -->
       <template v-if="isLoading">
@@ -84,7 +84,7 @@ function toggleNicknameModal() {
         <div v-if="isLoading">
           <ProgressSpinner />
         </div>
-        <div v-else class="flex items-start gap-2 flex-wrap h-72 w-full overflow-scroll">
+        <div v-else class="flex items-start gap-2 flex-wrap h-60 w-full overflow-scroll">
           <div v-for="msg in mediaMessages" :key="msg.messageId"
             class="bg-slate-300 w-[96px] h-[96px] overflow-hidden shadow-xl">
             <Image v-if="msg.content.startsWith('data:image/')" :src="msg.content" alt="Image" preview

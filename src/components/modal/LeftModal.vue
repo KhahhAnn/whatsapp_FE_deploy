@@ -48,7 +48,15 @@ function toggleJoinGroupModal() {
 }
 
 function toggleContactRequestModal() {
-  isContactRequestModalOpen.value = !isContactRequestModalOpen.value
+  // Gọi hàm để cập nhật pendingContacts trước khi mở modal
+  const userId = localStorage.getItem('userId')
+  if (userId) {
+    contactStore.getPendingContacts(userId).then(() => {
+      isContactRequestModalOpen.value = !isContactRequestModalOpen.value
+    })
+  } else {
+    isContactRequestModalOpen.value = !isContactRequestModalOpen.value
+  }
 }
 
 function toggleHistoryCallModal() {
@@ -66,9 +74,6 @@ onMounted(() => {
     userStore.getUserDetail(userId)
   }
 })
-
-//Theo dõi sự thay đổi của pendingContacts trong contactsStore để cập nhật số lượng pendingContacts bằng watch
-
 
 const handleUpdateUserAvatar = async () => {
   const inputElement = fileInput.value
@@ -98,7 +103,6 @@ const handleUpdateUserAvatar = async () => {
         console.error('Error updating avatar:', error)
       }
     }
-
     reader.readAsDataURL(file)
   }
 }
@@ -148,7 +152,9 @@ onMounted(async () => {
           />
         </OverlayBadge>
         <!-- Username -->
-        <h1 class="text-xl font-semibold hidden sm:inline-block">{{ userStore.selectedUser.username }}</h1>
+        <h1 class="text-xl font-semibold hidden sm:inline-block">
+          {{ userStore.selectedUser.username }}
+        </h1>
 
         <!-- Button -->
         <div class="flex flex-col overflow-auto justify-center items-start gap-4 py-8 w-full">
@@ -201,7 +207,6 @@ onMounted(async () => {
     <ContactRequestModal
       :isOpen="isContactRequestModalOpen"
       @update:isOpen="isContactRequestModalOpen = $event"
-      
     />
     <HistoryCallModal
       :isOpen="isHistoryCallModalOpen"

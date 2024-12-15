@@ -37,20 +37,17 @@ const handleLogin = async () => {
 
   try {
     const accountData = await accountStore.loginAccount(email.value, password.value)
-    if (accountData) {
-      console.log('Login successful:', accountData)
-      socketStore.connect()
-      router.push('/')
-    } else {
-      toast.add({
-        severity: 'error',
-        summary: 'Có lỗi xảy ra !',
-        detail: 'Lỗi đăng nhập',
-        life: 2000
-      })
-    }
+    console.log('Login successful:', accountData)
+    socketStore.connect()
+    router.push('/')
   } catch (error) {
-    console.log('error', error)
+    console.log('error', error.message)
+    toast.add({
+      severity: 'error',
+      summary: 'Có lỗi xảy ra !',
+      detail: `${error.message}`,
+      life: 2000
+    })
   }
 }
 </script>

@@ -1,6 +1,8 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import ContactService from '../services/ContactService.js'
+import socket from '../plugins/webSocket.js'
+
 
 export const useContactStore = defineStore('contact', () => {
   const contacts = ref([])
@@ -16,7 +18,7 @@ export const useContactStore = defineStore('contact', () => {
       const contactData = await ContactService.handleGetContactByUser(userId)
       contacts.value = contactData
     } catch (error) {
-      console.error('Failed to fetch contacts:', error)
+      console.error(error)
       contacts.value = [] // Reset to empty if fetch fails
     }
   }
@@ -26,7 +28,7 @@ export const useContactStore = defineStore('contact', () => {
       pendingContacts.value = await ContactService.handleGetPendingContacts(contactUserId)
       return pendingContacts.value.length
     } catch (error) {
-      console.error('Failed to fetch pending contacts:', error)
+      console.error(error)
       pendingContacts.value = [] // Reset nếu fetch fails
     }
   }
@@ -57,7 +59,7 @@ export const useContactStore = defineStore('contact', () => {
         console.error('No contact data received')
       }
     } catch (error) {
-      console.error('Error adding contact in ContactStore:', error)
+      console.error(error)
       throw error // Ném lại lỗi để Component có thể xử lý
     }
   }
@@ -101,6 +103,18 @@ export const useContactStore = defineStore('contact', () => {
     }
   }
 
+  const updateContactStatus = (userId, isOnline) => {
+    const contact = contacts.value.find((contact) => contact.contactUserId === userId)
+    if (contact) {
+      contact.isOnline = isOnline // Cập nhật trạng thái
+    }
+  }
+
+  // Lắng nghe sự kiện từ server
+  socket.on('userStatusUpdate', ({ userId, isOnline }) => {
+    updateContactStatus(userId, isOnline)
+  })
+
   return {
     contacts,
     selectedContact,
@@ -111,6 +125,7 @@ export const useContactStore = defineStore('contact', () => {
     deleteContact,
     getPendingContacts,
     acceptContactRequest,
-    declineContactRequest
+    declineContactRequest,
+    updateContactStatus
   }
 })

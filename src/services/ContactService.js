@@ -38,8 +38,7 @@ const handleCreateContact = async (userId, contactUserId, nickname, senderNickna
       status
     });
   } catch (error) {
-    console.error('Error during adding contact:', error.response ? error.response.data : error.message);
-    throw new Error('Failed to create contact: ' + (error.response ? error.response.data.message : error.message));
+    throw new Error((error.response ? error.response.data.message : error.message));
   }
 };
 
