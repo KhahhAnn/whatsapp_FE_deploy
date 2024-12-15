@@ -15,20 +15,4 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
-  server: {
-    proxy: {
-      // Proxy HTTP requests
-      '/api': {
-        target: 'https://whatsapp-server-lemon.vercel.app',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''), // Remove '/api' prefix
-      },
-      // Proxy WebSocket requests
-      '/socket.io': {
-        target: 'wss://https://whatsapp-server-lemon.vercel.app',
-        ws: true, // Enable WebSocket proxying
-        changeOrigin: true,
-      },
-    },
-  },
 });
