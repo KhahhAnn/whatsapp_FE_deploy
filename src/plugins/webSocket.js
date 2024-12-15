@@ -1,5 +1,5 @@
 import { io } from 'socket.io-client'
-const socketConnect = io('http://localhost:8080', {
+const socketConnect = io('whatsapp-server-lemon.vercel.app', {
   autoConnect: false
 })
 export default socketConnect
