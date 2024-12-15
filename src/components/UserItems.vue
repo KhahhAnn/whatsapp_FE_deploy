@@ -84,7 +84,7 @@ onMounted(async () => {
         class="text-xs"
         :class="{ 'text-green-500': props.contact.isOnline, 'text-red-500': !props.contact.isOnline }"
       >
-        {{ props.contact.isOnline ? 'Đang hoạt động' : 'Không hoạt động' }}
+        <!-- {{ props.contact.isOnline ? 'Đang hoạt động' : 'Không hoạt động' }} -->
       </div>
       </div>
     </div>
